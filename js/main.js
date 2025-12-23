@@ -137,7 +137,12 @@ document.addEventListener('DOMContentLoaded', function () {
         { id: 443, title: "Física 3° Curso", category: "fisica", level: "3-curso", image: "img/portadas/fisica3.png", file: "documentos/libro-ejemplo.pdf", description: "Electricidad y física moderna." },
         { id: 445, title: "Química 2° Curso", category: "quimica", level: "2-curso", image: "img/portadas/quimica2.png", file: "documentos/libro-ejemplo.pdf", description: "Reacciones y estequiometría." },
         { id: 446, title: "Química 3° Curso", category: "quimica", level: "3-curso", image: "img/portadas/quimmica3.png", file: "documentos/libro-ejemplo.pdf", description: "Química orgánica." },
-        { id: 461, title: "Filosofía 2° Curso", category: "filosofia", level: "2-curso", image: "img/portadas/filosofia2.png", file: "documentos/libro-ejemplo.pdf", description: "Pensamiento filosófico y lógica." }
+        { id: 460, title: "Filosofía 2° Curso", category: "filosofia", level: "2-curso", image: "img/portadas/filosofia2.png", file: "documentos/libro-ejemplo.pdf", description: "Pensamiento filosófico y lógica." },
+
+        // --- ENSAYOS DE CLIENTES / COMUNIDAD ---
+        { id: 901, title: "Ensayo sobre la Reforma Educativa", category: "ensayo", level: "comunidad", image: "img/portadas/default_cover.png", file: "documentos/libro-ejemplo.pdf", description: "Aporte de Juan Pérez sobre la educación paraguaya." },
+        { id: 902, title: "La Importancia de la Lectura", category: "ensayo", level: "comunidad", image: "img/portadas/default_cover.png", file: "documentos/libro-ejemplo.pdf", description: "Reflexión sobre el hábito lector en jóvenes." },
+        { id: 903, title: "Héroes del Paraguay", category: "ensayo", level: "comunidad", image: "img/portadas/default_cover.png", file: "documentos/libro-ejemplo.pdf", description: "Reseña histórica colaborativa." }
     ];
 
     // ==========================================
@@ -350,6 +355,46 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             filtered.forEach(book => {
                 container.insertAdjacentHTML('beforeend', generateCard(book, favorites));
+            });
+        }
+    };
+
+    window.renderCommunityBooks = function () {
+        const container = document.getElementById('community-books-list');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="col-12 mb-4 d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="font-weight-bold text-dark mb-1">Aportes de la Comunidad</h4>
+                    <p class="text-muted small mb-0">Ensayos, guías y resúmenes compartidos por estudiantes.</p>
+                </div>
+                <button class="btn btn-primary rounded-pill px-4 shadow-sm font-weight-bold" 
+                        onclick="$('#uploadMaterialModal').modal('show');">
+                    <i class="fas fa-plus mr-1"></i> Subir el mío
+                </button>
+            </div>
+            <div class="row w-100 m-0" id="essays-grid"></div>
+        `;
+
+        const grid = document.getElementById('essays-grid');
+        const ensayos = books.filter(b => b.category === 'ensayo');
+        const favorites = JSON.parse(localStorage.getItem('aranduka_favorites') || '[]');
+
+        if (ensayos.length === 0) {
+            grid.innerHTML = `
+                <div class="col-12 text-center py-5 border rounded" style="border-style: dashed !important; border-width: 2px !important; background: #f9f9f9;">
+                    <i class="fas fa-cloud-upload-alt fa-3x text-light mb-3"></i>
+                    <h5 class="text-muted">¡Sé el primero en aportar!</h5>
+                    <p class="text-muted small">Tu ensayo aparecerá aquí una vez aprobado.</p>
+                </div>`;
+        } else {
+            ensayos.forEach(book => {
+                grid.insertAdjacentHTML('beforeend', `
+                    <div class="col-md-6 mb-4">
+                        ${generateCard(book, favorites)}
+                    </div>
+                `);
             });
         }
     };

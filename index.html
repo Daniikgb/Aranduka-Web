@@ -454,10 +454,14 @@
         }
 
         .section-header h2 {
-            font-size: 3.2rem;
-            color: var(--primary-color);
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--py-blue) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 1.2rem;
             font-weight: 800;
+            letter-spacing: -1px;
         }
 
         .section-header .lead {
@@ -465,33 +469,73 @@
             margin: 0 auto 3rem;
         }
 
-        /* Tabs */
+        /* Tabs - App Style Model */
         .dashboard-tabs {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            margin-bottom: 3rem;
+            gap: 2rem;
+            margin-bottom: 4rem;
             flex-wrap: wrap;
+            padding: 1rem;
         }
 
         .tab-btn {
-            padding: 0.8rem 2rem;
-            border: 2px solid #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 140px;
+            height: 120px;
+            padding: 1rem;
+            border: none;
             background: var(--white);
-            border-radius: 50px;
-            font-weight: 600;
+            border-radius: 24px;
+            font-weight: 700;
             color: var(--text-light);
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
         }
 
-        .tab-btn.active,
-        .tab-btn:hover {
+        .tab-btn i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+            transition: 0.3s;
+            background: rgba(12, 100, 124, 0.1);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .tab-btn.active {
+            background: var(--white);
+            color: var(--primary-color);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(12, 100, 124, 0.15);
+            border: 2px solid var(--primary-color);
+        }
+
+        .tab-btn.active i {
             background: var(--primary-color);
             color: var(--white);
-            border-color: var(--primary-color);
-            box-shadow: 0 10px 20px rgba(12, 100, 124, 0.2);
-            transform: translateY(-3px);
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(12, 100, 124, 0.3);
+        }
+
+        .tab-btn:hover:not(.active) {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-btn:hover i {
+            transform: rotate(-10deg) scale(1.1);
+            background: rgba(12, 100, 124, 0.2);
         }
 
         .filter-section {
@@ -863,8 +907,44 @@
 
         .float-whatsapp:hover {
             transform: scale(1.1);
-            color: white;
+            color: white !important;
             background: #128c7e;
+            text-decoration: none;
+        }
+
+        .whatsapp-tooltip {
+            position: absolute;
+            bottom: 75px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            opacity: 1;
+            visibility: visible;
+            transition: 0.3s;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        /* Triangle Arrow */
+        .whatsapp-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px;
+            border-style: solid;
+            border-color: #fff transparent transparent transparent;
+        }
+
+        .float-whatsapp:hover .whatsapp-tooltip {
+            transform: translateX(-50%) translateY(-5px);
         }
 
         /* Footer */
@@ -1157,6 +1237,56 @@
             display: inline-block;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+
+        /* --- Founders Section Styles --- */
+        .founders-section {
+            padding: 6rem 2rem;
+            background-color: var(--white);
+            position: relative;
+        }
+
+        .founder-card {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            transition: 0.3s;
+            border: 1px solid #f0f0f0;
+        }
+
+        .founder-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .founder-img-wrapper {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid var(--secondary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .founder-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .founder-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .founder-bio {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
     </style>
 </head>
 
@@ -1270,6 +1400,46 @@
         </div>
     </section>
 
+    <!-- Fundadores / Bibliografía Section -->
+    <section class="founders-section">
+        <div class="container">
+            <div class="section-header text-center mb-5">
+                <h2>Nuestros Fundadores</h2>
+                <p class="lead" style="color: var(--slate-grey);">Conoce a los visionarios detrás de Aranduka.</p>
+            </div>
+            <div class="row justify-content-center">
+                <!-- Founder 1 -->
+                <div class="col-md-4 mb-4">
+                    <div class="founder-card text-center">
+                        <div class="founder-img-wrapper">
+                            <img src="https://via.placeholder.com/150" alt="Fundador 1" class="founder-img">
+                        </div>
+                        <h3 class="founder-name">Nombre del Fundador</h3>
+                        <p class="founder-role text-primary font-weight-bold">Co-Fundador</p>
+                        <p class="founder-bio">
+                            Aquí va la biografía del fundador. Su trayectoria educativa, su visión para el proyecto y
+                            sus aportes principales a la bibliografía nacional.
+                        </p>
+                    </div>
+                </div>
+                <!-- Founder 2 -->
+                <div class="col-md-4 mb-4">
+                    <div class="founder-card text-center">
+                        <div class="founder-img-wrapper">
+                            <img src="https://via.placeholder.com/150" alt="Fundador 2" class="founder-img">
+                        </div>
+                        <h3 class="founder-name">Nombre del Fundador</h3>
+                        <p class="founder-role text-primary font-weight-bold">Co-Fundador</p>
+                        <p class="founder-bio">
+                            Aquí va la biografía del fundador. Su trayectoria educativa, su visión para el proyecto y
+                            sus aportes principales a la bibliografía nacional.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Main Dashboard Section -->
     <main class="dashboard-container" id="materiales-section">
         <div class="dashboard-header-bg">
@@ -1280,10 +1450,11 @@
             </div>
 
             <div class="dashboard-tabs">
-                <button class="tab-btn active" data-target="secciones">Por Sección</button>
-                <button class="tab-btn" data-target="materias">Por Materias</button>
+                <button class="tab-btn active" data-target="secciones"><i class="fas fa-layer-group"></i> Niveles y
+                    Grados</button>
+                <button class="tab-btn" data-target="materias"><i class="fas fa-book"></i> Por Materias</button>
                 <button class="tab-btn" data-target="favoritos"><i class="fas fa-heart"></i> Favoritos</button>
-                <button class="tab-btn" data-target="comunidad"><i class="fas fa-users"></i> Comunidad</button>
+                <button class="tab-btn" data-target="comunidad"><i class="fas fa-users"></i> Ensayos Destacados</button>
             </div>
         </div>
 
@@ -1308,9 +1479,11 @@
                 </div>
                 <div class="d-flex align-items-center pr-2">
                     <button
-                        class="btn btn-info text-white btn-sm rounded-pill font-weight-bold mr-3 px-4 py-2 shadow-sm"
-                        onclick="document.querySelector('.tab-btn[data-target=\'comunidad\']').click()">
-                        <i class="fas fa-plus-circle mr-1"></i> Subir Aporte
+                        class="btn btn-primary text-white rounded-pill font-weight-bold mr-3 px-4 py-2 shadow animated pulse infinite"
+                        style="background: var(--primary-color); border: none; transition: transform 0.2s;"
+                        onclick="document.querySelector('.tab-btn[data-target=\'comunidad\']').click(); $('#uploadMaterialModal').modal('show');"
+                        onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="fas fa-file-upload mr-2"></i> Subir Ahora
                     </button>
                     <button type="button" class="close text-dark opacity-50" data-dismiss="alert" aria-label="Close"
                         style="outline:none;">
@@ -1397,8 +1570,8 @@
                         <span>Caligrafía</span>
                     </a>
                     <a href="#" class="filter-card community-trigger">
-                        <i class="fas fa-users"></i>
-                        <span>Aportes de la Comunidad</span>
+                        <i class="fas fa-users-cog"></i>
+                        <span>Ensayos Destacados</span>
                     </a>
                 </div>
             </div>
@@ -1406,50 +1579,7 @@
             <!-- Community Section -->
             <div id="comunidad" class="filter-section">
                 <div class="row">
-                    <div class="col-md-4" id="community-upload-col">
-                        <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 20px; background: #fff;">
-                            <h4 class="font-weight-bold text-dark mb-3">Subir Material a la Comunidad</h4>
-                            <p class="text-muted small">Comparte tus libros, ensayos, guías o análisis con la comunidad
-                                educativa.
-                            </p>
-                            <form id="uploadForm">
-                                <div class="form-group">
-                                    <input type="text" name="title" class="form-control rounded-pill"
-                                        placeholder="Título del Material" required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" name="author" class="form-control rounded-pill"
-                                        placeholder="Tu Nombre/Seudónimo" required>
-                                </div>
-                                <div class="form-group">
-                                    <select name="level" class="form-control rounded-pill">
-                                        <option value="General">Nivel General</option>
-                                        <option value="inicial">Inicial</option>
-                                        <option value="1-grado">1er Ciclo</option>
-                                        <option value="4-grado">2do Ciclo</option>
-                                        <option value="7-grado">3er Ciclo</option>
-                                        <option value="nivel-medio">Nivel Medio</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <textarea name="description" class="form-control" rows="3"
-                                        placeholder="Breve descripción..." style="border-radius: 15px;"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <div class="custom-file">
-                                        <input type="file" name="archivo" class="custom-file-input" id="customFile"
-                                            required>
-                                        <label class="custom-file-label" for="customFile">Elegir archivo
-                                            PDF...</label>
-                                    </div>
-                                </div>
-                                <button type="submit"
-                                    class="btn btn-primary btn-block rounded-pill font-weight-bold">Subir
-                                    Material</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="col-md-8" id="community-list-col">
+                    <div class="col-md-12" id="community-list-col">
                         <div class="row" id="community-books-list">
                             <!-- JS fills here -->
                         </div>
@@ -1964,8 +2094,66 @@
 
 
 
+    <!-- Upload Material Modal -->
+    <div class="modal fade" id="uploadMaterialModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+                <div class="modal-header border-0 bg-primary text-white p-4">
+                    <h5 class="modal-title font-weight-bold"><i class="fas fa-file-upload mr-2"></i> Compartir con la
+                        Comunidad</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="uploadForm">
+                        <div class="form-group">
+                            <label class="small font-weight-bold">Título del Material</label>
+                            <input type="text" name="title" class="form-control rounded-pill"
+                                placeholder="Ej: Resumen de Geografía" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="small font-weight-bold">Tu Nombre/Seudónimo</label>
+                            <input type="text" name="author" class="form-control rounded-pill"
+                                placeholder="¿Cómo quieres aparecer?" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="small font-weight-bold">Nivel Correspondiente</label>
+                            <select name="level" class="form-control rounded-pill">
+                                <option value="General">Nivel General</option>
+                                <option value="inicial">Inicial</option>
+                                <option value="1-grado">1er Ciclo</option>
+                                <option value="4-grado">2do Ciclo</option>
+                                <option value="7-grado">3er Ciclo</option>
+                                <option value="nivel-medio">Nivel Medio</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="small font-weight-bold">Breve descripción</label>
+                            <textarea name="description" class="form-control" rows="2"
+                                placeholder="Cuéntanos un poco sobre este archivo..."
+                                style="border-radius: 15px;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="small font-weight-bold">Archivo PDF</label>
+                            <div class="custom-file">
+                                <input type="file" name="archivo" class="custom-file-input" id="modalCustomFile"
+                                    required>
+                                <label class="custom-file-label" for="modalCustomFile"
+                                    style="border-radius: 50px;">Elegir PDF...</label>
+                            </div>
+                        </div>
+                        <button type="submit"
+                            class="btn btn-primary btn-block rounded-pill py-3 font-weight-bold shadow mt-4">
+                            Subir Material Ahora
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- WhatsApp FAB -->
     <a href="https://wa.me/595983714552" target="_blank" class="float-whatsapp">
+        <span class="whatsapp-tooltip">¡Contáctanos!</span>
         <i class="fab fa-whatsapp"></i>
     </a>
 
