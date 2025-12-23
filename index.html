@@ -1201,13 +1201,70 @@
                 border-radius: 8px;
             }
 
-            /* Dashboard Padding */
+            /* Dashboard Padding - Maximize width for books */
             .dashboard-main-area {
-                padding: 3rem 1rem 5rem;
+                padding: 3rem 0.5rem 5rem;
             }
 
             .dashboard-header-bg {
                 padding: 5rem 1rem 2rem;
+            }
+
+            /* Advantages: 2 Columns Compact */
+            .advantages {
+                padding: 4rem 1rem;
+            }
+
+            .advantages .cards {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .advantages .card-adv {
+                margin: 0;
+                min-width: 0;
+                padding: 1.5rem 1rem;
+            }
+
+            .advantages .card-adv i {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .advantages .card-adv h3 {
+                font-size: 1rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .advantages .card-adv p {
+                font-size: 0.8rem;
+                display: none;
+                /* Text too long for compact mode, hide or truncate */
+            }
+
+            /* Mission Chic Mobile */
+            .mission {
+                flex-direction: column-reverse;
+                /* Image on top? User said "put image with sense" */
+                padding: 4rem 1rem;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .mission .right img {
+                border-radius: 20px 20px 0 20px;
+                /* Chic asymmetrical */
+                box-shadow: 10px 10px 0 var(--primary-color);
+                transform: scale(0.95);
+            }
+
+            .mission .left {
+                padding: 0 1rem;
+            }
+
+            .mission .left h2 {
+                font-size: 2rem;
             }
 
             /* Prevent iOS Zoom on inputs */
@@ -1402,7 +1459,6 @@
                 docentes nacionales para ofrecer una plataforma que no solo brinde libros, sino que fomente una
                 verdadera cultura de aprendizaje compartido y crecimiento intelectual.</p>
             <div class="mt-4">
-                <span class="escarapela mr-2"></span>
                 <span class="escarapela mr-2"></span>
                 <span class="escarapela"></span>
             </div>
@@ -2213,21 +2269,18 @@
     </script>
 
     <script>
-        // Auto-Hide Header Script
-        let lastScrollTop = 0;
+        // Auto-Hide Header Script - Only show at top
         const header = document.querySelector('.main-header');
 
         window.addEventListener('scroll', function () {
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-            if (scrollTop > lastScrollTop && scrollTop > 100) {
-                // Scroll Down -> Hide
+            // Hide if scrolled down more than 50px. Show ONLY if at the top.
+            if (scrollTop > 50) {
                 header.classList.add('header-hidden');
             } else {
-                // Scroll Up -> Show
                 header.classList.remove('header-hidden');
             }
-            lastScrollTop = scrollTop;
         });
     </script>
 </body>
