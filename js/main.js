@@ -155,6 +155,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // 3. AUTHENTICATION (PHP/FETCH)
     // ==========================================
 
+    // ==========================================
+    // 3. AUTHENTICATION (DEMO MODE FOR GITHUB PAGES)
+    // ==========================================
+
     const checkSession = () => {
         currentUser = JSON.parse(localStorage.getItem('aranduka_currentUser'));
         const authMenuItem = document.getElementById('auth-menu-item');
@@ -182,50 +186,39 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    // Handlers
+    // --- DEMO MOCK LOGIN (For GitHub Pages) ---
     $('#studentLoginForm').on('submit', async function (e) {
         e.preventDefault();
         const ci = $(this).find('input[name="ci"]').val().trim();
         if (!ci) return Swal.fire('Error', 'Ingresa tu cédula o usuario', 'warning');
+
         Swal.showLoading();
-        try {
-            const response = await fetch('backend/login.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `ci=${encodeURIComponent(ci)}`
-            });
-            const data = await response.json().catch(() => null);
-            if (data && data.success) {
-                localStorage.setItem('aranduka_currentUser', JSON.stringify(data.user));
-                checkSession();
-                elements.loginModal.modal('hide');
-                Swal.fire('¡Bienvenido!', `Hola ${data.user.nombre_completo}`, 'success').then(() => location.reload());
-            } else {
-                Swal.fire('Error', data ? data.message : 'Credenciales incorrectas.', 'error');
-            }
-        } catch (error) {
-            Swal.fire('Error de Conexión', 'No se pudo conectar con el servidor.', 'error');
-        }
+
+        // SIMULATION
+        setTimeout(() => {
+            const mockUser = {
+                id: 1,
+                nombre_completo: "Estudiante Demo",
+                role: (ci === 'admin') ? 'admin' : 'student' // Simple backdoor for demo
+            };
+            localStorage.setItem('aranduka_currentUser', JSON.stringify(mockUser));
+            checkSession();
+            elements.loginModal.modal('hide');
+            Swal.fire('¡Bienvenido!', `Modo Demo Activado. Hola ${mockUser.nombre_completo}`, 'success').then(() => location.reload());
+        }, 800);
     });
 
     $('#studentRegisterForm').on('submit', async function (e) {
         e.preventDefault();
-        const formData = new FormData(this);
         Swal.showLoading();
-        try {
-            const response = await fetch('backend/registro.php', { method: 'POST', body: formData });
-            const data = await response.json().catch(() => null);
-            if (data && data.success) {
-                localStorage.setItem('aranduka_currentUser', JSON.stringify(data.user));
-                checkSession();
-                elements.loginModal.modal('hide');
-                Swal.fire('¡Registrado!', 'Tu cuenta ha sido creada.', 'success').then(() => location.reload());
-            } else {
-                Swal.fire('Error', data ? data.message : 'Error al registrar.', 'error');
-            }
-        } catch (error) {
-            Swal.fire('Error', 'Fallo conexión con backend.', 'error');
-        }
+        // SIMULATION
+        setTimeout(() => {
+            const mockUser = { id: 2, nombre_completo: "Nuevo Usuario", role: 'student' };
+            localStorage.setItem('aranduka_currentUser', JSON.stringify(mockUser));
+            checkSession();
+            elements.loginModal.modal('hide');
+            Swal.fire('¡Registrado!', 'Cuenta Demo creada correctamente.', 'success').then(() => location.reload());
+        }, 800);
     });
 
     document.getElementById('logoutBtn')?.addEventListener('click', (e) => {

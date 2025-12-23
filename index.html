@@ -997,6 +997,11 @@
             .hero .right img {
                 max-width: 80%;
                 margin: 0 auto;
+                display: block;
+            }
+
+            #heroCarousel {
+                margin: 0 auto;
             }
 
             .header-container {
@@ -1014,6 +1019,17 @@
                 white-space: nowrap;
                 padding-bottom: 10px;
                 justify-content: flex-start;
+            }
+
+            /* Responsive Nav for Mobile */
+            .main-nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.8rem;
+            }
+
+            .header-container {
+                padding: 0 0.5rem;
             }
         }
 
@@ -1061,14 +1077,53 @@
 
         @media (max-width: 576px) {
             .hero {
-                padding: 3rem 1rem;
+                padding: 6rem 1rem 3rem;
+                /* More top padding for static header */
             }
 
             .hero h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
+                line-height: 1.1;
+                margin-bottom: 20px;
+            }
+
+            .book-card {
+                margin: 0 auto 2rem;
+                max-width: 320px;
+                /* Center single column cards */
+            }
+
+            /* Fix Buttons Touch Area */
+            .btn {
+                min-height: 44px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
             }
 
             /* Full width buttons on mobile */
+            .book-actions .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+                display: block;
+            }
+
+            /* Reduce Dashboard Padding on Mobile */
+            .dashboard-main-area {
+                padding: 2rem 1rem 5rem;
+            }
+
+            .dashboard-header-bg {
+                padding: 5rem 1rem 3rem;
+            }
+
+            /* Prevent iOS Zoom on inputs */
+            input,
+            select,
+            textarea {
+                font-size: 16px !important;
+            }
+
             .book-actions .btn {
                 width: 100%;
                 margin-bottom: 0.5rem;
@@ -1083,6 +1138,13 @@
 
             .search-bar input {
                 font-size: 0.9rem;
+            }
+
+            /* Ensure Modal is visible on Top */
+            .modal-content-custom {
+                margin: 60px 10px 20px;
+                max-height: 85vh;
+                overflow-y: auto;
             }
         }
 
@@ -1108,12 +1170,12 @@
             </div>
 
             <div class="search-bar">
-                <form onsubmit="event.preventDefault();">
-                    <input type="text" id="searchInput" placeholder="Buscar material (ej. Matemática)..."
-                        autocomplete="off">
-                    <button type="button" id="voiceSearchBtn" title="Buscar por voz"><i
+                <form onsubmit="event.preventDefault();" style="display: flex; position:relative;">
+                    <input type="text" id="searchInput" placeholder="Buscar libro..." autocomplete="off">
+                    <!-- Adjusted for mobile tappability -->
+                    <button type="button" id="voiceSearchBtn" style="padding: 0 15px; right: 40px;"><i
                             class="fas fa-microphone"></i></button>
-                    <button type="submit"><i class="fas fa-search"></i></button>
+                    <button type="submit" style="padding: 0 15px; right: 5px;"><i class="fas fa-search"></i></button>
                 </form>
             </div>
 
