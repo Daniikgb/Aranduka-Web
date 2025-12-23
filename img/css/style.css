@@ -1,0 +1,936 @@
+/* Base Reset & Fonts */
+:root {
+    --primary-color: #0c647c;
+    --primary-dark: #084a5c;
+    --secondary-color: #f4f6f8;
+    --text-color: #333;
+    --text-light: #666;
+    --white: #ffffff;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --radius: 12px;
+}
+
+body.dark-mode {
+    --primary-color: #0dcaf0;
+    /* Brighter blue for dark mode */
+    --primary-dark: #0096b1;
+    --secondary-color: #1a2332;
+    /* Dark background for inputs */
+    --text-color: #e2e8f0;
+    --text-light: #94a3b8;
+    --white: #1e293b;
+    /* Dark card background */
+    background-color: #0f172a;
+    /* Very dark page background */
+    color: var(--text-color);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f6f8;
+    /* Softer background */
+    color: var(--text-color);
+    margin: 0;
+    font-size: 17px;
+    /* Increased readability */
+    line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
+
+    a,
+    button,
+    .btn,
+    .filter-card,
+    .tab-btn {
+        cursor: pointer;
+        /* Critical for iOS touch events */
+        position: relative;
+        z-index: 10;
+        /* Ensure clickable above potential overlays */
+    }
+
+    /* Ensure nothing covers the content */
+    .dashboard-container {
+        position: relative;
+        z-index: 5;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* Header */
+    .main-header {
+        background: var(--white);
+        padding: 1rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .header-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .logo img {
+        height: 130px;
+    }
+
+    .search-bar {
+        flex-grow: 1;
+        margin: 0 2rem;
+        position: relative;
+        max-width: 600px;
+        /* Wider */
+    }
+
+    .search-bar input {
+        width: 100%;
+        padding: 1.2rem 2rem;
+        /* Larger touch area */
+        padding-right: 90px;
+        border: 2px solid #ddd;
+        border-radius: 50px;
+        background: var(--white);
+        outline: none;
+        transition: all 0.3s;
+        font-size: 1.2rem;
+        /* Bigger text */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .search-bar input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(12, 100, 124, 0.15);
+    }
+
+    .search-bar button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .search-bar button[type="submit"] {
+        right: 15px;
+        color: var(--primary-color);
+        font-size: 1.4rem;
+    }
+
+    #voiceSearchBtn {
+        right: 55px;
+        /* Positioned left of submit */
+        color: #555;
+        font-size: 1.3rem;
+        padding: 5px;
+        border-radius: 50%;
+    }
+
+    #voiceSearchBtn:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+        color: #D52B1E;
+    }
+
+    .search-bar button:hover {
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .main-nav ul {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .main-nav a {
+        font-weight: 500;
+        color: var(--text-color);
+        font-size: 0.95rem;
+    }
+
+    .main-nav a.active,
+    .main-nav a:hover {
+        color: var(--primary-color);
+    }
+
+    .mobile-toggle {
+        display: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    /* Dashboard Container */
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        min-height: 80vh;
+    }
+
+    .dashboard-intro {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .dashboard-intro h1 {
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .dashboard-intro p {
+        color: var(--text-light);
+    }
+
+    /* Tabs */
+    .dashboard-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        padding: 0.8rem 2rem;
+        border: none;
+        background: var(--white);
+        border-radius: 50px;
+        font-weight: 600;
+        color: var(--text-light);
+        cursor: pointer;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s;
+    }
+
+    .tab-btn.active,
+    .tab-btn:hover {
+        background: var(--primary-color);
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    /* Filter Cards */
+    .filter-section {
+        display: none;
+        animation: fadeIn 0.4s ease;
+    }
+
+    .filter-section.active {
+        display: block;
+    }
+
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* Modernized Card Styles */
+    /* Base Card Style */
+    /* Modernized Card Styles - SIMPLIFIED */
+    .filter-card {
+        background: var(--white);
+        padding: 1.5rem;
+        border-radius: 16px;
+        /* Softer radius */
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+        border: 2px solid transparent;
+        /* Prepare for hover */
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .filter-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--primary-color);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Clearer Icons */
+    .filter-card i {
+        font-size: 2.8rem;
+        /* Bigger icons */
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+        background: none;
+        /* Removed gradient text for clarity */
+        -webkit-text-fill-color: initial;
+        transition: transform 0.3s;
+    }
+
+    .filter-card:hover i {
+        transform: scale(1.1);
+    }
+
+    /* Removed complex decor (::before, ::after, watermark) for simplicity */
+    .filter-card::before,
+    .filter-card::after,
+    .watermark-icon {
+        display: none;
+    }
+
+    /* Book Card Enhancements */
+    .book-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .book-card:hover {
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        transform: translateY(-8px);
+    }
+
+    .book-cover {
+        background: #f8f9fa; /* Lighter background */
+        height: 280px; /* Increased from 200px */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        padding: 10px; /* Add padding */
+    }
+
+    .book-cover img {
+        max-height: 100%; /* Fill the container height */
+        width: auto;
+        max-width: 100%; /* Prevent overflow */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        object-fit: contain; /* Ensure aspect ratio */
+        transition: transform 0.3s;
+    }
+
+    /* Hover effect for image */
+    .book-card:hover .book-cover img {
+        transform: scale(1.05);
+    }
+
+    .book-info {
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .book-info h4 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+        font-weight: 600;
+    }
+
+    .badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: var(--primary-color);
+        color: white;
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+    }
+
+    /* Footer */
+    .main-footer {
+        background: var(--white);
+        padding: 3rem 0;
+        margin-top: 5rem;
+    }
+
+    border-top: 1px solid #eee;
+}
+
+.social-links a {
+    display: inline-block;
+    margin: 0 10px;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+/* Active Filter State */
+.filter-card.selected {
+    border: 2px solid var(--primary-color);
+    background: #f0f9ff;
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.filter-card.selected i {
+    transform: scale(1.2);
+}
+
+/* Mobile Header Redesign - TOP DECK STYLE (Iteration 2) */
+@media (max-width: 768px) {
+    .header-container {
+        display: flex !important;
+        flex-direction: column !important;
+        /* Stacked */
+        align-items: center !important;
+        text-align: center;
+        padding: 1rem;
+        position: relative;
+        height: auto;
+        /* Dynamic height */
+    }
+
+    /* 1. Logo - Big & Centered */
+    .logo {
+        order: 1;
+        width: 100%;
+        margin-bottom: 1rem !important;
+        margin-top: 0.5rem;
+        display: flex;
+        justify-content: center;
+        z-index: 101;
+    }
+
+    .logo img {
+        height: 80px !important;
+        /* BIG Logo */
+        width: auto !important;
+        max-width: 250px;
+        object-fit: contain;
+    }
+
+    /* 2. Search Bar - Below Logo, Always Visible */
+    .search-bar {
+        display: block !important;
+        /* Always visible */
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        order: 2;
+        width: 100%;
+        margin: 0 !important;
+        background: transparent;
+        padding: 0;
+        box-shadow: none;
+        animation: none;
+        z-index: 100;
+    }
+
+    .search-bar form {
+        display: flex;
+        justify-content: center;
+    }
+
+    .search-bar input {
+        background: #f4f6f8;
+        /* Contrast against white header */
+        border: 1px solid #e1e1e1;
+        /* Add subtle shadow for pop */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Hide the separate Toggle Button we made earlier */
+    .mobile-search-toggle {
+        display: none !important;
+    }
+
+    /* 3. Menu Toggle - Absolute Top Right */
+    .mobile-toggle {
+        display: block !important;
+        position: absolute !important;
+        top: 25px;
+        right: 20px;
+        font-size: 1.8rem;
+        color: var(--primary-color);
+        z-index: 105;
+    }
+
+    /* 4. Hide Flag */
+    .header-flag {
+        display: none !important;
+    }
+
+    /* Navigation - Off-canvas Style (Still good) */
+    .main-nav {
+        display: block;
+        position: fixed;
+        top: 0;
+        /* Full height */
+        left: 0;
+        width: 80%;
+        /* Drawer style */
+        max-width: 300px;
+        height: 100vh;
+        background: var(--white);
+        transform: translateX(-100%);
+        /* Left drawer */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 200;
+        /* Top of everything */
+        padding: 4rem 2rem 2rem 2rem;
+        /* Space for close btn */
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .main-nav.open {
+        transform: translateX(0);
+        opacity: 1 !important;
+    }
+
+    /* Add overlay for menu */
+    .main-nav.open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 100%;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
+
+    .main-nav ul {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: left;
+        /* Menu list align left */
+    }
+
+    .main-nav a {
+        font-size: 1.2rem;
+        display: block;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* Grid Adjustments - WIDE CARDS (1 Col) */
+    .card-grid {
+        grid-template-columns: 1fr;
+        /* Single Column for Premium Feel */
+        gap: 1.5rem;
+        /* More breathing room */
+        padding: 1rem;
+    }
+
+    /* Book Card - Horizontal/Rich Layout */
+    .book-card {
+        flex-direction: row;
+        /* Horizontal layout */
+        align-items: center;
+        min-height: 140px;
+        padding: 0.5rem;
+    }
+
+    .book-cover {
+        width: 100px;
+        /* Fixed width cover */
+        height: 100% !important;
+        min-height: 120px;
+        background: transparent;
+        flex-shrink: 0;
+        border-radius: 8px;
+    }
+
+    .book-cover img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .book-info {
+        text-align: left;
+        padding: 0.5rem 1rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .book-info h4 {
+        font-size: 1.1rem !important;
+        /* Bigger Title */
+        margin-bottom: 0.25rem;
+        white-space: normal;
+        /* Allow wrap */
+        overflow: visible;
+        font-weight: 700;
+    }
+
+    .book-info p {
+        font-size: 0.85rem !important;
+        margin-bottom: 0.5rem;
+    }
+
+    .book-info .btn-outline-primary {
+        align-self: flex-start;
+        font-size: 0.8rem;
+        padding: 0.3rem 1rem;
+    }
+
+    .hero-content {
+        padding: 2rem 1rem;
+    }
+
+    .dashboard-intro h1 {
+        font-size: 1.8rem;
+    }
+}
+
+/* PARAGUAYAN CULTURAL THEME PACK */
+
+/* 1. Tricolor Header Border */
+.main-header {
+    border-bottom: 3px solid transparent;
+    border-image: linear-gradient(to right, #D52B1E 33%, #FFFFFF 33%, #FFFFFF 66%, #0038A8 66%) 1;
+}
+
+/* 2. Tricolor Card Hover Effect */
+.filter-card:hover {
+    border-bottom: 3px solid transparent;
+    border-image: linear-gradient(to right, #D52B1E 33%, #FFFFFF 33%, #FFFFFF 66%, #0038A8 66%) 1;
+}
+
+/* 3. Escarapela Decoration (CSS Only) */
+.escarapela-deco {
+
+    /* Ensure mobile toggle is clickable above other headers */
+    .mobile-toggle {
+        z-index: 9999 !important;
+    }
+
+    /* Prevent menu overlay from trapping clicks when closed */
+    .main-nav:not(.open) {
+        pointer-events: none;
+    }
+
+    .main-nav:not(.open) * {
+        pointer-events: none;
+    }
+
+    /* Re-enable pointer events for toggle even if nav is somehow weird */
+    .mobile-toggle {
+        pointer-events: auto !important;
+    }
+
+    border-radius: 50%;
+    background: radial-gradient(circle, #0038A8 30%, #FFFFFF 30%, #FFFFFF 60%, #D52B1E 60%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* 4. Ñandutí Inspired Background Pattern (Subtle) */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle at 100% 100%, rgba(200, 200, 200, 0.05) 10%, transparent 10%),
+        radial-gradient(circle at 0% 100%, rgba(200, 200, 200, 0.05) 10%, transparent 10%),
+        radial-gradient(circle at 100% 0%, rgba(200, 200, 200, 0.05) 10%, transparent 10%),
+        radial-gradient(circle at 0% 0%, rgba(200, 200, 200, 0.05) 10%, transparent 10%);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* 5. "Tereré" vibe - earthy tones for footer or accents if needed */
+/* Currently keeping it clean as per "no overload" request */
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1);
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--text-light);
+    transition: color 0.3s;
+    z-index: 10;
+}
+
+.close-modal:hover {
+    color: var(--primary-color);
+}
+
+.modal-body {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.modal-image {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--secondary-color);
+    border-radius: var(--radius);
+    padding: 1rem;
+}
+
+.modal-image img {
+    max-width: 100%;
+    max-height: 300px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+}
+
+.modal-details {
+    flex: 1.5;
+    min-width: 300px;
+}
+
+.modal-details h2 {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.modal-details .description {
+    color: var(--text-color);
+    margin: 1.5rem 0;
+    opacity: 0.9;
+}
+
+.modal-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    padding: 1rem 2rem;
+    /* Larger buttons */
+    border-radius: 50px;
+    text-align: center;
+    display: inline-block;
+    border: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    /* More visible text */
+    box-shadow: 0 4px 10px rgba(12, 100, 124, 0.3);
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: scale(1.02);
+    box-shadow: 0 6px 15px rgba(12, 100, 124, 0.4);
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    background: transparent;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+}
+
+/* Hero Section - SIMPLIFIED */
+.hero-section {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 3rem;
+    /* Spacious */
+    position: relative;
+    box-shadow: var(--shadow-sm);
+    /* Subtler shadow */
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+}
+
+/* Cleaner Background */
+.hero-bg-accent {
+    display: none;
+    /* Remove distraction */
+}
+
+.hero-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    gap: 2rem;
+}
+
+.hero-text {
+    flex: 1;
+    max-width: 600px;
+}
+
+.hero-text h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.hero-image {
+    flex: 0.8;
+    display: flex;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+.hero-image img {
+    max-height: 280px;
+    transform: rotateY(-10deg) rotateX(5deg);
+    box-shadow: -15px 20px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    transition: transform 0.5s ease;
+}
+
+.hero-image:hover img {
+    transform: rotateY(0) rotateX(0) scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .hero-content {
+        flex-direction: column-reverse;
+        text-align: center;
+    }
+
+    .hero-text h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero-image img {
+        max-height: 200px;
+        transform: none;
+    }
+
+    .hero-actions {
+        justify-content: center;
+    }
+}
+
+/* Admin Dashboard Styles */
+#pane-dashboard .card {
+    border: none;
+    border-radius: 15px;
+    transition: transform 0.2s;
+}
+
+#pane-dashboard .card:hover {
+    transform: translateY(-2px);
+}
+
+#pane-dashboard .btn {
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+#pane-dashboard .btn:hover {
+    transform: scale(1.05);
+}
+
+#adminDashboardModal .modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+#adminDashboardModal .modal-title {
+    font-weight: 700;
+}
+
+#recent-activity .list-group-item {
+    border: none;
+    padding: 0.75rem 0;
+    font-size: 0.9rem;
+}
