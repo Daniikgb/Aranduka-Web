@@ -67,6 +67,12 @@
             box-shadow: var(--shadow-sm);
             border-bottom: 3px solid transparent;
             border-image: linear-gradient(to right, var(--py-red) 33%, #FFFFFF 33%, #FFFFFF 66%, var(--py-blue) 66%) 1;
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .header-hidden {
+            transform: translateY(-100%);
+            box-shadow: none;
         }
 
         .header-container {
@@ -197,7 +203,8 @@
             display: flex;
             align-items: center;
             min-height: 80vh;
-            padding: 4rem 2rem;
+            min-height: 80vh;
+            padding: 8rem 2rem;
             position: relative;
             background-image: linear-gradient(rgba(54, 69, 79, 0.8), rgba(54, 69, 79, 0.8)), url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
@@ -324,7 +331,7 @@
         /* --- Advantages Row --- */
         .advantages {
             background-color: var(--white);
-            padding: 5rem 2rem;
+            padding: 8rem 2rem;
             text-align: center;
         }
 
@@ -555,30 +562,16 @@
             margin-bottom: 4rem;
         }
 
-        /* Mobile Optimization for Tabs */
-        @media (max-width: 768px) {
-            .dashboard-tabs {
-                gap: 0.5rem;
-                margin-bottom: 1.5rem;
-            }
 
-            .tab-btn {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.9rem;
-                flex: 1 1 auto;
-                /* Make tabs grow to fill width evenly */
-                text-align: center;
-            }
-        }
 
         /* Mobile Optimization for Filter Cards */
         @media (max-width: 768px) {
             .card-grid {
                 grid-template-columns: repeat(2, 1fr);
-                /* Force 2 columns on mobile */
-                gap: 1rem;
+                gap: 1.5rem;
                 margin-bottom: 2rem;
             }
+
 
             .filter-card {
                 padding: 1.5rem 1rem;
@@ -1157,44 +1150,64 @@
 
         @media (max-width: 576px) {
             .hero {
-                padding: 6rem 1rem 3rem;
-                /* More top padding for static header */
+                padding: 8rem 1rem 4rem;
             }
 
             .hero h1 {
-                font-size: 2.2rem;
-                line-height: 1.1;
+                font-size: 2.5rem;
+                line-height: 1.2;
                 margin-bottom: 20px;
             }
 
+            /* 2 Column Mobile and Compressed Cards */
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+                padding: 0 !important;
+            }
+
             .book-card {
-                margin: 0 auto 2rem;
-                max-width: 320px;
-                /* Center single column cards */
+                margin: 0 0 1rem 0;
+                max-width: none;
+                border-radius: 12px;
             }
 
-            /* Fix Buttons Touch Area */
-            .btn {
-                min-height: 44px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
+            .book-cover {
+                height: 160px;
+                border-radius: 12px 12px 0 0;
             }
 
-            /* Full width buttons on mobile */
+            .book-info {
+                padding: 1rem;
+            }
+
+            .book-info h4 {
+                font-size: 0.9rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .book-info p {
+                font-size: 0.75rem;
+                margin-bottom: 0.8rem;
+            }
+
+            /* Compact Buttons */
             .book-actions .btn {
                 width: 100%;
-                margin-bottom: 0.5rem;
-                display: block;
+                margin-bottom: 0.4rem;
+                display: flex;
+                padding: 0.4rem;
+                font-size: 0.75rem;
+                border-radius: 8px;
             }
 
-            /* Reduce Dashboard Padding on Mobile */
+            /* Dashboard Padding */
             .dashboard-main-area {
-                padding: 2rem 1rem 5rem;
+                padding: 3rem 1rem 5rem;
             }
 
             .dashboard-header-bg {
-                padding: 5rem 1rem 3rem;
+                padding: 5rem 1rem 2rem;
             }
 
             /* Prevent iOS Zoom on inputs */
@@ -2199,6 +2212,24 @@
         });
     </script>
 
+    <script>
+        // Auto-Hide Header Script
+        let lastScrollTop = 0;
+        const header = document.querySelector('.main-header');
+
+        window.addEventListener('scroll', function () {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scroll Down -> Hide
+                header.classList.add('header-hidden');
+            } else {
+                // Scroll Up -> Show
+                header.classList.remove('header-hidden');
+            }
+            lastScrollTop = scrollTop;
+        });
+    </script>
 </body>
 
 </html>
