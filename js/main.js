@@ -249,14 +249,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return `
             <div class="book-card quick-view-trigger" data-id="${book.id}">
                 <button class="btn btn-sm fav-btn" data-id="${book.id}" aria-label="Añadir a favoritos"
-                    style="position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(255,255,255,0.9); border-radius: 50%; width: 35px; height: 35px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    style="position: absolute; top: 8px; left: 8px; z-index: 25; background: rgba(255,255,255,0.9); border-radius: 50%; width: 35px; height: 35px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
                     <i class="${heartClass}"></i>
                 </button>
                 ${adminControls}
                 <div class="book-cover">
                     <div class="book-spine"></div>
                     <img src="${book.image}" alt="${book.title}" loading="lazy" onerror="this.src='img/portadas/default_cover.png';">
-                    <span class="book-status-badge">Disponible</span>
+                    
                 </div>
                 <div class="book-info">
                     <h4>${book.title}</h4>
