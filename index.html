@@ -2247,9 +2247,15 @@
             }
 
             /* Use display: contents to reorder children directly */
+            /* AND FLEX SHRINK FIX */
             .modal-col-image,
             .modal-col-info {
                 display: contents !important;
+            }
+
+            /* GLOBAL FLEX SHRINK PREVENTION FOR MOBILE MODAL ITEMS */
+            #quickViewModal .modal-row-main>* {
+                flex-shrink: 0 !important;
             }
 
             /* ORDERING */
