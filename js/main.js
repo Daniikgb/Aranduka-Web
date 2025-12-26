@@ -659,10 +659,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     sec.classList.add('active');
 
                     // 3. Auto-Scroll Logic: Targeted for flow
-                    // If switching to selections or subjects, scroll to see the options
-                    if (targetId === 'secciones' || targetId === 'materias') {
-                        smoothScrollTo(sec, 150);
-                    }
+                    // Execute after a slight delay to ensure the browser has repainted the new section
+                    setTimeout(() => {
+                        smoothScrollTo(sec, 140);
+                    }, 50);
                 }
             });
 
