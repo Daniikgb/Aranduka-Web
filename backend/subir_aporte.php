@@ -16,7 +16,8 @@ $usuario_id = $_POST['usuario_id'] ?? null; // ID del usuario que sube (enviado 
 
 // Validar archivo
 if (!isset($_FILES['archivo']) || $_FILES['archivo']['error'] !== UPLOAD_ERR_OK) {
-    echo json_encode(['success' => false, 'message' => 'Error al subir el archivo.']);
+    $errCode = $_FILES['archivo']['error'] ?? 'No file';
+    echo json_encode(['success' => false, 'message' => "Error al subir el archivo. Código PHP: $errCode"]);
     exit;
 }
 
@@ -31,13 +32,25 @@ if (!in_array($ext, $allowed)) {
 
 // Generar nombre único y mover
 $nuevo_nombre = uniqid('aporte_') . '.' . $ext;
-$ruta_destino = 'uploads/' . $nuevo_nombre;
+// Fix: Use absolute path to ensure correct resolution
+$upload_dir = __DIR__ . '/uploads/';
+
+// Crear carpeta si no existe
+if (!is_dir($upload_dir)) {
+    if (!mkdir($upload_dir, 0777, true)) {
+         echo json_encode(['success' => false, 'message' => 'Error interno: No se pudo crear carpeta uploads.']);
+         exit;
+    }
+}
+
+$ruta_destino = $upload_dir . $nuevo_nombre;
+$ruta_web = 'backend/uploads/' . $nuevo_nombre; // Ruta para guardar en la BD
 
 if (move_uploaded_file($archivo['tmp_name'], $ruta_destino)) {
-    // Guardar en BD
+    // Guardar en BD (guardamos la ruta relativa para la web)
     try {
         $stmt = $pdo->prepare("INSERT INTO aportes (usuario_id, titulo, descripcion, categoria, archivo_url, estado) VALUES (?, ?, ?, ?, ?, 'pendiente')");
-        $stmt->execute([$usuario_id, $titulo, $descripcion, $categoria, $ruta_destino]);
+        $stmt->execute([$usuario_id, $titulo, $descripcion, $categoria, $ruta_web]);
         
         echo json_encode(['success' => true, 'message' => 'Aporte subido correctamente. Pendiente de aprobación.']);
     } catch (PDOException $e) {

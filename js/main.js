@@ -12,6 +12,28 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentUser = JSON.parse(localStorage.getItem('aranduka_currentUser')) || null;
     let currentFilter = { type: 'all', value: '' };
     let currentSort = 'az';
+    let isNavigatingHistory = false;
+
+    // Handle Browser Back Button
+    window.addEventListener('popstate', (event) => {
+        isNavigatingHistory = true;
+        if (event.state) {
+            if (event.state.view === 'grid') {
+                showGradeGrid(event.state.level);
+            } else if (event.state.modal === 'quickView') {
+                // If we pop back to a modal state (rare if handled by close)
+                // usually we pop FROM a modal state TO a null state.
+            }
+        } else {
+            // Default State (Close Modals, Reset Views)
+            $('#quickViewModal').removeClass('active');
+            $('.modal').modal('hide');
+            renderBooks('all');
+            document.getElementById('books-container').style.display = 'grid';
+            elements.introTitle.innerText = "Explora nuestros materiales";
+        }
+        isNavigatingHistory = false;
+    });
 
     // DOM Elements
     const elements = {
@@ -19,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
         authRequiredModal: $('#authRequiredModal'),
         adminDashboardModal: $('#adminDashboardModal'),
         booksContainer: document.getElementById('books-container'),
-        introTitle: document.querySelector('.section-header p') || document.getElementById('viewTitle'),
+        introTitle: document.querySelector('.dashboard-header-bg .section-header p') || document.getElementById('viewTitle'),
         viewTitle: document.getElementById('viewTitle'),
         searchInput: document.getElementById('searchInput'),
         sortSelect: document.getElementById('sortBooks'),
@@ -27,8 +49,17 @@ document.addEventListener('DOMContentLoaded', function () {
         tabs: document.querySelectorAll('.tab-btn'),
         sections: document.querySelectorAll('.filter-section'),
         adminTableBody: document.getElementById('admin-users-table-body'),
-        voiceBtn: document.getElementById('voiceSearchBtn')
+        voiceBtn: document.getElementById('voiceSearchBtn'),
+        loginBtn: document.getElementById('loginBtn')
     };
+
+    // Auth Listeners
+    if (elements.loginBtn) {
+        elements.loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            elements.loginModal.modal('show');
+        });
+    }
 
     // ==========================================
     // 1. DATA (CATALOGO DIGITAL & HIERARCHY)
@@ -191,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    // --- DEMO MOCK LOGIN (For GitHub Pages) ---
+    // --- REAL BACKEND LOGIN ---
     $('#studentLoginForm').on('submit', async function (e) {
         e.preventDefault();
         const ci = $(this).find('input[name="ci"]').val().trim();
@@ -199,31 +230,85 @@ document.addEventListener('DOMContentLoaded', function () {
 
         Swal.showLoading();
 
-        // SIMULATION
-        setTimeout(() => {
-            const mockUser = {
-                id: 1,
-                nombre_completo: "Estudiante Demo",
-                role: (ci === 'admin') ? 'admin' : 'student' // Simple backdoor for demo
-            };
-            localStorage.setItem('aranduka_currentUser', JSON.stringify(mockUser));
-            checkSession();
-            elements.loginModal.modal('hide');
-            Swal.fire('¡Bienvenido!', `Modo Demo Activado. Hola ${mockUser.nombre_completo}`, 'success').then(() => location.reload());
-        }, 800);
+        try {
+            const formData = new FormData();
+            formData.append('ci', ci);
+
+            const response = await fetch('backend/login.php', {
+                method: 'POST',
+                body: JSON.stringify({ ci: ci }), // Send as JSON as preferred by backend logic
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                // Login Success
+                localStorage.setItem('aranduka_currentUser', JSON.stringify(data.user));
+                checkSession();
+                elements.loginModal.modal('hide');
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Bienvenido!',
+                    text: data.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => location.reload());
+            } else {
+                Swal.fire('Error de Acceso', data.message, 'error');
+            }
+        } catch (error) {
+            console.error(error);
+            Swal.fire('Error', 'No se pudo conectar con el servidor.', 'error');
+        }
     });
 
+    // --- REAL BACKEND REGISTER ---
     $('#studentRegisterForm').on('submit', async function (e) {
         e.preventDefault();
+
+        // Basic Client Validation
+        const form = this;
+        const ci = form.ci.value.trim();
+        const nombre = form.nombre.value.trim();
+
+        if (!ci || !nombre) {
+            return Swal.fire('Atención', 'Completá los campos obligatorios.', 'warning');
+        }
+
         Swal.showLoading();
-        // SIMULATION
-        setTimeout(() => {
-            const mockUser = { id: 2, nombre_completo: "Nuevo Usuario", role: 'student' };
-            localStorage.setItem('aranduka_currentUser', JSON.stringify(mockUser));
-            checkSession();
-            elements.loginModal.modal('hide');
-            Swal.fire('¡Registrado!', 'Cuenta Demo creada correctamente.', 'success').then(() => location.reload());
-        }, 800);
+
+        // Prepare Data
+        const formData = {
+            ci: ci,
+            nombre: nombre,
+            telefono: form.telefono.value,
+            email: form.email.value,
+            colegio: form.colegio.value,
+            password: '' // Backend will handle default
+        };
+
+        try {
+            const response = await fetch('backend/registro.php', {
+                method: 'POST',
+                body: JSON.stringify(formData),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                // Auto Login on Register Success
+                localStorage.setItem('aranduka_currentUser', JSON.stringify(data.user));
+                checkSession();
+                elements.loginModal.modal('hide');
+                Swal.fire('¡Registrado!', data.message, 'success').then(() => location.reload());
+            } else {
+                Swal.fire('Error', data.message, 'error');
+            }
+        } catch (error) {
+            console.error('Registration Error:', error);
+            // Show more specific error if available from response parsing failure or network
+            Swal.fire('Error', `Hubo un problema al registrar: ${error.message || error}`, 'error');
+        }
     });
 
     document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
@@ -240,14 +325,29 @@ document.addEventListener('DOMContentLoaded', function () {
     function generateCard(book, favorites) {
         const isFav = favorites.includes(book.id);
         const heartClass = isFav ? 'fas fa-heart text-danger' : 'far fa-heart text-muted';
+        const user = JSON.parse(localStorage.getItem('aranduka_currentUser'));
+
         let adminControls = isAdmin() ? `
-            <button class="btn btn-sm shadow" onclick="deleteBook(${book.id})" 
-                style="position: absolute; top: 15px; right: 15px; z-index: 25; background: white; border-radius: 50%; width: 35px; height: 35px; color: #dc3545; border:none;">
+            <button class="btn btn-sm shadow" onclick="deleteBook(${book.id}); event.stopPropagation();" 
+                style="position: absolute; top: 15px; left: 50px; z-index: 25; background: white; border-radius: 50%; width: 35px; height: 35px; color: #dc3545; border:none;">
                 <i class="fas fa-trash"></i>
             </button>` : '';
 
+        // Quick Download (Only if logged in)
+        let quickAction = '';
+        if (user) {
+            quickAction = `
+                <button class="quick-download-btn ml-2" onclick="handleQuickDownload(${book.id}); event.stopPropagation();" title="Descarga Rápida">
+                    <i class="fas fa-download"></i>
+                </button>
+            `;
+        }
+
         return `
             <div class="book-card quick-view-trigger" data-id="${book.id}">
+                <!-- PDF Badge -->
+                <span class="pdf-badge">PDF</span>
+
                 <button class="btn btn-sm fav-btn" data-id="${book.id}" aria-label="Añadir a favoritos"
                     style="position: absolute; top: 8px; left: 8px; z-index: 25; background: rgba(255,255,255,0.9); border-radius: 50%; width: 35px; height: 35px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
                     <i class="${heartClass}"></i>
@@ -256,13 +356,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="book-cover">
                     <div class="book-spine"></div>
                     <img src="${book.image}" alt="${book.title}" loading="lazy" onerror="this.src='img/portadas/default_cover.png';">
-                    
                 </div>
                 <div class="book-info">
                     <h4>${book.title}</h4>
                     <p>${book.category.replace(/-/g, ' ').toUpperCase()}</p>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center align-items-center">
                         <button type="button" class="btn btn-outline-primary btn-sm px-4">Ver Detalles</button>
+                        ${quickAction}
                     </div>
                 </div>
             </div>`;
@@ -317,6 +417,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
+        // Update Breadcrumbs
+        updateBreadcrumbs(parentLevel, filterType === 'filter' ? filterValue : null);
+
         if (parentLevel && filterType !== 'all' && filterType !== 'search') {
             const gradesInLevel = educationLevels[parentLevel];
             let gradeButtons = '';
@@ -355,6 +458,20 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             filtered.forEach(book => {
                 container.insertAdjacentHTML('beforeend', generateCard(book, favorites));
+            });
+
+            // --- SCROLL ANIMATION: Observer Hook ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.book-card').forEach(card => {
+                observer.observe(card);
             });
         }
     };
@@ -458,16 +575,27 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('click', handleGlobalClick);
 
     // Search Input
-    elements.searchInput?.addEventListener('input', (e) => {
-        const val = e.target.value;
-        if (val.length > 2) {
+    // Search Input Logic (Input + Submit)
+    const handleSearch = (val) => {
+        if (val.length > 0) {
             elements.introTitle.innerText = `Resultados: "${val}"`;
             renderBooks('search', val);
             scrollToResults();
-        } else if (val.length === 0) {
+        } else {
             elements.introTitle.innerText = "Explora nuestros materiales";
             renderBooks('all');
         }
+    };
+
+    elements.searchInput?.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if (val.length > 2 || val.length === 0) handleSearch(val);
+    });
+
+    document.getElementById('searchForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const val = elements.searchInput.value;
+        handleSearch(val);
     });
 
     // RESTORED: Voice Search
@@ -531,14 +659,21 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
-    // 6. MODALS & UI COMPONENTS
+    // 6. MODALS & UI COMPONENTS (History Enhanced)
     // ==========================================
 
-    function openBookModal(id) {
+    window.openBookModal = function (id) {
         const book = books.find(b => b.id === id);
         if (!book) return;
 
+        // Store ID for Share Button
         const m = document.getElementById('quickViewModal');
+        m.dataset.bookId = id;
+
+        // History Push with Hash for Sharing
+        if (!isNavigatingHistory) {
+            history.pushState({ modal: 'quickView', id: id }, '', `#book-${id}`);
+        }
         document.getElementById('modalBookImage').src = book.image;
         document.getElementById('modalBookTitle').innerText = book.title;
         document.getElementById('modalBookDescription').innerText = book.description || 'Sin descripción';
@@ -556,9 +691,85 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
+        // --- RELATED BOOKS LOGIC ---
+        const relatedContainer = document.getElementById('relatedBooksContainer');
+        if (relatedContainer) {
+            const related = books.filter(b => (b.level === book.level || b.category === book.category) && b.id !== book.id)
+                .sort(() => 0.5 - Math.random()) // Shuffle
+                .slice(0, 3);
+
+            if (related.length > 0) {
+                let relatedHtml = '<h5 class="mt-4 mb-3" style="font-weight:700; color:#333;">También te podría interesar:</h5><div class="row">';
+                related.forEach(rb => {
+                    relatedHtml += `
+                        <div class="col-4 text-center cursor-pointer" onclick="openBookModal(${rb.id})">
+                            <img src="${rb.image}" class="img-fluid rounded shadow-sm mb-2 hover-up" style="max-height: 100px;">
+                            <p class="small text-muted text-truncate">${rb.title}</p>
+                        </div>
+                    `;
+                });
+                relatedHtml += '</div>';
+                relatedContainer.innerHTML = relatedHtml;
+                relatedContainer.style.display = 'block';
+            } else {
+                relatedContainer.style.display = 'none';
+            }
+        }
+
         document.getElementById('modalDownloadBtn').href = book.file;
         m.classList.add('active');
-        m.querySelector('.close-modal').onclick = () => m.classList.remove('active');
+
+        // Manual Close handles History Back
+        m.querySelector('.close-modal').onclick = () => {
+            if (!isNavigatingHistory) history.back();
+            m.classList.remove('active');
+        };
+    };
+
+    window.shareBook = function (id) {
+        const book = books.find(b => b.id === id);
+        const url = `${window.location.origin}${window.location.pathname}#book-${id}`;
+
+        if (navigator.share) {
+            navigator.share({
+                title: book.title,
+                text: `¡Mira este libro en Aranduka: ${book.title}!`,
+                url: url
+            }).catch(console.error);
+        } else {
+            // Fallback: Copy to clipboard or open WhatsApp
+            const text = `¡Mira este libro en Aranduka: ${book.title}! ${url}`;
+
+            // Try clipboard first
+            navigator.clipboard.writeText(text).then(() => {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Enlace copiado al portapapeles',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }).catch(() => {
+                // Final fallback: WhatsApp
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+            });
+        }
+    };
+
+    // Check Deep Link on Load
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#book-')) {
+        const bookId = parseInt(hash.replace('#book-', ''));
+        if (!isNaN(bookId)) {
+            // Slight delay to ensure books are loaded/rendered if they come from async (though currently static/local)
+            // Ideally we wait for fetch, but here books are likely available or we need to ensure they are. 
+            // Assuming 'books' array is available. IF it's async populated later, we might need a hook.
+            // For now, simple check:
+            setTimeout(() => {
+                if (typeof openBookModal === 'function') openBookModal(bookId);
+            }, 500);
+        }
     }
 
     function toggleFavorite(id, btnElem) {
@@ -610,8 +821,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (typeof $ !== 'undefined') $('#heroCarousel').carousel({ interval: 4000, pause: 'hover' });
     }
 
-    // RESTORED: Grade Grid with Cards
+    // RESTORED: Grade Grid with Cards (History Enhanced)
     window.showGradeGrid = function (level) {
+        // Push state for Back Button support
+        if (!isNavigatingHistory) {
+            history.pushState({ view: 'grid', level: level }, '', `#nivel-${level.replace(/\s+/g, '-')}`);
+        }
+
         const container = elements.booksContainer;
         container.style.display = 'block';
         elements.introTitle.innerText = `Nivel: ${level.toUpperCase()}`;
@@ -681,6 +897,67 @@ document.addEventListener('DOMContentLoaded', function () {
                 renderBooks(currentFilter.type, currentFilter.value);
                 Swal.fire('Eliminado', '', 'success');
             }
+        });
+    };
+
+    // Breadcrumbs Logic
+    window.updateBreadcrumbs = function (level, category) {
+        const container = document.getElementById('breadcrumbs');
+        if (!container) return;
+
+        let html = '<a href="#" class="breadcrumb-link" onclick="location.reload()">Inicio</a>';
+
+        if (level && level !== 'all') {
+            html += ` <span>/</span> <a href="#" class="breadcrumb-link" onclick="showGradeGrid('${level}')" style="text-transform:capitalize">${level.replace(/-/g, ' ')}</a>`;
+            container.style.display = 'inline-block';
+        } else {
+            container.style.display = 'none'; // Hide on simple "all" view if preferred, or keep generic
+        }
+
+        if (category) {
+            html += ` <span>/</span> <span class="current" style="text-transform:capitalize">${category.replace(/-/g, ' ')}</span>`;
+            container.style.display = 'inline-block';
+        }
+
+        container.innerHTML = html;
+    };
+
+    // Handle Sticky Tabs
+    const tabsContainer = document.querySelector('.dashboard-tabs');
+    if (tabsContainer) {
+        document.addEventListener('scroll', () => {
+            // Toggle sticky based on scroll
+            if (window.scrollY > 350) {
+                tabsContainer.classList.add('sticky');
+            } else {
+                tabsContainer.classList.remove('sticky');
+            }
+        }, { passive: true });
+    }
+
+    // Quick Download Handler
+    window.handleQuickDownload = function (bookId) {
+        const book = books.find(b => b.id === bookId);
+        if (!book) return;
+
+        const user = JSON.parse(localStorage.getItem('aranduka_currentUser'));
+        if (!user) return Swal.fire('Error', 'Debes iniciar sesión', 'error');
+
+        // Trigger Download
+        const link = document.createElement('a');
+        link.href = book.file;
+        link.download = `${book.title}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: 'Descarga iniciada',
+            showConfirmButton: false,
+            timer: 2000
         });
     };
 

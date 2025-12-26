@@ -2,6 +2,9 @@
 // backend/registro.php
 header('Content-Type: application/json');
 require 'conexion.php';
+// Disable error display to avoid breaking JSON
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
 
 // Recibir datos JSON o POST normal
 $input = json_decode(file_get_contents('php://input'), true);
@@ -19,9 +22,14 @@ $colegio = $input['colegio'] ?? '';
 $password = $input['password'] ?? '';
 
 // 1. Validaciones básicas
-if (empty($ci) || empty($nombre) || empty($password)) {
-    echo json_encode(['success' => false, 'message' => 'Faltan datos obligatorios (CI, Nombre o Contraseña).']);
+if (empty($ci) || empty($nombre)) {
+    echo json_encode(['success' => false, 'message' => 'Faltan datos obligatorios (CI o Nombre).']);
     exit;
+}
+
+// Check password - Asignar por defecto si viene vacío (Solicitud del usuario para simplificar registro)
+if (empty($password)) {
+    $password = 'aranduka123'; 
 }
 
 // 2. Comprobar si la CI ya existe

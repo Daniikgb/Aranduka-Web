@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
@@ -39,6 +40,18 @@
             --radius: 12px;
             --py-red: #D52B1E;
             --py-blue: #0038A8;
+        }
+
+        /* Scroll Animations */
+        .book-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .book-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         body {
@@ -423,38 +436,30 @@
             box-shadow: 0 40px 100px rgba(0, 0, 0, 0.06);
             position: relative;
             z-index: 5;
-            margin-top: -80px;
+            margin-top: -20px;
             overflow: hidden;
             border: 1px solid #f0f2f5;
         }
 
         /* Institutional Header Style in Dashboard */
         .dashboard-header-bg {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            padding: 7rem 2rem 5rem;
+            background: #ffffff;
+            padding: 3.5rem 2rem 2.5rem;
             text-align: center;
-            border-bottom: 2px solid #edf2f7;
+            /* Border removed */
             position: relative;
             overflow: hidden;
         }
 
         /* Abstract Background Decoration for Header */
+        /* Abstract Background Decoration for Header - REMOVED for clean look */
         .dashboard-header-bg::after {
-            content: '';
-            position: absolute;
-            top: -50px;
-            right: -50px;
-            width: 250px;
-            height: 250px;
-            background: var(--primary-color);
-            opacity: 0.03;
-            border-radius: 50%;
-            filter: blur(50px);
+            display: none;
         }
 
 
         .dashboard-main-area {
-            padding: 5rem 2rem 10rem;
+            padding: 5rem 2rem 4rem;
             background-image: radial-gradient(#0c647c0f 1.5px, transparent 1.5px);
             background-size: 30px 30px;
             background-color: #ffffff;
@@ -481,9 +486,13 @@
             display: flex;
             justify-content: center;
             gap: 2rem;
-            margin-bottom: 4rem;
+            margin-bottom: 2rem;
             flex-wrap: wrap;
             padding: 1rem;
+            /* Sticky preparation */
+            margin-left: -2rem;
+            margin-right: -2rem;
+            width: calc(100% + 4rem);
         }
 
         .tab-btn {
@@ -491,17 +500,22 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 140px;
-            height: 120px;
-            padding: 1rem;
-            border: none;
+            width: 150px;
+            /* Slightly wider */
+            height: 130px;
+            /* Slightly taller */
+            padding: 1.5rem;
+            border: 1px solid #f1f5f9;
+            /* Subtle border */
             background: var(--white);
-            border-radius: 24px;
-            font-weight: 700;
-            color: var(--text-light);
+            border-radius: 20px;
+            /* Slightly less rounded */
+            font-weight: 600;
+            color: var(--text-color);
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            /* Tailwind-like shadow */
             position: relative;
             overflow: hidden;
         }
@@ -521,28 +535,29 @@
         }
 
         .tab-btn.active {
-            background: var(--white);
+            background: #ffffff;
             color: var(--primary-color);
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(12, 100, 124, 0.15);
-            border: 2px solid var(--primary-color);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: var(--primary-color);
         }
 
         .tab-btn.active i {
             background: var(--primary-color);
             color: var(--white);
             transform: scale(1.1);
-            box-shadow: 0 5px 15px rgba(12, 100, 124, 0.3);
+            box-shadow: 0 4px 12px rgba(12, 100, 124, 0.25);
         }
 
         .tab-btn:hover:not(.active) {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-color: #cbd5e1;
         }
 
         .tab-btn:hover i {
-            transform: rotate(-10deg) scale(1.1);
-            background: rgba(12, 100, 124, 0.2);
+            transform: scale(1.05);
+            background: rgba(12, 100, 124, 0.15);
         }
 
         .filter-section {
@@ -669,19 +684,19 @@
 
 
         .filter-card i {
-            font-size: 3.2rem;
-            margin-bottom: 1.5rem;
+            font-size: 2.8rem;
+            margin-bottom: 1.2rem;
             color: var(--primary-color);
             background: linear-gradient(135deg, rgba(12, 100, 124, 0.08) 0%, rgba(12, 100, 124, 0.02) 100%);
-            width: 90px;
-            height: 90px;
+            width: 75px;
+            height: 75px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 22px;
+            border-radius: 16px;
             transition: all 0.4s;
             flex-shrink: 0;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.04);
         }
 
         /* Prevent conflicts when using icon-box wrapper */
@@ -882,18 +897,18 @@
         /* Floating WhatsApp */
         .float-whatsapp {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 65px;
-            height: 65px;
+            bottom: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
             background: #25d366;
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 35px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            font-size: 28px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             z-index: 1000;
             transition: 0.3s;
         }
@@ -907,7 +922,7 @@
 
         .whatsapp-tooltip {
             position: absolute;
-            bottom: 75px;
+            bottom: 60px;
             left: 50%;
             transform: translateX(-50%);
             background: #fff;
@@ -1317,8 +1332,8 @@
 
         .founder-card {
             background: #fff;
-            padding: 2rem;
-            border-radius: 20px;
+            padding: 1rem;
+            border-radius: 10px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
             transition: 0.3s;
             border: 1px solid #f0f0f0;
@@ -1330,12 +1345,12 @@
         }
 
         .founder-img-wrapper {
-            width: 150px;
-            height: 150px;
-            margin: 0 auto 1.5rem;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1rem;
             border-radius: 50%;
             overflow: hidden;
-            border: 5px solid var(--secondary-color);
+            border: 2px solid var(--secondary-color);
             box-shadow: var(--shadow-md);
         }
 
@@ -1357,6 +1372,240 @@
             font-size: 0.95rem;
             line-height: 1.6;
         }
+
+        /* Back to Top Button */
+        .btn-back-to-top {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            width: 50px;
+            height: 50px;
+            background: var(--charcoal);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+            opacity: 0.8;
+        }
+
+        .btn-back-to-top:hover {
+            transform: translateY(-5px);
+            background: var(--primary-color);
+            opacity: 1;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs-container {
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 0.5rem;
+            background: #f1f5f9;
+            border-radius: 50px;
+            display: inline-block;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .breadcrumbs-container span {
+            margin: 0 5px;
+            color: #cbd5e1;
+        }
+
+        .breadcrumbs-container a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .breadcrumbs-container .current {
+            color: var(--text-color);
+            font-weight: 700;
+        }
+
+        /* Sticky Tabs */
+        .dashboard-tabs.sticky {
+            position: sticky;
+            top: 70px;
+            /* Adjusted for header */
+            z-index: 900;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem !important;
+            margin-bottom: 2rem !important;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        /* PDF Badge & Quick Action */
+        .pdf-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #D52B1E;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .quick-download-btn {
+            background: rgba(12, 100, 124, 0.1);
+            color: var(--primary-color);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.2s;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .quick-download-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 991px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .logo img {
+                height: 100px;
+                margin: 0;
+            }
+
+            .search-bar {
+                margin: 0.5rem 0;
+                width: 100%;
+                max-width: none;
+                order: 2;
+            }
+
+            .main-nav {
+                width: 100%;
+                order: 3;
+                overflow-x: auto;
+                padding-bottom: 5px;
+            }
+
+            .main-nav ul {
+                gap: 0.8rem;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .hero {
+                flex-direction: column-reverse;
+                padding: 4rem 1.5rem;
+                text-align: center;
+                min-height: auto;
+            }
+
+            .hero .left {
+                padding: 0;
+                margin-top: 2rem;
+            }
+
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .hero .right {
+                width: 100%;
+                margin-bottom: 2rem;
+            }
+
+            .mission {
+                flex-direction: column;
+                padding: 4rem 1.5rem;
+                gap: 3rem;
+            }
+
+            .mission .left {
+                order: 2;
+            }
+
+            .mission .right {
+                order: 1;
+                width: 100%;
+            }
+
+            .dashboard-header-bg {
+                padding: 2.5rem 1rem;
+            }
+
+            .section-header h2 {
+                font-size: 2.5rem;
+            }
+
+            .section-header .lead {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .books-grid {
+                grid-template-columns: 1fr;
+                /* Single column */
+                gap: 2rem;
+                padding: 1rem 0;
+            }
+
+            .tab-btn {
+                width: 100%;
+                flex-direction: row;
+                height: auto;
+                justify-content: flex-start;
+                padding: 1rem 1.5rem;
+                border-radius: 15px;
+                margin-bottom: 0.5rem;
+            }
+
+            .tab-btn i {
+                margin-bottom: 0;
+                margin-right: 1.5rem;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .dashboard-tabs {
+                flex-direction: column;
+                margin-left: 0;
+                margin-right: 0;
+                width: 100%;
+                padding: 0;
+                gap: 0.5rem;
+            }
+
+            .dashboard-main-area {
+                padding: 2rem 1rem 6rem;
+                /* Extra padding for bottom */
+            }
+
+            .breadcrumbs-container {
+                display: none;
+                /* Hide breadcrumbs on very small screens to save space */
+            }
+        }
     </style>
 </head>
 
@@ -1370,7 +1619,7 @@
             </div>
 
             <div class="search-bar">
-                <form onsubmit="event.preventDefault();" style="display: flex; position:relative;">
+                <form id="searchForm" onsubmit="event.preventDefault();" style="display: flex; position:relative;">
                     <input type="text" id="searchInput" placeholder="Buscar libro..." autocomplete="off">
                     <!-- Adjusted for mobile tappability -->
                     <button type="button" id="voiceSearchBtn" style="padding: 0 15px; right: 40px;"><i
@@ -1382,6 +1631,31 @@
             <nav class="main-nav">
                 <ul>
                     <li><a href="#" id="navInicioBtn" class="active">Inicio</a></li>
+
+                    <!-- Contact Dropdown -->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false" style="cursor: pointer;">
+                            Contactos
+                        </a>
+                        <div class="dropdown-menu border-0 shadow-lg mt-2" style="border-radius: 15px; padding: 1rem;">
+                            <a class="dropdown-item py-2 rounded" href="https://www.facebook.com/share/1B2zAdUQPS/"
+                                target="_blank">
+                                <i class="fab fa-facebook text-primary mr-2" style="width: 20px;"></i> Facebook
+                            </a>
+                            <a class="dropdown-item py-2 rounded" href="https://www.instagram.com/editorialaranduka/"
+                                target="_blank">
+                                <i class="fab fa-instagram text-danger mr-2" style="width: 20px;"></i> Instagram
+                            </a>
+                            <a class="dropdown-item py-2 rounded" href="https://wa.me/595983714552" target="_blank">
+                                <i class="fab fa-whatsapp text-success mr-2" style="width: 20px;"></i> WhatsApp
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item py-2 rounded" href="mailto:arandukacentral@gmail.com">
+                                <i class="fas fa-envelope text-secondary mr-2" style="width: 20px;"></i> Correo
+                            </a>
+                        </div>
+                    </li>
                     <!-- Admin Panel Access (Conditional in JS) -->
                     <li id="admin-menu-item" class="d-none">
                         <a href="#" class="btn-admin-nav" onclick="$('#adminDashboardModal').modal('show')">
@@ -1665,7 +1939,14 @@
             </div>
 
             <!-- Results Grid -->
-            <div class="results-area mt-5">
+            <div class="container text-center mb-2">
+                <div id="breadcrumbs" class="breadcrumbs-container" style="display: none;">
+                    <a href="#" class="breadcrumb-link" data-target="home">Inicio</a> <span>/</span> <span
+                        class="current">Libros</span>
+                </div>
+            </div>
+
+            <div class="results-area mt-3">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3 id="viewTitle" style="margin:0">Todos los Materiales</h3>
                     <div class="d-flex align-items-center">
@@ -1685,7 +1966,9 @@
                         <i class="fas fa-spinner fa-spin fa-2x text-muted"></i>
                     </div>
                 </div>
-            </div> <!-- End dashboard-main-area -->
+            </div> <!-- End results-area -->
+        </div> <!-- End dashboard-main-area -->
+        </div> <!-- End dashboard-container -->
     </main>
 
     <!-- Footer -->
@@ -1698,7 +1981,7 @@
                         class="fab fa-instagram"></i></a>
                 <a href="https://wa.me/595983714552" target="_blank"><i class="fab fa-whatsapp"></i></a>
             </div>
-            <p>&copy; 2025 Editorial Aranduka | Todos los derechos reservados.</p>
+            <p>&copy; 2025 Editorial Aranduka | Desarrollado por BTI026.</p>
         </div>
     </footer>
 
@@ -1730,6 +2013,12 @@
                     <p class="text-secondary mb-4" id="modalBookDescription"
                         style="font-size: 1.1rem; line-height: 1.6;">Descripción del material...</p>
 
+                    <!-- Related Books Container -->
+                    <div id="relatedBooksContainer" class="mb-4"
+                        style="display:none; border-top: 1px solid #eee; padding-top: 1rem;">
+                        <!-- JS fills this -->
+                    </div>
+
                     <div class="mt-auto">
                         <a href="#"
                             class="btn btn-primary btn-block rounded-pill py-3 font-weight-bold shadow-sm downloadDocBtn mb-3"
@@ -1741,6 +2030,11 @@
                             id="modalGuideBtn" download style="display:none; border-width: 2px;">
                             <i class="fas fa-chalkboard-teacher mr-2"></i> Guía para Docentes
                         </a>
+                        <button onclick="shareBook(parseInt(document.getElementById('quickViewModal').dataset.bookId))"
+                            class="btn btn-outline-secondary btn-block rounded-pill py-2 font-weight-bold mt-2"
+                            style="border-width: 2px;">
+                            <i class="fas fa-share-alt mr-2"></i> Compartir
+                        </button>
                     </div>
                 </div>
             </div>
@@ -2226,6 +2520,11 @@
         <i class="fab fa-whatsapp"></i>
     </a>
 
+    <!-- Back to Top Button -->
+    <button id="backToTopBtn" class="btn-back-to-top" title="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
@@ -2269,19 +2568,33 @@
     </script>
 
     <script>
-        // Auto-Hide Header Script - Only show at top
+        // Auto-Hide Header Script
         const header = document.querySelector('.main-header');
+        const backToTopBtn = document.getElementById('backToTopBtn');
 
         window.addEventListener('scroll', function () {
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-            // Hide if scrolled down more than 50px. Show ONLY if at the top.
+            // Header Logic
             if (scrollTop > 50) {
                 header.classList.add('header-hidden');
             } else {
                 header.classList.remove('header-hidden');
             }
+
+            // Back to Top Logic
+            if (scrollTop > 300) {
+                if (backToTopBtn) backToTopBtn.style.display = 'flex';
+            } else {
+                if (backToTopBtn) backToTopBtn.style.display = 'none';
+            }
         });
+
+        if (backToTopBtn) {
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
     </script>
 </body>
 
