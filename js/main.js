@@ -616,9 +616,52 @@ document.addEventListener('DOMContentLoaded', function () {
             elements.searchInput.dispatchEvent(new Event('input'));
             elements.voiceBtn.style.color = '#888';
         };
+
         recognition.onend = () => elements.voiceBtn.style.color = '#888';
     }
 
+    // --- Dashboard Tabs Logic ---
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const sections = document.querySelectorAll('.filter-section');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // 1. UI Updates
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // 2. Section Display
+            const targetId = btn.dataset.target; // secciones, materias, favoritos, comunidad
+            sections.forEach(sec => {
+                sec.classList.remove('active');
+                if (sec.id === targetId) {
+                    sec.classList.add('active');
+
+                    // 3. Auto-Scroll Logic (Added)
+                    // Scroll to the filter section with a bit of offset for the sticky header
+                    const headerOffset = 180; // Adjust based on your header height
+                    const elementPosition = sec.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }
+            });
+
+            // 3. Special Handlers
+            if (targetId === 'favoritos') {
+                renderBooks('favorites');
+                elements.introTitle.innerText = "Tus Libros Favoritos";
+            } else if (targetId === 'comunidad') {
+                renderCommunityBooks();
+            } else {
+                renderBooks('all');
+                elements.introTitle.innerText = "Explora todos los libros";
+            }
+        });
+    });
     // Tab Switching (RESTORED Community Logic)
     elements.tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -672,7 +715,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // History Push with Hash for Sharing
         if (!isNavigatingHistory) {
-            history.pushState({ modal: 'quickView', id: id }, '', `#book-${id}`);
+            history.pushState({ modal: 'quickView', id: id }, '', `#book - ${id} `);
         }
         document.getElementById('modalBookImage').src = book.image;
         document.getElementById('modalBookTitle').innerText = book.title;
@@ -702,11 +745,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 let relatedHtml = '<h5 class="mt-4 mb-3" style="font-weight:700; color:#333;">También te podría interesar:</h5><div class="row">';
                 related.forEach(rb => {
                     relatedHtml += `
-                        <div class="col-4 text-center cursor-pointer" onclick="openBookModal(${rb.id})">
-                            <img src="${rb.image}" class="img-fluid rounded shadow-sm mb-2 hover-up" style="max-height: 100px;">
-                            <p class="small text-muted text-truncate">${rb.title}</p>
-                        </div>
-                    `;
+                < div class="col-4 text-center cursor-pointer" onclick = "openBookModal(${rb.id})" >
+                    <img src="${rb.image}" class="img-fluid rounded shadow-sm mb-2 hover-up" style="max-height: 100px;">
+                        <p class="small text-muted text-truncate">${rb.title}</p>
+                    </div>
+            `;
                 });
                 relatedHtml += '</div>';
                 relatedContainer.innerHTML = relatedHtml;
@@ -728,17 +771,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.shareBook = function (id) {
         const book = books.find(b => b.id === id);
-        const url = `${window.location.origin}${window.location.pathname}#book-${id}`;
+        const url = `${window.location.origin}${window.location.pathname} #book - ${id} `;
 
         if (navigator.share) {
             navigator.share({
                 title: book.title,
-                text: `¡Mira este libro en Aranduka: ${book.title}!`,
+                text: `¡Mira este libro en Aranduka: ${book.title} !`,
                 url: url
             }).catch(console.error);
         } else {
             // Fallback: Copy to clipboard or open WhatsApp
-            const text = `¡Mira este libro en Aranduka: ${book.title}! ${url}`;
+            const text = `¡Mira este libro en Aranduka: ${book.title} !${url} `;
 
             // Try clipboard first
             navigator.clipboard.writeText(text).then(() => {

@@ -1587,151 +1587,180 @@
                     grid-row: 1;
                 }
 
+                /* --- Header Navigation Adjustments --- */
+                #navInicioBtn {
+                    display: none !important;
+                    /* Hide Start button on mobile */
+                }
+
                 .logo img {
-                    height: 90px;
-                    /* Increased size as requested */
+                    height: 110px;
+                    /* Bigger Logo */
                     margin: 0;
                 }
 
-                .main-nav {
-                    grid-column: 2;
-                    grid-row: 1;
-                    justify-self: end;
-                    width: auto !important;
-                    padding: 0;
-                    order: unset;
-                    overflow: visible;
-                    /* Allow dropdowns */
+                /* Aesthetic Login Button Mobile */
+                .btn-login-nav {
+                    background: linear-gradient(135deg, var(--primary-color) 0%, #0a5266 100%);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    box-shadow: 0 4px 15px rgba(12, 100, 124, 0.4);
+                    padding: 0.5rem 1rem;
+                    font-size: 0.85rem;
+                    letter-spacing: 0.5px;
                 }
 
-                .main-nav ul {
-                    gap: 0.3rem;
-                    /* Tighter gap */
-                    justify-content: flex-end;
-                    flex-wrap: nowrap;
-                    align-items: center;
+                /* --- Modal Aesthetic Upgrades --- */
+                /* Beautiful Download Button */
+                #modalDownloadBtn {
+                    background: linear-gradient(45deg, #11998e, #38ef7d);
+                    /* Fresh Green/Teal Gradient */
+                    border: none;
+                    box-shadow: 0 10px 20px rgba(56, 239, 125, 0.3);
+                    color: white;
+                    font-size: 1.1rem !important;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                    transition: transform 0.3s, box-shadow 0.3s;
+                    position: relative;
+                    overflow: hidden;
                 }
 
-                .main-nav a.btn {
-                    font-size: 0.75rem;
-                    padding: 0.3rem 0.5rem;
-                    white-space: nowrap;
+                #modalDownloadBtn:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 15px 25px rgba(56, 239, 125, 0.5);
                 }
 
-                /* Hide "Iniciar Sesión" text on very small screens, show icon only if needed, 
-               but for now just making it smaller to fit. */
-                .main-nav #loginBtn span {
-                    /* If we had a span for text, we could hide it. Assuming simplified button style. */
-                }
-
-                .search-bar {
-                    grid-column: 1 / -1;
-                    grid-row: 2;
-                    width: 100%;
-                    max-width: none;
-                    margin: 5px 0 0 0;
-                    order: unset;
-                }
-
-                /* Adjust Hero to match new header compactness */
-                .hero {
-                    flex-direction: column-reverse;
-                    padding: 2rem 1.5rem;
-                    text-align: center;
-                    min-height: auto;
-                }
-
-                .hero .left {
-                    padding: 0;
-                    margin-top: 2rem;
-                }
-
-                .hero h1 {
-                    font-size: 2.8rem;
-                }
-
-                .hero p {
-                    font-size: 1.1rem;
-                }
-
-                .hero .right {
-                    width: 100%;
-                    margin-bottom: 2rem;
-                }
-
-                .mission {
-                    flex-direction: column;
-                    padding: 4rem 1.5rem;
-                    gap: 3rem;
-                }
-
-                .mission .left {
-                    order: 2;
-                }
-
-                .mission .right {
-                    order: 1;
-                    width: 100%;
-                }
-
-                .dashboard-header-bg {
-                    padding: 2.5rem 1rem;
-                }
-
-                .section-header h2 {
-                    font-size: 2.5rem;
-                }
-
-                .section-header .lead {
-                    font-size: 1rem;
-                }
-            }
-
-            @media (max-width: 576px) {
-                .books-grid {
-                    grid-template-columns: 1fr;
-                    /* Single column */
-                    gap: 2rem;
-                    padding: 1rem 0;
-                }
-
-                .tab-btn {
-                    width: 100%;
-                    flex-direction: row;
-                    height: auto;
-                    justify-content: flex-start;
-                    padding: 1rem 1.5rem;
-                    border-radius: 15px;
-                    margin-bottom: 0.5rem;
-                }
-
-                .tab-btn i {
-                    margin-bottom: 0;
-                    margin-right: 1.5rem;
-                    width: 40px;
-                    height: 40px;
+                /* Related Books Styling */
+                #relatedBooksContainer h5 {
                     font-size: 1.2rem;
+                    margin-bottom: 1rem;
+                    text-align: center;
+                    color: var(--primary-color);
+                    font-weight: 700;
                 }
 
-                .dashboard-tabs {
-                    flex-direction: column;
-                    margin-left: 0;
-                    margin-right: 0;
+                .related-book-card {
+                    border-radius: 15px;
+                    overflow: hidden;
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+                    transition: 0.3s;
+                }
+
+                .related-book-card img {
                     width: 100%;
-                    padding: 0;
-                    gap: 0.5rem;
-                }
-
-                .dashboard-main-area {
-                    padding: 2rem 1rem 6rem;
-                    /* Extra padding for bottom */
-                }
-
-                .breadcrumbs-container {
-                    display: none;
-                    /* Hide breadcrumbs on very small screens to save space */
+                    height: 120px;
+                    object-fit: cover;
                 }
             }
+
+            .search-bar {
+                grid-column: 1 / -1;
+                grid-row: 2;
+                width: 100%;
+                max-width: none;
+                margin: 5px 0 0 0;
+                order: unset;
+            }
+
+            /* Adjust Hero to match new header compactness */
+            .hero {
+                flex-direction: column-reverse;
+                padding: 2rem 1.5rem;
+                text-align: center;
+                min-height: auto;
+            }
+
+            .hero .left {
+                padding: 0;
+                margin-top: 2rem;
+            }
+
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .hero .right {
+                width: 100%;
+                margin-bottom: 2rem;
+            }
+
+            .mission {
+                flex-direction: column;
+                padding: 4rem 1.5rem;
+                gap: 3rem;
+            }
+
+            .mission .left {
+                order: 2;
+            }
+
+            .mission .right {
+                order: 1;
+                width: 100%;
+            }
+
+            .dashboard-header-bg {
+                padding: 2.5rem 1rem;
+            }
+
+            .section-header h2 {
+                font-size: 2.5rem;
+            }
+
+            .section-header .lead {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .books-grid {
+                grid-template-columns: 1fr;
+                /* Single column */
+                gap: 2rem;
+                padding: 1rem 0;
+            }
+
+            .tab-btn {
+                width: 100%;
+                flex-direction: row;
+                height: auto;
+                justify-content: flex-start;
+                padding: 1rem 1.5rem;
+                border-radius: 15px;
+                margin-bottom: 0.5rem;
+            }
+
+            .tab-btn i {
+                margin-bottom: 0;
+                margin-right: 1.5rem;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .dashboard-tabs {
+                flex-direction: column;
+                margin-left: 0;
+                margin-right: 0;
+                width: 100%;
+                padding: 0;
+                gap: 0.5rem;
+            }
+
+            .dashboard-main-area {
+                padding: 2rem 1rem 6rem;
+                /* Extra padding for bottom */
+            }
+
+            .breadcrumbs-container {
+                display: none;
+                /* Hide breadcrumbs on very small screens to save space */
+            }
+        }
     </style>
 </head>
 
