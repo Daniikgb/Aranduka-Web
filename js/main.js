@@ -486,8 +486,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     <h4 class="font-weight-bold text-dark mb-1">Aportes de la Comunidad</h4>
                     <p class="text-muted small mb-0">Ensayos, guías y resúmenes compartidos por estudiantes.</p>
                 </div>
-                <button class="btn btn-primary rounded-pill px-4 shadow-sm font-weight-bold" 
-                        onclick="$('#uploadMaterialModal').modal('show');">
+                <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm font-weight-bold" 
+                        onclick="$('#uploadMaterialModal').modal('show');" style="font-size: 0.85rem;">
                     <i class="fas fa-plus mr-1"></i> Subir el mío
                 </button>
             </div>
