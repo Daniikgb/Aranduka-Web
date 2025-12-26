@@ -763,7 +763,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 related.forEach(rb => {
                     relatedHtml += `
                     <div class="col-4 text-center cursor-pointer related-book-card" onclick="openBookModal(${rb.id})">
-                        <img src="${rb.image}" class="img-fluid rounded shadow-sm mb-2 hover-up" style="max-height: 100px;">
+                        <img src="${rb.image}" class="img-fluid rounded shadow-sm mb-2 hover-up" style="max-height: 140px;">
                         <p class="small text-muted text-truncate font-weight-bold" style="font-size: 0.7rem;">${rb.title}</p>
                     </div>
             `;

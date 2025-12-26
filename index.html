@@ -1992,10 +1992,9 @@
             }
         }
 
-        /* --- ANTI-GRAVITY PRO: FINAL MOBILE FIX (REFERENCE MATCH) --- */
+        /* --- ANTI-GRAVITY PRO: FINAL MOBILE FIX (REFERENCE MATCH v2) --- */
         @media (max-width: 768px) {
 
-            /* RESET BOOTSTRAP MODAL MARGINS */
             #quickViewModal .modal-dialog {
                 margin: 0 !important;
                 padding: 0 !important;
@@ -2004,7 +2003,6 @@
                 height: 100%;
             }
 
-            /* 1. CONTAINER: FULL SCREEN CLEAN WHITE */
             #quickViewModal .modal-content-custom {
                 position: fixed !important;
                 top: 0 !important;
@@ -2021,7 +2019,6 @@
                 flex-direction: column !important;
             }
 
-            /* 2. CLOSE BUTTON: SUBTLE TOP RIGHT */
             .close-modal {
                 position: absolute !important;
                 top: 15px !important;
@@ -2039,153 +2036,131 @@
                 justify-content: center;
             }
 
-            /* 3. SCROLLABLE AREA */
-            #quickViewModal .row {
-                margin: 0 !important;
+            /* REORDERING MAIN ROW */
+            #quickViewModal .modal-row-main {
+                display: flex !important;
+                flex-direction: column !important;
                 width: 100% !important;
-                flex: 1 !important;
+                margin: 0 !important;
                 overflow-y: auto !important;
-                -webkit-overflow-scrolling: touch;
-                display: block !important;
-                height: auto !important;
-                padding-bottom: 80px !important;
+                padding-bottom: 50px !important;
             }
 
-            /* 4. HERO SECTION (Clean White Background per reference) */
-            #quickViewModal .col-md-6:first-child {
-                min-height: auto !important;
-                background: #ffffff !important;
-                /* Pure white */
-                padding-top: 4rem !important;
-                padding-bottom: 1rem !important;
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
-                border-bottom: 1px solid #f0f0f0;
-                /* Subtle separate if needed, or remove */
+            /* 1. INFO HEADER AT THE TOP */
+            .modal-col-info {
+                order: 1 !important;
+                padding: 5rem 1.5rem 1rem 1.5rem !important;
+                /* Space for close button */
+                text-align: left !important;
+            }
+
+            /* 2. IMAGE BELOW TITLES */
+            .modal-col-image {
+                order: 2 !important;
+                padding: 1rem !important;
+                background: #fff !important;
             }
 
             .modal-book-wrapper {
-                width: 160px !important;
-                max-width: 50% !important;
+                width: 260px !important;
+                /* MUCH LARGER COVER */
+                max-width: 80vw !important;
                 margin: 0 auto !important;
             }
 
             #modalBookImage {
-                width: 100% !important;
-                box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15) !important;
                 transform: none !important;
-                /* Flat or subtle, reference is flat */
-                border-radius: 4px !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+                border-radius: 8px !important;
             }
 
-            /* 5. CONTENT SECTION - Typography Alignment */
-            #quickViewModal .col-md-6:last-child {
-                padding: 1.5rem 1.5rem !important;
-                text-align: left !important;
-                /* Left Align Everything */
+            /* 3. DESCRIPTION & BUTTONS */
+            .modal-info-header {
+                order: 1 !important;
             }
 
-            /* BADGE (Blue Pill) */
-            #modalBookBadge {
-                display: inline-block !important;
-                /* Not table center */
-                margin: 0 0 0.5rem 0 !important;
-                background-color: var(--primary-color) !important;
-                font-size: 0.75rem !important;
-                padding: 0.4rem 1rem !important;
-                border-radius: 50px !important;
-                letter-spacing: 0.5px !important;
-                color: white !important;
-            }
-
-            /* TITLE (Large Serif) */
-            #modalBookTitle {
-                font-size: 1.8rem !important;
-                text-align: left !important;
-                /* Left Align */
-                color: #222;
-                margin-bottom: 0.2rem;
-                font-family: 'Playfair Display', serif !important;
-                font-weight: 700 !important;
-                line-height: 1.1 !important;
-            }
-
-            /* CATEGORY (Blue Uppercase) */
-            #modalBookCategory {
-                text-align: left !important;
-                color: var(--primary-color) !important;
-                font-size: 0.8rem !important;
-                font-weight: 700 !important;
-                letter-spacing: 1px !important;
-                margin-bottom: 1rem !important;
-                text-transform: uppercase !important;
-                display: block !important;
-            }
-
-            /* DIVIDER LINE */
             .modal-divider {
-                width: 50px !important;
-                height: 3px !important;
-                background: #eee !important;
+                order: 2 !important;
                 margin: 1rem 0 !important;
-                display: block !important;
-                /* Ensure visible */
             }
 
-            /* DESCRIPTION */
-            #modalBookDescription {
-                font-size: 0.95rem !important;
-                color: #666;
-                text-align: left !important;
-                /* Left Align */
-                line-height: 1.5;
-                margin-bottom: 2rem !important;
+            .modal-description-wrapper {
+                order: 3 !important;
             }
 
-            /* RELATED BOOKS */
-            #relatedBooksContainer h5 {
-                text-align: left !important;
-                font-size: 0.95rem !important;
-                margin-left: 0 !important;
-                margin-bottom: 1rem !important;
-            }
-
-            #relatedBooksContainer .col-4 {
-                padding: 0 5px !important;
-            }
-
-            /* BUTTONS (Bottom Fixed or Flow) */
-            .mt-auto {
-                background: transparent !important;
-                padding: 0 !important;
-                box-shadow: none !important;
-                margin: 0 !important;
+            .modal-actions-wrapper {
+                order: 4 !important;
                 margin-top: 1rem !important;
             }
 
-            /* Primary Button (Blue) */
-            #modalDownloadBtn {
-                margin-top: 0;
-                padding: 0.8rem !important;
-                width: 100%;
-                border-radius: 50px !important;
-                /* Pill */
-                background: linear-gradient(90deg, #007bff, #0056b3) !important;
-                /* Solid Blue */
-                box-shadow: none !important;
-                color: white !important;
-                margin-bottom: 0.8rem !important;
+            .modal-related-wrapper {
+                order: 5 !important;
+                margin-top: 2rem !important;
+                border-top: 1px solid #f0f0f0;
+                padding-top: 2rem !important;
             }
 
-            /* Share Button (Outline) - Targeting by structure if id missing or using class */
-            .mt-auto button {
+            /* TYPOGRAPHY */
+            #modalBookBadge {
+                margin: 0 0 0.8rem 0 !important;
+                background-color: var(--primary-color) !important;
+                border-radius: 50px !important;
+            }
+
+            #modalBookTitle {
+                font-size: 2.2rem !important;
+                line-height: 1.1 !important;
+                text-align: left !important;
+            }
+
+            #modalBookCategory {
+                text-align: left !important;
+                font-size: 0.9rem !important;
+                margin-top: 0.5rem !important;
+                color: var(--primary-color) !important;
+            }
+
+            #modalBookDescription {
+                font-size: 1rem !important;
+                color: #555 !important;
+                text-align: left !important;
+            }
+
+            /* BUTTONS STYLING */
+            #modalDownloadBtn {
+                border-radius: 50px !important;
+                padding: 1rem !important;
+                background: var(--primary-color) !important;
+            }
+
+            .modal-actions-wrapper .btn-outline-secondary,
+            .modal-actions-wrapper .btn-outline-primary {
                 border-radius: 50px !important;
                 padding: 0.8rem !important;
-                border: 1px solid #ccc !important;
-                background: white !important;
-                color: #555 !important;
-                width: 100%;
+                margin-top: 0.5rem !important;
+            }
+
+            /* RELATED BOOKS LARGER */
+            .modal-related-wrapper h5 {
+                font-size: 1.1rem !important;
+                font-weight: 700 !important;
+                margin-bottom: 1.5rem !important;
+            }
+
+            #relatedBooksContainer .col-4 {
+                padding: 0 8px !important;
+            }
+
+            .related-book-card img {
+                height: 140px !important;
+                /* LARGER THUMBNAILS */
+                width: auto !important;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+            }
+
+            .related-book-card p {
+                font-size: 0.8rem !important;
+                margin-top: 0.5rem !important;
             }
         }
     </style>
@@ -2385,35 +2360,31 @@
 
         <div class="dashboard-main-area">
 
-            <!-- Announcement Banner -->
-            <div class="alert alert-info border-0 shadow-sm mb-4 d-flex align-items-center justify-content-between fade show"
-                role="alert" style="background: linear-gradient(90deg, #e1f5fe 0%, #b3e5fc 100%); border-radius: 20px;">
-                <div class="d-flex align-items-center p-2">
-                    <div class="bg-white text-info rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-sm"
-                        style="width: 50px; height: 50px; min-width: 50px;">
-                        <i class="fas fa-file-upload fa-lg"></i>
+            <!-- Announcement Banner (Redesigned) -->
+            <div class="card border-0 shadow-sm mb-4 overflow-hidden"
+                style="border-radius: 20px; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: 1px solid rgba(0,0,0,0.03);">
+                <div class="card-body p-3 p-md-4 d-flex align-items-center justify-content-between flex-wrap">
+                    <div class="d-flex align-items-center flex-grow-1">
+                        <div class="d-flex align-items-center justify-content-center mr-3 mr-md-4"
+                            style="width: 55px; height: 55px; min-width: 55px; background: rgba(12, 100, 124, 0.08); border-radius: 18px; color: var(--primary-color);">
+                            <i class="fas fa-feather-alt fa-lg"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-weight-bold text-dark mb-1"
+                                style="font-family: 'Playfair Display', serif; font-size: 1.25rem;">¡El espacio es tuyo!
+                            </h5>
+                            <p class="text-muted mb-0 small" style="line-height: 1.4; max-width: 500px;">
+                                Publica tus <b>ensayos y guías</b>. Ayuda a crecer a la comunidad Aranduka.
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <h6 class="font-weight-bold text-dark mb-1">¡El espacio es tuyo!</h6>
-                        <p class="mb-0 text-dark small" style="line-height: 1.4;">
-                            Ahora puedes publicar tus propios <b>ensayos, libros y guías</b> para ayudar a otros
-                            estudiantes.
-                            <br>Tu aporte hace crecer a la comunidad Aranduka.
-                        </p>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center pr-2">
                     <button
-                        class="btn btn-primary text-white rounded-pill font-weight-bold mr-3 px-4 py-2 shadow animated pulse infinite"
-                        style="background: var(--primary-color); border: none; transition: transform 0.2s;"
+                        class="btn btn-primary px-4 py-2 rounded-pill font-weight-bold shadow-sm mt-3 mt-md-0 ml-auto"
                         onclick="document.querySelector('.tab-btn[data-target=\'comunidad\']').click(); $('#uploadMaterialModal').modal('show');"
-                        onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                        <i class="fas fa-file-upload mr-2"></i> Subir Ahora
+                        style="font-size: 0.9rem; letter-spacing: 0.5px; min-width: 140px;">
+                        Subir Aporte <i class="fas fa-upload ml-2"></i>
                     </button>
-                    <button type="button" class="close text-dark opacity-50" data-dismiss="alert" aria-label="Close"
-                        style="outline:none;">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <!-- Close button optional, removing for cleaner look as it is a permanent CTA -->
                 </div>
             </div>
 
@@ -2571,15 +2542,17 @@
     <div id="quickViewModal" class="modal-overlay">
         <div class="modal-content-custom">
             <button class="close-modal">&times;</button>
-            <div class="row">
-                <div class="col-md-6 d-flex align-items-center justify-content-center py-4">
+            <div class="row modal-row-main">
+                <!-- Columna Portada -->
+                <div class="col-md-6 modal-col-image d-flex align-items-center justify-content-center py-4">
                     <div class="modal-book-wrapper" style="perspective: 1000px; width: 100%; max-width: 350px;">
                         <img src="" alt="Book Cover" id="modalBookImage"
                             style="width: 100%; height: auto; border-radius: 4px 12px 12px 4px; box-shadow: 20px 20px 50px rgba(0,0,0,0.3); transform: rotateY(-10deg); transition: 0.5s; border: none;">
                     </div>
                 </div>
-                <div class="col-md-6 p-4 d-flex flex-column justify-content-center">
-                    <div class="mb-3">
+                <!-- Columna Información -->
+                <div class="col-md-6 modal-col-info p-4 d-flex flex-column justify-content-center">
+                    <div class="modal-info-header mb-3">
                         <span class="badge badge-primary px-3 py-1 rounded-pill mb-2" id="modalBookBadge"
                             style="font-size: 0.8rem; letter-spacing: 1px;">Grado</span>
                         <h2 id="modalBookTitle" class="font-weight-bold text-dark mb-1"
@@ -2592,16 +2565,12 @@
                     <div class="modal-divider my-3"
                         style="height: 2px; width: 50px; background: var(--primary-color); opacity: 0.3;"></div>
 
-                    <p class="text-secondary mb-4" id="modalBookDescription"
-                        style="font-size: 1.1rem; line-height: 1.6;">Descripción del material...</p>
-
-                    <!-- Related Books Container -->
-                    <div id="relatedBooksContainer" class="mb-4"
-                        style="display:none; border-top: 1px solid #eee; padding-top: 1rem;">
-                        <!-- JS fills this -->
+                    <div class="modal-description-wrapper mb-4">
+                        <p class="text-secondary" id="modalBookDescription"
+                            style="font-size: 1.1rem; line-height: 1.6;">Descripción del material...</p>
                     </div>
 
-                    <div class="mt-auto">
+                    <div class="modal-actions-wrapper mb-4">
                         <a href="#"
                             class="btn btn-primary btn-block rounded-pill py-3 font-weight-bold shadow-sm downloadDocBtn mb-3"
                             id="modalDownloadBtn" download style="font-size: 1rem;">
@@ -2617,6 +2586,12 @@
                             style="border-width: 2px;">
                             <i class="fas fa-share-alt mr-2"></i> Compartir
                         </button>
+                    </div>
+
+                    <!-- Related Books Container -->
+                    <div id="relatedBooksContainer" class="modal-related-wrapper"
+                        style="display:none; border-top: 1px solid #eee; padding-top: 1rem;">
+                        <!-- JS fills this -->
                     </div>
                 </div>
             </div>
