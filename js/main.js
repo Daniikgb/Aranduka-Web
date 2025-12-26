@@ -15,19 +15,27 @@ document.addEventListener('DOMContentLoaded', function () {
     let isNavigatingHistory = false;
 
     // Handle Browser Back Button
+    // Handle Browser Back Button
     window.addEventListener('popstate', (event) => {
         isNavigatingHistory = true;
+
+        // Anti-Gravity: Check if modal needs closing
+        const modal = document.getElementById('quickViewModal');
+        if (modal && modal.classList.contains('active')) {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
         if (event.state) {
             if (event.state.view === 'grid') {
                 showGradeGrid(event.state.level);
-            } else if (event.state.modal === 'quickView') {
-                // If we pop back to a modal state (rare if handled by close)
-                // usually we pop FROM a modal state TO a null state.
             }
+            // Existing logic for other states can remain here
         } else {
             // Default State (Close Modals, Reset Views)
             $('#quickViewModal').removeClass('active');
             $('.modal').modal('hide');
+            document.body.style.overflow = 'auto';
             renderBooks('all');
             document.getElementById('books-container').style.display = 'grid';
             elements.introTitle.innerText = "Explora nuestros materiales";
@@ -713,10 +721,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const m = document.getElementById('quickViewModal');
         m.dataset.bookId = id;
 
-        // History Push with Hash for Sharing
+        // 1. Mostrar modal
+        m.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Evita scroll de fondo
+
+        // 2. MAGIA ANTI-GRAVITY: Inyectar estado en el historial
         if (!isNavigatingHistory) {
-            history.pushState({ modal: 'quickView', id: id }, '', `#book - ${id} `);
+            window.history.pushState({ modalOpen: true }, "");
         }
+
+        // 3. Resetear el scroll del modal al inicio cada vez que se abre
+        const contentArea = m.querySelector('.modal-content-custom .row');
+        if (contentArea) contentArea.scrollTop = 0;
+
         document.getElementById('modalBookImage').src = book.image;
         document.getElementById('modalBookTitle').innerText = book.title;
         document.getElementById('modalBookDescription').innerText = book.description || 'Sin descripción';
@@ -760,12 +777,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         document.getElementById('modalDownloadBtn').href = book.file;
-        m.classList.add('active');
 
-        // Manual Close handles History Back
+        // Modificar el botón X para que también sea compatible con el historial
+        // Note: Adding event listener here might duplicate it if not careful, 
+        // but replacing 'onclick' is safer than addEventListener for single instance.
+        // Or better, use a one-time setup or ensure we don't stack listeners.
+        // The previous code used .onclick, so I will stick to that to avoid duplicates.
         m.querySelector('.close-modal').onclick = () => {
-            if (!isNavigatingHistory) history.back();
             m.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            if (!isNavigatingHistory && window.history.state && window.history.state.modalOpen) {
+                history.back();
+            }
         };
     };
 
