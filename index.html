@@ -2957,12 +2957,33 @@
     <!-- Modals -->
     <div id="quickViewModal" class="modal-overlay">
         <div class="modal-content-custom single-block-modal">
-            <div class="modal-header-actions sticky-top-modal">
-                <button class="close-modal-btn"><i class="fas fa-arrow-left"></i> Volver</button>
+            <div
+                class="modal-header-actions sticky-top-modal d-flex align-items-center justify-content-between px-3 py-2 bg-white border-bottom">
+                <button class="close-modal-btn btn btn-link text-dark p-0" style="font-size: 1.5rem;">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <!-- Download Button Moved to Header (Gray) -->
+                <a href="#" class="btn btn-secondary btn-sm font-weight-bold rounded-pill shadow-sm"
+                    id="modalDownloadBtn" download>
+                    <i class="fas fa-download mr-1"></i> DESCARGAR
+                </a>
             </div>
 
             <div class="modal-scroll-container">
-                <div class="modal-body-content">
+                <div class="modal-body-content position-relative">
+
+                    <!-- WhatsApp Floating Button with Label -->
+                    <div class="whatsapp-float-wrapper"
+                        style="position: fixed; bottom: 20px; right: 20px; z-index: 1050; display: flex; flex-direction: column; align-items: center;">
+                        <span class="bg-white shadow-sm px-2 py-1 rounded mb-1 small font-weight-bold text-dark"
+                            style="font-size: 0.75rem;">Contáctanos</span>
+                        <a href="https://wa.me/595983714552" target="_blank" class="btn-whatsapp-float shadow"
+                            style="background: #25D366; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; text-decoration: none;">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+
                     <!-- Left Column: Image -->
                     <div class="modal-column-left">
                         <div class="modal-book-cover-container">
@@ -2987,26 +3008,9 @@
                             Descripción...
                         </p>
 
-                        <!-- Actions -->
-                        <!-- Actions -->
+                        <!-- Actions Wrapper (Download removed from here as it is now in header) -->
                         <div class="modal-actions-wrapper">
-                            <!-- WhatsApp Float -->
-                            <a href="https://wa.me/595983714552" target="_blank" class="btn-whatsapp-float">
-                                <i class="fab fa-whatsapp"></i>
-                            </a>
-
-                            <!-- Download App Button -->
-                            <a href="#" class="btn-download-app-bar" id="modalDownloadAppBtn">
-                                <!-- Changed ID to differentiate -->
-                                <i class="fas fa-arrow-down mr-2"></i> Descargar Aplicación
-                            </a>
-
-                            <!-- Hidden Desktop Buttons (kept for semantic Structure or desktop view if needed) -->
-                            <a href="#"
-                                class="btn btn-primary btn-lg rounded-pill shadow-sm font-weight-bold d-none d-lg-inline-flex align-items-center justify-content-center py-3 mb-3"
-                                id="modalDownloadBtn" download>
-                                <i class="fas fa-download mr-2 fa-lg"></i> DESCARGAR
-                            </a>
+                            <!-- Secondary buttons removed to satisfy 'Only one download button' request -->
                         </div>
                     </div>
                 </div>
