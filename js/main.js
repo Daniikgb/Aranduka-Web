@@ -696,85 +696,88 @@ document.addEventListener('DOMContentLoaded', function () {
         const m = document.getElementById('quickViewModal');
         m.dataset.bookId = id;
 
-        // 1. Congelar la página Aranduka (Scroll-Lock)
-        // 1. Congelar la página Aranduka (Scroll-Lock con posición preservada)
-        const scrollY = window.scrollY;
-        document.body.style.position = 'fixed';
-        document.body.style.top = `-${scrollY}px`;
-        document.body.style.width = '100%';
-        document.body.classList.add('modal-open-freeze');
-
-        // 2. Activar Modal y Blur
+        // 1. Scroll Lock (Cleaner Approach)
+        // Store current scroll position to restore if needed, but 'overflow: hidden' usually keeps it visually
+        document.body.style.overflow = 'hidden';
         m.classList.add('active');
 
-        // 3. Resetear scroll interno del libro al principio
-        const scrollArea = m.querySelector('.modal-row-main') || m.querySelector('.modal-content-custom .row');
-        if (scrollArea) scrollArea.scrollTop = 0;
+        // 2. Reset Scroll of the internal container
+        const scrollContainer = m.querySelector('.modal-scroll-container');
+        if (scrollContainer) scrollContainer.scrollTop = 0;
 
-        // 4. HISTORIAL: Engañar al navegador para el botón "Atrás"
+        // 3. History Push
         if (!isNavigatingHistory) {
             window.history.pushState({ modalOpen: true }, "");
         }
 
+        // 4. Populate Content
         document.getElementById('modalBookImage').src = book.image;
         document.getElementById('modalBookTitle').innerText = book.title;
-        document.getElementById('modalBookDescription').innerText = book.description || 'Sin descripción';
-        document.getElementById('modalBookCategory').innerText = book.category.toUpperCase();
-
-        // DETERMINAR FILE TYPE PARA EL BADGE INTERNO (Pro+)
-        let fileTypeBadge = '';
-        if (book.file) {
-            const ext = book.file.split('.').pop().toLowerCase();
-            let color = '#D52B1E';
-            let label = 'DOCUMENTO';
-            if (ext === 'pdf') { label = 'PDF'; color = '#D52B1E'; }
-            else if (ext === 'doc' || ext === 'docx') { label = 'WORD'; color = '#2b579a'; }
-            fileTypeBadge = `<span class="modal-file-indicator" style="background:${color};">${label}</span>`;
-        }
+        document.getElementById('modalBookDescription').innerText = book.description || 'Sin descripción disponible.';
+        document.getElementById('modalBookCategoryText').innerText = book.category.replace(/-/g, ' ').toUpperCase();
 
         const badgeEl = document.getElementById('modalBookBadge');
-        // Fix: Don't overwrite parent, just update badge and append file indicator if not exists
-        // Safer approach: Reconstruct the whole header properly or use specific targeting.
-        // Let's use reconstruction to be safe since we have all data.
+        if (badgeEl) badgeEl.innerText = book.level.toUpperCase();
 
-        badgeEl.parentElement.innerHTML = `
-            <span id="modalBookBadge" class="badge-py" style="background:var(--primary-color); color:white; padding:4px 12px; border-radius:50px; font-weight:700; font-size:0.8rem; letter-spacing:1px; margin-right:5px;">${book.level.toUpperCase()}</span>
-            ${fileTypeBadge}
-            <h2 id="modalBookTitle" class="font-weight-bold text-dark mb-1 mt-2" style="font-family: 'Playfair Display', serif; font-size: 2.2rem; line-height: 1.1;">${book.title}</h2>
-            <p class="text-primary font-weight-bold small text-uppercase" id="modalBookCategory" style="letter-spacing: 1.5px; opacity: 0.8;">${book.category.toUpperCase()}</p>
-        `;
+        // 5. Actions
+        const downloadBtn = document.getElementById('modalDownloadBtn');
+        if (downloadBtn) {
+            // Check auth (Simulated or Real)
+            const user = JSON.parse(localStorage.getItem('aranduka_currentUser'));
+            if (!user) {
+                // If not logged in, change button to Trigger Login
+                downloadBtn.innerHTML = '<i class="fas fa-lock mr-2"></i> INICIA SESIÓN PARA DESCARGAR';
+                downloadBtn.onclick = (e) => {
+                    e.preventDefault();
+                    $('#authRequiredModal').modal('show');
+                };
+                downloadBtn.removeAttribute('download');
+                downloadBtn.href = '#';
+                downloadBtn.classList.remove('btn-primary'); // Optional style change
+                downloadBtn.classList.add('btn-secondary');
+            } else {
+                // Logged In -> Prepare Download
+                downloadBtn.innerHTML = '<i class="fas fa-download mr-2 fa-lg"></i> DESCARGAR AHORA';
+                downloadBtn.href = book.file;
+                downloadBtn.setAttribute('download', book.title); // Suggest filename
+                downloadBtn.onclick = null; // Remove previous overrides
+                downloadBtn.classList.add('btn-primary');
+                downloadBtn.classList.remove('btn-secondary');
 
-        // RESTORED: Guide Button Logic
+                // Track Download (Optional)
+                downloadBtn.addEventListener('click', () => {
+                    // Log download if needed
+                });
+            }
+        }
+
         const guideBtn = document.getElementById('modalGuideBtn');
         if (guideBtn) {
             if (book.guideFile) {
                 guideBtn.href = book.guideFile;
-                guideBtn.style.display = 'block';
+                guideBtn.style.display = 'inline-flex';
             } else {
                 guideBtn.style.display = 'none';
             }
         }
 
-        // --- RELATED BOOKS LOGIC ---
+        // 6. Related Books Logic (Grid for Mobile)
         const relatedContainer = document.getElementById('relatedBooksContainer');
         if (relatedContainer) {
             const related = books.filter(b => (b.level === book.level || b.category === book.category) && b.id !== book.id)
-                .sort(() => 0.5 - Math.random()) // Shuffle
-                .slice(0, 2);
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 2); // Show exactly 2 books as requested
 
             if (related.length > 0) {
-                let relatedHtml = '<h5 class="mt-4 mb-4" style="font-weight:800; color:#2d3748; letter-spacing: -0.5px;">También te podría interesar:</h5><div class="row g-4">';
+                let relatedHtml = '<h5 class="text-center font-weight-bold mb-4">También te podría interesar</h5><div class="row justify-content-center">';
                 related.forEach(rb => {
                     relatedHtml += `
-                    <div class="col-6 text-center cursor-pointer related-book-card mb-4" onclick="openBookModal(${rb.id})">
-                        <div style="padding: 10px;">
-                            <img src="${rb.image}" class="img-fluid rounded-lg shadow-lg mb-3 hover-up" 
-                                 style="height: auto; width: 100%; object-fit: contain; background: #fff; border: 1px solid #edf2f7;">
-                            <p class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem; line-height: 1.3;">${rb.title}</p>
-                            <p class="small text-primary text-uppercase font-weight-bold" style="letter-spacing: 1px; font-size: 0.7rem;">${rb.category.replace(/-/g, ' ')}</p>
+                    <div class="col-6 mb-4 cursor-pointer related-book-card" onclick="openBookModal(${rb.id})">
+                        <div class="card h-100 border-0 bg-transparent">
+                            <img src="${rb.image}" class="img-fluid rounded mb-2 shadow-sm" style="height: 250px; object-fit: contain; width: 100%;">
+                            <p class="small font-weight-bold text-center mb-0 mt-1 text-dark" style="line-height: 1.2;">${rb.title}</p>
                         </div>
-                    </div>
-            `;
+                    </div>`;
                 });
                 relatedHtml += '</div>';
                 relatedContainer.innerHTML = relatedHtml;
@@ -784,24 +787,27 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        document.getElementById('modalDownloadBtn').href = book.file;
-
-        // CIERRA EL LIBRO: Restaura todo a la normalidad
-        m.querySelector('.close-modal').onclick = () => {
-            m.classList.remove('active');
-            document.body.classList.remove('modal-open-freeze');
-            const scrollY = document.body.style.top;
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.width = '';
-            window.scrollTo(0, parseInt(scrollY || '0') * -1);
-
-            // Si el usuario cerró con la X, sacamos la entrada del historial
-            if (!isNavigatingHistory && window.history.state && window.history.state.modalOpen) {
-                window.history.back();
-            }
-        };
+        // 7. Closing Logic
+        const closeBtn = m.querySelector('.close-modal-btn');
+        if (closeBtn) {
+            closeBtn.onclick = (e) => {
+                e.preventDefault(); // Stop any jump
+                closeBookModal();
+            };
+        }
     };
+
+    window.closeBookModal = function () {
+        const m = document.getElementById('quickViewModal');
+        m.classList.remove('active');
+        document.body.style.overflow = ''; // Unlock scroll
+
+        // Handle History
+        if (!isNavigatingHistory && window.history.state && window.history.state.modalOpen) {
+            window.history.back();
+        }
+    };
+
 
     window.shareBook = function (id) {
         const book = books.find(b => b.id === id);
