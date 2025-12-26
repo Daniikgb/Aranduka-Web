@@ -14,30 +14,17 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentSort = 'az';
     let isNavigatingHistory = false;
 
-    // Handle Browser Back Button
-    // Handle Browser Back Button
+    // Handle Browser Back Button (Anti-Gravity Pro+)
     window.addEventListener('popstate', (event) => {
         isNavigatingHistory = true;
-
-        // Anti-Gravity: Check if modal needs closing
         const modal = document.getElementById('quickViewModal');
         if (modal && modal.classList.contains('active')) {
             modal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        if (event.state) {
-            if (event.state.view === 'grid') {
-                showGradeGrid(event.state.level);
-            }
-            // Existing logic for other states can remain here
+            document.body.classList.remove('modal-open-freeze');
         } else {
-            // Default State (Close Modals, Reset Views)
-            $('#quickViewModal').removeClass('active');
+            // Default State
             $('.modal').modal('hide');
-            document.body.style.overflow = 'auto';
             renderBooks('all');
-            document.getElementById('books-container').style.display = 'grid';
             elements.introTitle.innerText = "Explora nuestros materiales";
         }
         isNavigatingHistory = false;
@@ -711,18 +698,20 @@ document.addEventListener('DOMContentLoaded', function () {
         const m = document.getElementById('quickViewModal');
         m.dataset.bookId = id;
 
-        // 1. Mostrar modal
-        m.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Evita scroll de fondo
+        // 1. Congelar la página Aranduka (Scroll-Lock)
+        document.body.classList.add('modal-open-freeze');
 
-        // 2. MAGIA ANTI-GRAVITY: Inyectar estado en el historial
+        // 2. Activar Modal y Blur
+        m.classList.add('active');
+
+        // 3. Resetear scroll interno del libro al principio
+        const scrollArea = m.querySelector('.modal-content-custom .row');
+        if (scrollArea) scrollArea.scrollTop = 0;
+
+        // 4. HISTORIAL: Engañar al navegador para el botón "Atrás"
         if (!isNavigatingHistory) {
             window.history.pushState({ modalOpen: true }, "");
         }
-
-        // 3. Resetear el scroll del modal al inicio cada vez que se abre
-        const contentArea = m.querySelector('.modal-content-custom .row');
-        if (contentArea) contentArea.scrollTop = 0;
 
         document.getElementById('modalBookImage').src = book.image;
         document.getElementById('modalBookTitle').innerText = book.title;
@@ -772,16 +761,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.getElementById('modalDownloadBtn').href = book.file;
 
-        // Modificar el botón X para que también sea compatible con el historial
-        // Note: Adding event listener here might duplicate it if not careful, 
-        // but replacing 'onclick' is safer than addEventListener for single instance.
-        // Or better, use a one-time setup or ensure we don't stack listeners.
-        // The previous code used .onclick, so I will stick to that to avoid duplicates.
+        // CIERRA EL LIBRO: Restaura todo a la normalidad
         m.querySelector('.close-modal').onclick = () => {
             m.classList.remove('active');
-            document.body.style.overflow = 'auto';
+            document.body.classList.remove('modal-open-freeze');
+
+            // Si el usuario cerró con la X, sacamos la entrada del historial
             if (!isNavigatingHistory && window.history.state && window.history.state.modalOpen) {
-                history.back();
+                window.history.back();
             }
         };
     };

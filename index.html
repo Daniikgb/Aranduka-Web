@@ -955,6 +955,14 @@
             transform: translateX(-50%) translateY(-5px);
         }
 
+        /* 2. Congelar página principal */
+        body.modal-open-freeze {
+            overflow: hidden !important;
+            height: 100vh !important;
+            position: fixed;
+            width: 100%;
+        }
+
         /* Footer */
         .main-footer {
             background: var(--charcoal);
@@ -979,19 +987,20 @@
             color: #0ee0f3;
         }
 
-        /* Modals */
+        /* 1. Fondo con desenfoque profundo */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px) brightness(0.7);
+            -webkit-backdrop-filter: blur(12px) brightness(0.7);
             z-index: 2000;
             visibility: hidden;
             opacity: 0;
-            transition: 0.3s;
+            transition: all 0.4s ease;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1000,6 +1009,8 @@
         .modal-overlay.active {
             visibility: visible;
             opacity: 1;
+            align-items: flex-end;
+            /* El libro nace desde abajo en móvil */
         }
 
         .modal-content-custom {
@@ -1309,109 +1320,154 @@
                 font-size: 0.9rem;
             }
 
-            /* --- PREMIUM VERTICAL MODAL REDESIGN --- */
-            .modal-content-custom {
-                max-width: 750px !important;
-                margin: 1.5rem auto;
-                height: auto !important;
-                max-height: 92vh !important;
-                border-radius: 30px !important;
-                background: #fff;
-                display: flex;
-                flex-direction: column;
-                overflow: hidden;
-            }
+            /* --- PLAN ANTI-GRAVITY PRO+ FINAL --- */
+            @media (max-width: 768px) {
 
-            .modal-row-main {
-                flex-direction: column !important;
-                margin: 0 !important;
-                display: flex !important;
-                width: 100% !important;
-                overflow-y: auto;
-            }
+                /* 3. Contenedor con Animación de Entrada */
+                .modal-content-custom {
+                    width: 100vw !important;
+                    height: 92dvh !important;
+                    /* Deja ver un poco del blur arriba */
+                    border-radius: 30px 30px 0 0 !important;
+                    background: #ffffff;
+                    display: flex;
+                    flex-direction: column;
+                    overflow: hidden;
+                    animation: slideUp 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+                    border: none !important;
+                    margin: 0 !important;
+                    max-width: 100% !important;
+                }
 
-            .modal-col-image {
-                width: 100% !important;
-                padding: 4rem 2rem 3rem !important;
-                background: linear-gradient(135deg, #0038A8 0%, #0056b3 100%);
-                /* Vibrant blue header */
-                position: relative;
-                overflow: hidden;
-            }
+                @keyframes slideUp {
+                    from {
+                        transform: translateY(100%);
+                    }
 
-            .modal-col-image::after {
-                content: "";
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 100px;
-                background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
-                pointer-events: none;
-            }
+                    to {
+                        transform: translateY(0);
+                    }
+                }
 
-            .modal-book-wrapper {
-                max-width: 260px !important;
-                margin: 0 auto;
-                perspective: 1000px;
-                filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
-                z-index: 5;
-            }
+                /* 4. Hero Section: Imagen con "Sentido" y Vida */
+                .modal-content-custom .row {
+                    margin: 0 !important;
+                    display: block !important;
+                    overflow-y: auto !important;
+                    height: 100% !important;
+                    -webkit-overflow-scrolling: touch;
+                    width: 100% !important;
+                }
 
-            #modalBookImage {
-                width: 100%;
-                height: auto;
-                border-radius: 4px 12px 12px 4px;
-                transform: rotateY(-15deg) rotateX(5deg);
-                transition: 0.5s;
-                border: none;
-            }
+                .modal-col-image {
+                    background: linear-gradient(180deg, rgba(12, 100, 124, 0.15) 0%, #ffffff 100%) !important;
+                    padding: 4rem 1rem 2rem 1rem !important;
+                    min-height: 40vh;
+                    display: flex !important;
+                    justify-content: center !important;
+                    align-items: center !important;
+                    position: relative;
+                    width: 100% !important;
+                }
 
-            .modal-col-info {
-                width: 100% !important;
-                padding: 4rem 2.5rem 3rem !important;
-                /* Move info up slightly */
-                text-align: center;
-                background: white;
-                margin-top: -30px;
-                /* Overlap with header gradient transition */
-                border-top-left-radius: 40px;
-                border-top-right-radius: 40px;
-                z-index: 10;
-            }
+                /* El Libro con efecto 3D Realista */
+                .modal-book-wrapper {
+                    max-width: 190px !important;
+                    margin: 0 auto !important;
+                    filter: none !important;
+                }
 
-            .modal-info-header {
-                margin-bottom: 2.5rem;
-            }
+                .modal-book-wrapper img {
+                    width: 190px !important;
+                    border-radius: 2px 12px 12px 2px !important;
+                    box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.3) !important;
+                    transform: rotateY(-12deg) rotateX(2deg) !important;
+                    transition: transform 0.5s ease;
+                }
 
-            #modalBookTitle {
-                font-size: 2.8rem !important;
-                color: #111;
-                font-family: 'Playfair Display', serif;
-                margin-bottom: 0.7rem;
-                line-height: 1.1;
-                font-weight: 900;
-            }
+                /* 5. Tipografía y Colores Vivos (Aranduka Style) */
+                .modal-col-info {
+                    padding: 1.5rem 2rem 5rem 2rem !important;
+                    margin-top: 0 !important;
+                    border-radius: 0 !important;
+                    text-align: center !important;
+                }
 
-            #modalBookCategory {
-                color: var(--primary-color) !important;
-                font-size: 1.1rem !important;
-                letter-spacing: 3px;
-                font-weight: 800;
-                text-transform: uppercase;
-                margin-bottom: 2rem;
-                display: block;
-                opacity: 0.9;
-            }
+                #modalBookBadge {
+                    background: #D52B1E !important;
+                    /* Rojo Paraguay */
+                    color: white !important;
+                    padding: 6px 16px !important;
+                    font-weight: 800 !important;
+                    border-radius: 50px !important;
+                    box-shadow: 0 4px 10px rgba(213, 43, 30, 0.2) !important;
+                    display: inline-block !important;
+                    margin: 0 auto 10px !important;
+                }
 
-            #modalBookDescription {
-                font-size: 1.2rem !important;
-                color: #4a5568 !important;
-                line-height: 1.8;
-                text-align: center;
-                margin: 0 auto 3rem !important;
-                max-width: 600px;
-                font-weight: 400;
+                #modalBookTitle {
+                    font-family: 'Playfair Display', serif !important;
+                    font-size: 2.3rem !important;
+                    color: #0c647c !important;
+                    /* Primary Color */
+                    margin-top: 15px !important;
+                    font-weight: 800 !important;
+                }
+
+                #modalBookCategory {
+                    color: #0038A8 !important;
+                    /* Azul Paraguay */
+                    font-weight: 700 !important;
+                    text-transform: uppercase !important;
+                    letter-spacing: 1.5px !important;
+                    font-size: 0.85rem !important;
+                }
+
+                /* 6. Botón de Descarga con Efecto "Pulse" */
+                #modalDownloadBtn {
+                    background: linear-gradient(135deg, #0c647c 0%, #0038A8 100%) !important;
+                    border: none !important;
+                    padding: 1.3rem !important;
+                    border-radius: 20px !important;
+                    font-size: 1.1rem !important;
+                    box-shadow: 0 12px 25px rgba(0, 56, 168, 0.3) !important;
+                    animation: pulseBtn 2s infinite !important;
+                }
+
+                @keyframes pulseBtn {
+                    0% {
+                        transform: scale(1);
+                    }
+
+                    50% {
+                        transform: scale(1.02);
+                        box-shadow: 0 15px 30px rgba(0, 56, 168, 0.4);
+                    }
+
+                    100% {
+                        transform: scale(1);
+                    }
+                }
+
+                /* 7. La "X" Pro de Cierre */
+                .close-modal {
+                    position: fixed !important;
+                    top: 25px !important;
+                    right: 20px !important;
+                    background: rgba(255, 255, 255, 0.9) !important;
+                    width: 48px !important;
+                    height: 48px !important;
+                    border-radius: 50% !important;
+                    color: #333 !important;
+                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+                    z-index: 10001 !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    font-size: 24px !important;
+                    border: none !important;
+                    padding: 0 !important;
+                }
             }
 
             /* Buttons */
