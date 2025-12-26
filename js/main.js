@@ -697,13 +697,18 @@ document.addEventListener('DOMContentLoaded', function () {
         m.dataset.bookId = id;
 
         // 1. Congelar la página Aranduka (Scroll-Lock)
+        // 1. Congelar la página Aranduka (Scroll-Lock con posición preservada)
+        const scrollY = window.scrollY;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.width = '100%';
         document.body.classList.add('modal-open-freeze');
 
         // 2. Activar Modal y Blur
         m.classList.add('active');
 
         // 3. Resetear scroll interno del libro al principio
-        const scrollArea = m.querySelector('.modal-content-custom .row');
+        const scrollArea = m.querySelector('.modal-row-main') || m.querySelector('.modal-content-custom .row');
         if (scrollArea) scrollArea.scrollTop = 0;
 
         // 4. HISTORIAL: Engañar al navegador para el botón "Atrás"
@@ -764,7 +769,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="col-6 text-center cursor-pointer related-book-card mb-4" onclick="openBookModal(${rb.id})">
                         <div style="padding: 10px;">
                             <img src="${rb.image}" class="img-fluid rounded-lg shadow-lg mb-3 hover-up" 
-                                 style="height: 250px; width: 100%; object-fit: contain; background: #fbfbfb; border: 1px solid #edf2f7;">
+                                 style="height: auto; width: 100%; object-fit: contain; background: #fff; border: 1px solid #edf2f7;">
                             <p class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem; line-height: 1.3;">${rb.title}</p>
                             <p class="small text-primary text-uppercase font-weight-bold" style="letter-spacing: 1px; font-size: 0.7rem;">${rb.category.replace(/-/g, ' ')}</p>
                         </div>
@@ -785,6 +790,11 @@ document.addEventListener('DOMContentLoaded', function () {
         m.querySelector('.close-modal').onclick = () => {
             m.classList.remove('active');
             document.body.classList.remove('modal-open-freeze');
+            const scrollY = document.body.style.top;
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
 
             // Si el usuario cerró con la X, sacamos la entrada del historial
             if (!isNavigatingHistory && window.history.state && window.history.state.modalOpen) {

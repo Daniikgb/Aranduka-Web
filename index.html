@@ -2206,125 +2206,155 @@
                 height: 100%;
             }
 
+            /* --- NEW APP-LIKE LAYOUT STRUCTURE --- */
+
+            /* 1. Modal Container: Fixed Full Screen CANVAS */
             #quickViewModal .modal-content-custom {
                 position: fixed !important;
                 top: 0 !important;
                 left: 0 !important;
                 width: 100vw !important;
                 height: 100dvh !important;
+                border-radius: 0 !important;
                 margin: 0 !important;
                 padding: 0 !important;
-                border-radius: 0 !important;
                 background: #ffffff !important;
-                border: none !important;
-                box-shadow: none !important;
+                overflow: hidden !important;
+                /* No scroll on container itself */
                 display: flex !important;
                 flex-direction: column !important;
             }
 
-            .close-modal {
-                position: absolute !important;
-                top: 15px !important;
-                right: 15px !important;
-                z-index: 9999 !important;
-                background: white !important;
-                color: #D52B1E !important;
-                /* RED CLOSE BUTTON MOBILE V2 */
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important;
-                border: 1px solid #eee !important;
-                width: 40px !important;
-                height: 40px !important;
-                border-radius: 50% !important;
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
+            /* 2. Scrollable Area: EVERYTHING except Sticky Footer */
+            #quickViewModal {
+                padding: 0 !important;
+                /* Remove Bootstrap padding */
             }
 
-            /* PRECISION REORDERING */
             #quickViewModal .modal-row-main {
-                display: flex !important;
-                flex-direction: column !important;
-                width: 100% !important;
-                margin: 0 !important;
+                display: block !important;
+                /* Normal block flow */
+                height: 100% !important;
                 overflow-y: auto !important;
-                padding-bottom: 50px !important;
+                /* Unified Scroll */
+                padding-bottom: 100px !important;
+                /* Space for Sticky Footer */
+                -webkit-overflow-scrolling: touch !important;
+                /* Momentum Scroll */
+                scroll-behavior: smooth !important;
             }
 
-            /* Use display: contents to reorder children directly */
-            /* AND FLEX SHRINK FIX */
+            /* Remove display: contents hack */
             .modal-col-image,
             .modal-col-info {
-                display: contents !important;
-            }
-
-            /* GLOBAL FLEX SHRINK PREVENTION FOR MOBILE MODAL ITEMS */
-            #quickViewModal .modal-row-main>* {
-                flex-shrink: 0 !important;
-            }
-
-            /* ORDERING */
-            /* 1. Title Area */
-            .modal-info-header {
-                order: 1 !important;
-                padding: 5rem 1.5rem 0.5rem 1.5rem !important;
-            }
-
-            /* 2. Image Area */
-            .modal-book-wrapper {
-                order: 2 !important;
-                width: 280px !important;
-                /* EVEN LARGER COVER */
-                max-width: 85vw !important;
-                margin: 0.5rem auto !important;
                 display: block !important;
-                animation: floatBook 6s ease-in-out infinite;
+                width: 100% !important;
+                padding: 0 !important;
             }
 
-            @keyframes floatBook {
-                0% {
-                    transform: translateY(0px);
-                }
+            /* 3. HERO IMAGE SECTION */
+            .modal-col-image {
+                padding-top: 4rem !important;
+                /* Space for top spacing */
+                padding-bottom: 2rem !important;
+                background: linear-gradient(180deg, rgba(12, 100, 124, 0.05) 0%, #ffffff 100%) !important;
+                text-align: center !important;
+                border-radius: 0 0 30px 30px !important;
+            }
 
-                50% {
-                    transform: translateY(-10px);
-                }
-
-                100% {
-                    transform: translateY(0px);
-                }
+            .modal-book-wrapper {
+                width: 200px !important;
+                /* Balanced size */
+                max-width: 60vw !important;
+                margin: 0 auto !important;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
+                border-radius: 12px !important;
+                display: block !important;
+                /* Ensure it takes space */
             }
 
             #modalBookImage {
-                width: 100% !important;
-                transform: none !important;
-                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12) !important;
-                border-radius: 10px !important;
+                border-radius: 12px !important;
             }
 
-            /* 3. Description Area */
-            .modal-divider {
-                order: 3 !important;
-                margin: 1rem 1.5rem !important;
-                width: 60px !important;
+            /* 4. CONTENT TYPOGRAPHY & SPACING */
+            .modal-info-header {
+                padding: 1rem 1.5rem 0 1.5rem !important;
+                text-align: center !important;
             }
 
+            #modalBookTitle {
+                font-size: 1.8rem !important;
+                line-height: 1.2 !important;
+                margin-bottom: 0.5rem !important;
+                color: #222 !important;
+            }
+
+            #modalBookCategory {
+                font-size: 0.9rem !important;
+                color: var(--primary-color) !important;
+                margin-bottom: 1.5rem !important;
+            }
+
+            /* DESCRIPTION */
             .modal-description-wrapper {
-                order: 4 !important;
                 padding: 0 1.5rem !important;
+                margin-bottom: 2rem !important;
             }
 
-            /* 4. Actions Area */
-            .modal-actions-wrapper {
-                order: 5 !important;
-                padding: 1.5rem !important;
-                margin-top: 0.5rem !important;
+            #modalBookDescription {
+                font-size: 1.05rem !important;
+                line-height: 1.7 !important;
+                color: #555 !important;
+                text-align: left !important;
+                /* Better reading */
             }
 
-            /* 5. Related Area */
+            /* RELATED BOOKS */
             .modal-related-wrapper {
-                order: 6 !important;
-                padding: 1.5rem 1.5rem !important;
-                margin-top: 0 !important;
+                padding: 0 1.5rem 2rem 1.5rem !important;
+                background: #fff !important;
+            }
+
+            /* 5. STICKY FOOTER ACTION BAR */
+            .modal-actions-wrapper {
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                background: rgba(255, 255, 255, 0.95) !important;
+                backdrop-filter: blur(10px) !important;
+                padding: 15px 20px !important;
+                z-index: 1000 !important;
+                border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+                box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05) !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+            }
+
+            #modalDownloadBtn {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 1rem !important;
+                font-size: 1.1rem !important;
+                border-radius: 50px !important;
+                /* Pill shape */
+                background: var(--primary-color) !important;
+                box-shadow: 0 8px 20px rgba(12, 100, 124, 0.25) !important;
+            }
+
+            /* Hide things we don't need or re-order naturally */
+            .modal-divider {
+                display: none !important;
+            }
+
+            /* Close Button Position */
+            .close-modal {
+                top: 15px !important;
+                right: 15px !important;
+                background: rgba(255, 255, 255, 0.8) !important;
+                border: none !important;
             }
 
             /* TYPOGRAPHY */
