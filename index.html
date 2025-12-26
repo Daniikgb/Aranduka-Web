@@ -1608,58 +1608,62 @@
                     font-size: 0.85rem;
                     letter-spacing: 0.5px;
                 }
-
-                /* --- Modal Aesthetic Upgrades --- */
-                /* Beautiful Download Button */
-                #modalDownloadBtn {
-                    background: linear-gradient(45deg, #11998e, #38ef7d);
-                    /* Fresh Green/Teal Gradient */
-                    border: none;
-                    box-shadow: 0 10px 20px rgba(56, 239, 125, 0.3);
-                    color: white;
-                    font-size: 1.1rem !important;
-                    letter-spacing: 1px;
-                    text-transform: uppercase;
-                    transition: transform 0.3s, box-shadow 0.3s;
-                    position: relative;
-                    overflow: hidden;
-                }
-
-                #modalDownloadBtn:hover {
-                    transform: translateY(-3px);
-                    box-shadow: 0 15px 25px rgba(56, 239, 125, 0.5);
-                }
-
-                /* Related Books Styling */
-                #relatedBooksContainer h5 {
-                    font-size: 1.2rem;
-                    margin-bottom: 1rem;
-                    text-align: center;
-                    color: var(--primary-color);
-                    font-weight: 700;
-                }
-
-                .related-book-card {
-                    border-radius: 15px;
-                    overflow: hidden;
-                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-                    transition: 0.3s;
-                }
-
-                .related-book-card img {
-                    width: 100%;
-                    height: 120px;
-                    object-fit: cover;
-                }
             }
 
-            .search-bar {
-                grid-column: 1 / -1;
-                grid-row: 2;
+            /* --- Modal Aesthetic Upgrades (Global) --- */
+            /* Beautiful Download Button */
+            #modalDownloadBtn {
+                background: linear-gradient(45deg, #11998e, #38ef7d);
+                /* Fresh Green/Teal Gradient */
+                border: none;
+                box-shadow: 0 10px 20px rgba(56, 239, 125, 0.3);
+                color: white;
+                font-size: 1.1rem !important;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                transition: transform 0.3s, box-shadow 0.3s;
+                position: relative;
+                overflow: hidden;
+            }
+
+            #modalDownloadBtn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 15px 25px rgba(56, 239, 125, 0.5);
+            }
+
+            /* Related Books Styling */
+            #relatedBooksContainer h5 {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+                text-align: center;
+                color: var(--primary-color);
+                font-weight: 700;
+            }
+
+            .related-book-card {
+                border-radius: 15px;
+                overflow: hidden;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+                transition: 0.3s;
+            }
+
+            .related-book-card img {
                 width: 100%;
-                max-width: none;
-                margin: 5px 0 0 0;
-                order: unset;
+                height: 120px;
+                object-fit: cover;
+            }
+
+            /* --- Mobile Responsiveness (Search Bar) --- */
+            @media (max-width: 991px) {
+
+                .search-bar {
+                    grid-column: 1 / -1;
+                    grid-row: 2;
+                    width: 100%;
+                    max-width: none;
+                    margin: 5px 0 0 0;
+                    order: unset;
+                }
             }
 
             /* Adjust Hero to match new header compactness */

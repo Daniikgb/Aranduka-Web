@@ -486,9 +486,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     <h4 class="font-weight-bold text-dark mb-1">Aportes de la Comunidad</h4>
                     <p class="text-muted small mb-0">Ensayos, guías y resúmenes compartidos por estudiantes.</p>
                 </div>
-                <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm font-weight-bold" 
-                        onclick="$('#uploadMaterialModal').modal('show');" style="font-size: 0.85rem;">
-                    <i class="fas fa-plus mr-1"></i> Subir el mío
+                <button class="btn btn-outline-primary btn-sm rounded-pill px-3 font-weight-bold" 
+                        onclick="$('#uploadMaterialModal').modal('show');" style="font-size: 0.75rem; border-width:1px;">
+                    <i class="fas fa-plus mr-1"></i> Subir Material
                 </button>
             </div>
             <div class="row w-100 m-0" id="essays-grid"></div>
@@ -745,8 +745,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 let relatedHtml = '<h5 class="mt-4 mb-3" style="font-weight:700; color:#333;">También te podría interesar:</h5><div class="row">';
                 related.forEach(rb => {
                     relatedHtml += `
-                < div class="col-4 text-center cursor-pointer" onclick = "openBookModal(${rb.id})" >
-                    <img src="${rb.image}" class="img-fluid rounded shadow-sm mb-2 hover-up" style="max-height: 100px;">
+                    <div class="col-4 text-center cursor-pointer" onclick="openBookModal(${rb.id})">
+                        <img src="${rb.image}" class="img-fluid rounded shadow-sm mb-2 hover-up" style="max-height: 100px;">
                         <p class="small text-muted text-truncate">${rb.title}</p>
                     </div>
             `;
