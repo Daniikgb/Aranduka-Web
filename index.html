@@ -1075,6 +1075,26 @@
             text-transform: uppercase;
         }
 
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.3s;
+            color: #333;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
         .close-modal:hover {
             transform: rotate(90deg);
             color: var(--py-red);
@@ -2178,8 +2198,23 @@
                 width: 280px !important;
                 /* EVEN LARGER COVER */
                 max-width: 85vw !important;
-                margin: 1.5rem auto !important;
+                margin: 0.5rem auto !important;
                 display: block !important;
+                animation: floatBook 6s ease-in-out infinite;
+            }
+
+            @keyframes floatBook {
+                0% {
+                    transform: translateY(0px);
+                }
+
+                50% {
+                    transform: translateY(-10px);
+                }
+
+                100% {
+                    transform: translateY(0px);
+                }
             }
 
             #modalBookImage {
@@ -2205,15 +2240,14 @@
             .modal-actions-wrapper {
                 order: 5 !important;
                 padding: 1.5rem !important;
-                margin-top: 1rem !important;
+                margin-top: 0.5rem !important;
             }
 
             /* 5. Related Area */
             .modal-related-wrapper {
                 order: 6 !important;
-                margin-top: 1rem !important;
-                border-top: 1px solid #f0f0f0;
-                padding: 2rem 1.5rem !important;
+                padding: 1.5rem 1.5rem !important;
+                margin-top: 0 !important;
             }
 
             /* TYPOGRAPHY */
@@ -2227,11 +2261,16 @@
             #modalBookTitle {
                 font-size: 2.2rem !important;
                 line-height: 1.1 !important;
-                text-align: left !important;
+                text-align: center !important;
+                background: linear-gradient(45deg, var(--primary-color), #0038A8);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 0.5rem !important;
+                font-weight: 850 !important;
             }
 
             #modalBookCategory {
-                text-align: left !important;
+                text-align: center !important;
                 font-size: 0.95rem !important;
                 margin-top: 0.5rem !important;
                 color: var(--primary-color) !important;
@@ -2241,6 +2280,7 @@
                 font-size: 1.1rem !important;
                 color: #444 !important;
                 line-height: 1.6 !important;
+                text-align: justify;
             }
 
             /* BUTTONS STYLING */
@@ -2262,6 +2302,8 @@
                 font-weight: 800 !important;
                 margin-bottom: 2rem !important;
                 color: #1a1a1a;
+                text-align: center;
+                margin-bottom: 1.5rem !important;
             }
 
             #relatedBooksContainer .col-6 {
@@ -2270,14 +2312,16 @@
             }
 
             .related-book-card img {
-                height: 180px !important;
-                /* SIGNIFICANTLY LARGER THUMBNAILS */
-                width: 100% !important;
+                height: 220px !important;
+                width: auto !important;
+                max-width: 100% !important;
                 object-fit: contain;
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+                /* Mantener la proporción completa de la portada */
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
                 border-radius: 12px !important;
-                background: #fbfbfb;
-                padding: 5px;
+                background: transparent;
+                /* Quitar fondo gris si existe */
+                padding: 0;
             }
 
             .related-book-card p {
@@ -3209,12 +3253,12 @@
     </button>
 
     <!-- Scripts -->
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/main.js"></script>
-
     <script>
         // Tab switching logic for Dashboard
         $(document).ready(function () {
@@ -3229,6 +3273,7 @@
                 // Custom Scroll Logic: Scroll to tabs with offset for Sticky Header
                 // This ensures tabs & section content are visible, but doesn't scroll down to books.
                 const tabs = document.querySelector('.dashboard-tabs');
+
                 if (tabs) {
                     // 120px offset to account for sticky header and some breathing room
                     const headerOffset = 120;
@@ -3249,7 +3294,6 @@
             });
         });
     </script>
-
     <script>
         // Auto-Hide Header Script
         const header = document.querySelector('.main-header');
@@ -3275,7 +3319,10 @@
 
         if (backToTopBtn) {
             backToTopBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             });
         }
     </script>

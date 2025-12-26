@@ -438,19 +438,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 const gKey = normalizeKey(g).replace(/\s+/g, '-');
                 const activeClass = (gKey === filterValue) ? 'btn-primary text-white' : 'btn-outline-primary bg-white';
                 gradeButtons += `
-            < button class="btn ${activeClass} rounded-pill px-4 py-2 mx-1 my-1 shadow-sm font-weight-bold"
-        onclick = "renderBooks('filter', '${gKey}')" style = "border-width: 2px;" >
-            ${g}
-                    </button > `;
+                    <button class="btn ${activeClass} rounded-pill px-4 py-2 mx-1 my-1 shadow-sm font-weight-bold"
+                            onclick="renderBooks('filter', '${gKey}')" style="border-width: 2px;">
+                        ${g}
+                    </button>`;
             });
 
             const backNav = document.createElement('div');
             backNav.className = 'col-12 mb-4 d-flex flex-column align-items-center';
             backNav.style.gridColumn = '1 / -1';
             backNav.innerHTML = `
-            < div class="small text-uppercase font-weight-bold text-muted mb-2" style = "letter-spacing:1px" >
-                <i class="fas fa-layer-group mr-1"></i> Explorando: ${parentLevel.toUpperCase()}
-                </div >
+                <div class="small text-uppercase font-weight-bold text-muted mb-2" style="letter-spacing:1px">
+                    <i class="fas fa-layer-group mr-1"></i> Explorando: ${parentLevel.toUpperCase()}
+                </div>
                 <div class="d-flex flex-wrap justify-content-center">
                     ${gradeButtons}
                     <button class="btn btn-link text-muted ml-md-3 font-weight-bold" onclick="showGradeGrid('${parentLevel}')">
@@ -728,9 +728,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const badgeEl = document.getElementById('modalBookBadge');
+        // Fix: Don't overwrite parent, just update badge and append file indicator if not exists
+        // Safer approach: Reconstruct the whole header properly or use specific targeting.
+        // Let's use reconstruction to be safe since we have all data.
+
         badgeEl.parentElement.innerHTML = `
-            <span id="modalBookBadge" class="badge-py">${book.level.toUpperCase()}</span>
+            <span id="modalBookBadge" class="badge-py" style="background:var(--primary-color); color:white; padding:4px 12px; border-radius:50px; font-weight:700; font-size:0.8rem; letter-spacing:1px; margin-right:5px;">${book.level.toUpperCase()}</span>
             ${fileTypeBadge}
+            <h2 id="modalBookTitle" class="font-weight-bold text-dark mb-1 mt-2" style="font-family: 'Playfair Display', serif; font-size: 2.2rem; line-height: 1.1;">${book.title}</h2>
+            <p class="text-primary font-weight-bold small text-uppercase" id="modalBookCategory" style="letter-spacing: 1.5px; opacity: 0.8;">${book.category.toUpperCase()}</p>
         `;
 
         // RESTORED: Guide Button Logic
