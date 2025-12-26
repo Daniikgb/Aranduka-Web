@@ -2036,7 +2036,7 @@
                 justify-content: center;
             }
 
-            /* REORDERING MAIN ROW */
+            /* PRECISION REORDERING */
             #quickViewModal .modal-row-main {
                 display: flex !important;
                 flex-direction: column !important;
@@ -2046,58 +2046,61 @@
                 padding-bottom: 50px !important;
             }
 
-            /* 1. INFO HEADER AT THE TOP */
+            /* Use display: contents to reorder children directly */
+            .modal-col-image,
             .modal-col-info {
+                display: contents !important;
+            }
+
+            /* ORDERING */
+            /* 1. Title Area */
+            .modal-info-header {
                 order: 1 !important;
-                padding: 5rem 1.5rem 1rem 1.5rem !important;
-                /* Space for close button */
-                text-align: left !important;
+                padding: 5rem 1.5rem 0.5rem 1.5rem !important;
             }
 
-            /* 2. IMAGE BELOW TITLES */
-            .modal-col-image {
-                order: 2 !important;
-                padding: 1rem !important;
-                background: #fff !important;
-            }
-
+            /* 2. Image Area */
             .modal-book-wrapper {
-                width: 260px !important;
-                /* MUCH LARGER COVER */
-                max-width: 80vw !important;
-                margin: 0 auto !important;
+                order: 2 !important;
+                width: 280px !important;
+                /* EVEN LARGER COVER */
+                max-width: 85vw !important;
+                margin: 1.5rem auto !important;
+                display: block !important;
             }
 
             #modalBookImage {
+                width: 100% !important;
                 transform: none !important;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
-                border-radius: 8px !important;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12) !important;
+                border-radius: 10px !important;
             }
 
-            /* 3. DESCRIPTION & BUTTONS */
-            .modal-info-header {
-                order: 1 !important;
-            }
-
+            /* 3. Description Area */
             .modal-divider {
-                order: 2 !important;
-                margin: 1rem 0 !important;
+                order: 3 !important;
+                margin: 1rem 1.5rem !important;
+                width: 60px !important;
             }
 
             .modal-description-wrapper {
-                order: 3 !important;
+                order: 4 !important;
+                padding: 0 1.5rem !important;
             }
 
+            /* 4. Actions Area */
             .modal-actions-wrapper {
-                order: 4 !important;
+                order: 5 !important;
+                padding: 1.5rem !important;
                 margin-top: 1rem !important;
             }
 
+            /* 5. Related Area */
             .modal-related-wrapper {
-                order: 5 !important;
-                margin-top: 2rem !important;
+                order: 6 !important;
+                margin-top: 1rem !important;
                 border-top: 1px solid #f0f0f0;
-                padding-top: 2rem !important;
+                padding: 2rem 1.5rem !important;
             }
 
             /* TYPOGRAPHY */
@@ -2105,6 +2108,7 @@
                 margin: 0 0 0.8rem 0 !important;
                 background-color: var(--primary-color) !important;
                 border-radius: 50px !important;
+                font-size: 0.85rem !important;
             }
 
             #modalBookTitle {
@@ -2115,52 +2119,59 @@
 
             #modalBookCategory {
                 text-align: left !important;
-                font-size: 0.9rem !important;
+                font-size: 0.95rem !important;
                 margin-top: 0.5rem !important;
                 color: var(--primary-color) !important;
             }
 
             #modalBookDescription {
-                font-size: 1rem !important;
-                color: #555 !important;
-                text-align: left !important;
+                font-size: 1.1rem !important;
+                color: #444 !important;
+                line-height: 1.6 !important;
             }
 
             /* BUTTONS STYLING */
             #modalDownloadBtn {
                 border-radius: 50px !important;
-                padding: 1rem !important;
+                padding: 1.1rem !important;
                 background: var(--primary-color) !important;
-            }
-
-            .modal-actions-wrapper .btn-outline-secondary,
-            .modal-actions-wrapper .btn-outline-primary {
-                border-radius: 50px !important;
-                padding: 0.8rem !important;
-                margin-top: 0.5rem !important;
-            }
-
-            /* RELATED BOOKS LARGER */
-            .modal-related-wrapper h5 {
                 font-size: 1.1rem !important;
-                font-weight: 700 !important;
+            }
+
+            .modal-actions-wrapper .btn-outline {
+                border-radius: 50px !important;
+                padding: 0.9rem !important;
+            }
+
+            /* RELATED BOOKS ENHANCEMENT */
+            .modal-related-wrapper h5 {
+                font-size: 1.25rem !important;
+                font-weight: 800 !important;
+                margin-bottom: 2rem !important;
+                color: #1a1a1a;
+            }
+
+            #relatedBooksContainer .col-6 {
+                padding: 0 10px !important;
                 margin-bottom: 1.5rem !important;
             }
 
-            #relatedBooksContainer .col-4 {
-                padding: 0 8px !important;
-            }
-
             .related-book-card img {
-                height: 140px !important;
-                /* LARGER THUMBNAILS */
-                width: auto !important;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+                height: 180px !important;
+                /* SIGNIFICANTLY LARGER THUMBNAILS */
+                width: 100% !important;
+                object-fit: contain;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+                border-radius: 12px !important;
+                background: #fbfbfb;
+                padding: 5px;
             }
 
             .related-book-card p {
-                font-size: 0.8rem !important;
-                margin-top: 0.5rem !important;
+                font-size: 0.85rem !important;
+                font-weight: 700 !important;
+                margin-top: 0.8rem !important;
+                color: #333 !important;
             }
         }
     </style>

@@ -335,6 +335,23 @@ document.addEventListener('DOMContentLoaded', function () {
         const heartClass = isFav ? 'fas fa-heart text-danger' : 'far fa-heart text-muted';
         const user = JSON.parse(localStorage.getItem('aranduka_currentUser'));
 
+        // Logic for File Type Badge
+        let fileType = 'PDF';
+        let badgeColor = '#D52B1E'; // Default PDF Red
+        if (book.file) {
+            const ext = book.file.split('.').pop().toLowerCase();
+            if (ext === 'docx' || ext === 'doc') {
+                fileType = 'WORD';
+                badgeColor = '#2b579a'; // Word Blue
+            } else if (ext === 'xlsx' || ext === 'xls') {
+                fileType = 'EXCEL';
+                badgeColor = '#217346'; // Excel Green
+            } else if (ext === 'pptx' || ext === 'ppt') {
+                fileType = 'PPT';
+                badgeColor = '#b7472a'; // PPT Orange
+            }
+        }
+
         let adminControls = isAdmin() ? `
             <button class="btn btn-sm shadow" onclick="deleteBook(${book.id}); event.stopPropagation();" 
                 style="position: absolute; top: 15px; left: 50px; z-index: 25; background: white; border-radius: 50%; width: 35px; height: 35px; color: #dc3545; border:none;">
@@ -353,8 +370,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         return `
             <div class="book-card quick-view-trigger" data-id="${book.id}">
-                <!-- PDF Badge -->
-                <span class="pdf-badge">PDF</span>
+                <!-- Dynamic File Badge -->
+                <span class="pdf-badge" style="background-color: ${badgeColor} !important;">${fileType}</span>
 
                 <button class="btn btn-sm fav-btn" data-id="${book.id}" aria-label="Añadir a favoritos"
                     style="position: absolute; top: 8px; left: 8px; z-index: 25; background: rgba(255,255,255,0.9); border-radius: 50%; width: 35px; height: 35px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
@@ -558,9 +575,8 @@ document.addEventListener('DOMContentLoaded', function () {
             // Logic: Level > Grade > Category
             if (filterCard.dataset.level) {
                 showGradeGrid(filterCard.dataset.level);
-                // Scroll to simplified container for Levels/Grades
-                const containerTop = elements.booksContainer.getBoundingClientRect().top + window.scrollY - 100;
-                window.scrollTo({ top: containerTop, behavior: 'smooth' });
+                // Scroll to the books container area where grades appear
+                smoothScrollTo(elements.booksContainer, 140);
             } else if (filterCard.dataset.grade) {
                 renderBooks('filter', filterCard.dataset.grade);
                 scrollToResults();
@@ -584,11 +600,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Search Input
     // Search Input Logic (Input + Submit)
-    const handleSearch = (val) => {
+    const smoothScrollTo = (element, offset = 100) => {
+        if (!element) return;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+        });
+    };
+
+    const handleSearch = (val, shouldScroll = false) => {
         if (val.length > 0) {
             elements.introTitle.innerText = `Resultados: "${val}"`;
             renderBooks('search', val);
-            scrollToResults();
+            if (shouldScroll) {
+                smoothScrollTo(document.querySelector('.results-area'), 120);
+            }
         } else {
             elements.introTitle.innerText = "Explora nuestros materiales";
             renderBooks('all');
@@ -597,13 +625,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     elements.searchInput?.addEventListener('input', (e) => {
         const val = e.target.value;
-        if (val.length > 2 || val.length === 0) handleSearch(val);
+        if (val.length > 2 || val.length === 0) handleSearch(val, false);
     });
 
     document.getElementById('searchForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
         const val = elements.searchInput.value;
-        handleSearch(val);
+        handleSearch(val, true);
     });
 
     // RESTORED: Voice Search
@@ -621,14 +649,14 @@ document.addEventListener('DOMContentLoaded', function () {
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
             elements.searchInput.value = transcript;
-            elements.searchInput.dispatchEvent(new Event('input'));
+            handleSearch(transcript, true); // Voice usually means intent to see results immediately
             elements.voiceBtn.style.color = '#888';
         };
 
         recognition.onend = () => elements.voiceBtn.style.color = '#888';
     }
 
-    // --- Dashboard Tabs Logic ---
+    // --- Dashboard Tabs Logic (Unified) ---
     const tabBtns = document.querySelectorAll('.tab-btn');
     const sections = document.querySelectorAll('.filter-section');
 
@@ -645,16 +673,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (sec.id === targetId) {
                     sec.classList.add('active');
 
-                    // 3. Auto-Scroll Logic (Added)
-                    // Scroll to the filter section with a bit of offset for the sticky header
-                    const headerOffset = 180; // Adjust based on your header height
-                    const elementPosition = sec.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: "smooth"
-                    });
+                    // 3. Auto-Scroll Logic: Targeted for flow
+                    // If switching to selections or subjects, scroll to see the options
+                    if (targetId === 'secciones' || targetId === 'materias') {
+                        smoothScrollTo(sec, 150);
+                    }
                 }
             });
 
@@ -664,47 +687,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 elements.introTitle.innerText = "Tus Libros Favoritos";
             } else if (targetId === 'comunidad') {
                 renderCommunityBooks();
-            } else {
-                renderBooks('all');
-                elements.introTitle.innerText = "Explora todos los libros";
-            }
-        });
-    });
-    // Tab Switching (RESTORED Community Logic)
-    elements.tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            elements.tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-
-            elements.sections.forEach(s => s.classList.remove('active'));
-            const targetId = tab.dataset.target;
-            const targetSec = document.getElementById(targetId);
-            if (targetSec) targetSec.classList.add('active');
-
-            // --- RESTORED: Community Layout Management --
-            const uploadCol = document.getElementById('community-upload-col');
-            const listCol = document.getElementById('community-list-col');
-
-            if (targetId === 'comunidad') {
                 elements.introTitle.innerText = 'Aportes de la Comunidad';
-                renderCommunityBooks();
-                // Ensure Layout is Reset (Show Form)
+                const uploadCol = document.getElementById('community-upload-col');
+                const listCol = document.getElementById('community-list-col');
                 if (uploadCol) uploadCol.classList.remove('d-none');
                 if (listCol) { listCol.classList.remove('col-md-12'); listCol.classList.add('col-md-8'); }
             } else {
-                // If not community, we can reset view if needed, or just let tabs handle it
-                if (targetId === 'secciones') renderBooks('all');
-                if (targetId === 'favoritos') {
-                    elements.introTitle.innerText = 'Tus Favoritos';
-                    renderBooks('favorites');
-                }
-            }
-
-            const offset = 120;
-            const container = document.querySelector('.dashboard-container');
-            if (container) {
-                const top = container.getBoundingClientRect().top + window.scrollY - offset;
-                window.scrollTo({ top, behavior: 'smooth' });
+                renderBooks('all');
+                elements.introTitle.innerText = "Explora todos los libros";
             }
         });
     });
@@ -762,9 +752,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 let relatedHtml = '<h5 class="mt-4 mb-3" style="font-weight:700; color:#333;">También te podría interesar:</h5><div class="row">';
                 related.forEach(rb => {
                     relatedHtml += `
-                    <div class="col-4 text-center cursor-pointer related-book-card" onclick="openBookModal(${rb.id})">
-                        <img src="${rb.image}" class="img-fluid rounded shadow-sm mb-2 hover-up" style="max-height: 140px;">
-                        <p class="small text-muted text-truncate font-weight-bold" style="font-size: 0.7rem;">${rb.title}</p>
+                    <div class="col-6 col-md-4 text-center cursor-pointer related-book-card" onclick="openBookModal(${rb.id})">
+                        <img src="${rb.image}" class="img-fluid rounded shadow-sm mb-2 hover-up" style="max-height: 200px; width: auto; object-fit: cover;">
+                        <p class="small text-muted text-truncate font-weight-bold" style="font-size: 0.8rem;">${rb.title}</p>
                     </div>
             `;
                 });
