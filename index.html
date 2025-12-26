@@ -2157,14 +2157,25 @@
                 margin-bottom: 1.2rem;
                 font-weight: 800;
                 color: var(--charcoal);
+                /* STICKY HEADER FIX */
+                position: sticky;
+                top: 0;
+                background: white;
+                /* Ensure text remains readable over content */
+                z-index: 50;
+                padding: 10px 0;
+                border-bottom: 2px solid #f0f0f0;
+                /* Optional: visual separation when stuck */
             }
 
             .related-book-card img {
                 height: 450px !important;
                 /* MASSIVE IMAGES (was 280px) */
                 width: 100% !important;
-                object-fit: cover !important;
-                /* Fill the card */
+                object-fit: contain !important;
+                /* FIXED: No more cropping */
+                background: #fff;
+                /* Clean background for letterboxing */
                 border-radius: 15px;
                 box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
             }
