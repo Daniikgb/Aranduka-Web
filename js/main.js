@@ -762,9 +762,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 let relatedHtml = '<h5 class="mt-4 mb-3" style="font-weight:700; color:#333;">También te podría interesar:</h5><div class="row">';
                 related.forEach(rb => {
                     relatedHtml += `
-                    <div class="col-4 text-center cursor-pointer" onclick="openBookModal(${rb.id})">
+                    <div class="col-6 col-md-4 text-center cursor-pointer related-book-card" onclick="openBookModal(${rb.id})">
                         <img src="${rb.image}" class="img-fluid rounded shadow-sm mb-2 hover-up" style="max-height: 100px;">
-                        <p class="small text-muted text-truncate">${rb.title}</p>
+                        <p class="small text-muted text-truncate font-weight-bold">${rb.title}</p>
                     </div>
             `;
                 });
