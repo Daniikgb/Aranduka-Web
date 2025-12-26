@@ -8,14 +8,14 @@
   "description": "Biblioteca Virtual y Editorial Educativa de Paraguay",
   "icons": [
     {
-      "src": "https://upload.wikimedia.org/wikipedia/commons/2/27/Flag_of_Paraguay.svg",
+      "src": "img/portadas/logo aranduka.jpeg",
       "sizes": "192x192",
-      "type": "image/svg+xml"
+      "type": "image/jpeg"
     },
     {
-      "src": "https://upload.wikimedia.org/wikipedia/commons/2/27/Flag_of_Paraguay.svg",
+      "src": "img/portadas/logo aranduka.jpeg",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "type": "image/jpeg"
     }
   ]
 }

@@ -7,7 +7,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <!-- Favicon -->
-    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/2/27/Flag_of_Paraguay.svg" sizes="32x32" />
+    <link rel="icon" href="img/portadas/logo aranduka.jpeg" type="image/jpeg" />
     <link rel="manifest" href="manifest.json"> <!-- PWA Manifest -->
 
     <!-- Google Fonts -->
@@ -775,13 +775,14 @@
 
         /* The Subtle 3D Book Look */
         .book-cover img {
-            max-height: 85%;
-            max-width: 85%;
-            border-radius: 2px 8px 8px 2px;
-            box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.15);
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+            box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15);
             transition: all 0.4s ease;
             z-index: 2;
-            transform: rotateY(-5deg);
+            padding: 10px;
         }
 
         /* Shine Effect */
@@ -896,66 +897,7 @@
             box-shadow: 0 4px 10px rgba(12, 100, 124, 0.3);
         }
 
-        /* Floating WhatsApp */
-        .float-whatsapp {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 50px;
-            height: 50px;
-            background: #25d366;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            transition: 0.3s;
-        }
 
-        .float-whatsapp:hover {
-            transform: scale(1.1);
-            color: white !important;
-            background: #128c7e;
-            text-decoration: none;
-        }
-
-        .whatsapp-tooltip {
-            position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #fff;
-            color: #333;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            opacity: 1;
-            visibility: visible;
-            transition: 0.3s;
-            white-space: nowrap;
-            pointer-events: none;
-        }
-
-        /* Triangle Arrow */
-        .whatsapp-tooltip::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 6px;
-            border-style: solid;
-            border-color: #fff transparent transparent transparent;
-        }
-
-        .float-whatsapp:hover .whatsapp-tooltip {
-            transform: translateX(-50%) translateY(-5px);
-        }
 
         /* 2. Congelar página principal */
         body.modal-open-freeze {
@@ -1441,10 +1383,12 @@
 
             .modal-book-wrapper img {
                 width: 100% !important;
-                border-radius: 2px 12px 12px 2px !important;
-                box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.3) !important;
-                transform: rotateY(-10deg) !important;
-                transition: transform 0.5s ease;
+                height: auto !important;
+                max-height: 300px !important;
+                object-fit: contain !important;
+                border-radius: 12px !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+                transform: none !important;
             }
 
             /* 5. Sección de Información: Diseño con Colores Vivos */
@@ -3347,10 +3291,7 @@
     </div>
 
     <!-- WhatsApp FAB -->
-    <a href="https://wa.me/595983714552" target="_blank" class="float-whatsapp">
-        <span class="whatsapp-tooltip">¡Contáctanos!</span>
-        <i class="fab fa-whatsapp"></i>
-    </a>
+
 
     <!-- Back to Top Button -->
     <button id="backToTopBtn" class="btn-back-to-top" title="Volver arriba">
