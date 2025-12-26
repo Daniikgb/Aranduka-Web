@@ -481,8 +481,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!container) return;
 
         container.innerHTML = `
-            <div class="col-12 mb-4 d-flex justify-content-between align-items-center">
-                <div>
+            <div class="col-12 mb-4 d-flex flex-column flex-md-row justify-content-between align-items-center text-center text-md-left">
+                <div class="mb-2 mb-md-0">
                     <h4 class="font-weight-bold text-dark mb-1">Aportes de la Comunidad</h4>
                     <p class="text-muted small mb-0">Ensayos, guías y resúmenes compartidos por estudiantes.</p>
                 </div>
