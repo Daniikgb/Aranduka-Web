@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <!-- Favicon -->
     <link rel="icon" href="img/portadas/logo aranduka.jpeg" type="image/jpeg" />
-    <link rel="manifest" href="manifest.json"> <!-- PWA Manifest -->
+
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2117,15 +2117,14 @@
             }
 
             .related-book-card img {
-                height: 450px !important;
-                /* MASSIVE IMAGES (was 280px) */
+                height: 130px !important;
+                /* Even Smaller for Desktop */
                 width: 100% !important;
                 object-fit: contain !important;
-                /* FIXED: No more cropping */
                 background: #fff;
                 /* Clean background for letterboxing */
                 border-radius: 15px;
-                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             }
 
             /* Ajuste para las columnas de relacionados (serán col-6 en JS pero aseguramos aquí) */
@@ -2255,73 +2254,15 @@
             }
 
             .related-book-card img {
-                height: 350px !important;
-                /* Big images */
+                height: 180px !important;
+                /* Even Smaller */
                 width: 100% !important;
                 object-fit: contain !important;
                 background: #fff !important;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
             }
 
-            /* 5. FIXED BOTTOM BAR (WhatsApp + Download App) */
-            .modal-actions-wrapper {
-                position: fixed !important;
-                bottom: 0 !important;
-                left: 0 !important;
-                width: 100% !important;
-                background: #ffffff !important;
-                box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1) !important;
-                padding: 15px 20px !important;
-                z-index: 10000 !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: space-between !important;
-                /* Use space-between layout */
-                gap: 15px !important;
-                border-top: 1px solid #f0f0f0 !important;
-            }
 
-            /* WhatsApp Button Style - Circle/Icon */
-            .btn-whatsapp-float {
-                width: 55px !important;
-                height: 55px !important;
-                min-width: 55px !important;
-                border-radius: 50% !important;
-                background: #25D366 !important;
-                color: white !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                font-size: 1.8rem !important;
-                box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4) !important;
-                text-decoration: none !important;
-            }
-
-            /* Download App Button - Full Width Pill */
-            .btn-download-app-bar {
-                flex: 1 !important;
-                background: var(--primary-color) !important;
-                color: white !important;
-                border-radius: 50px !important;
-                padding: 0.9rem 1rem !important;
-                font-weight: 700 !important;
-                text-transform: uppercase !important;
-                font-size: 0.9rem !important;
-                text-align: center !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                box-shadow: 0 5px 15px rgba(12, 100, 124, 0.3) !important;
-                text-decoration: none !important;
-                white-space: nowrap !important;
-            }
-
-            /* Hide original inline buttons in modal since we use bar */
-            #modalDownloadBtn,
-            #modalGuideBtn {
-                display: none !important;
-                /* Hide original download button in modal flow */
-            }
 
             /* Floating Close Button */
             .close-modal-btn {
@@ -2350,11 +2291,7 @@
                 margin: 0 !important;
             }
 
-            /* Back to Top logic fix for modal */
-            .modal-scroll-container .btn-back-to-top {
-                bottom: 90px !important;
-                /* Move above bottom bar */
-            }
+
         }
 
         /* --- CONTINUOUS MODAL REDESIGN (SINGLE BLOCK) --- */
@@ -2562,21 +2499,148 @@
                     font-size: 1.1rem !important;
                 }
 
-                /* Hide sticky footer logic on desktop if we want inline buttons */
-                .modal-actions-wrapper {
-                    position: static !important;
-                    background: none !important;
-                    box-shadow: none !important;
-                    padding: 0 !important;
-                    display: block !important;
-                    border: none !important;
-                }
+
 
                 #modalDownloadBtn {
                     max-width: 300px;
                     /* Not full width */
                     display: inline-flex !important;
                 }
+            }
+        }
+
+        /* FORCE MODALS ON TOP */
+        #loginModal,
+        #authRequiredModal {
+            z-index: 12000 !important;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            /* LEFT SIDE */
+            z-index: 9999;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--py-blue));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            display: none;
+            /* Controlled by JS */
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, var(--py-blue), var(--primary-color));
+        }
+
+        /* --- RED CIRCULAR CLOSE BUTTON --- */
+        .close-modal-btn {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            width: 42px;
+            /* Large readable touch target */
+            height: 42px;
+            background-color: #D52B1E !important;
+            color: white !important;
+            border-radius: 50%;
+            display: flex !important;
+            /* Force Flex */
+            align-items: center;
+            justify-content: center;
+            border: none !important;
+            opacity: 1 !important;
+            box-shadow: 0 4px 12px rgba(213, 43, 30, 0.4);
+            text-shadow: none;
+            transition: transform 0.2s;
+            z-index: 1050;
+            padding: 0 !important;
+        }
+
+        .close-modal-btn:hover {
+            transform: scale(1.1);
+            background-color: #b01f14 !important;
+        }
+
+        .close-modal-btn i {
+            color: white !important;
+            font-size: 1.5rem;
+            /* Larger Icon */
+            line-height: 1;
+            display: block;
+            margin: 0 !important;
+            /* PERFECT CENTER */
+            padding: 0 !important;
+        }
+
+        .close-modal-btn span {
+            display: none;
+        }
+
+        /* Override standard Bootstrap close */
+        .modal-header .close {
+            padding: 0;
+            margin: 0;
+            opacity: 1;
+        }
+
+        /* --- SCROLL INDICATOR --- */
+        .scroll-indicator {
+            text-align: center;
+            margin-top: -5px;
+            /* Negative margin to pull it UP */
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            /* Larger Arrow */
+            animation: bounce 2s infinite;
+            opacity: 0.9;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .scroll-indicator p {
+            font-size: 0.9rem;
+            /* Larger Text */
+            margin-bottom: 4px;
+            font-weight: 800;
+            /* Extra Bold */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        margin-bottom: 2px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-8px);
+            }
+
+            60% {
+                transform: translateY(-4px);
             }
         }
     </style>
@@ -2604,6 +2668,9 @@
             <nav class="main-nav">
                 <ul>
                     <li><a href="#" id="navInicioBtn" class="active">Inicio</a></li>
+
+                    <!-- Subir Aporte Button (Desktop) -->
+
 
                     <!-- Contact Dropdown -->
                     <li class="dropdown">
@@ -2956,33 +3023,42 @@
 
     <!-- Modals -->
     <div id="quickViewModal" class="modal-overlay">
-        <div class="modal-content-custom single-block-modal">
-            <div
-                class="modal-header-actions sticky-top-modal d-flex align-items-center justify-content-between px-3 py-2 bg-white border-bottom">
-                <button class="close-modal-btn btn btn-link text-dark p-0" style="font-size: 1.5rem;">
+        <div class="modal-content-custom single-block-modal"
+            style="display: flex; flex-direction: column; max-height: 90vh; overflow: hidden;">
+            <!-- Modal Header (Mobile & Desktop) - Force Sticky & White Background -->
+            <div class="modal-header-actions d-flex align-items-center justify-content-between px-3 py-3 bg-white border-bottom"
+                style="position: sticky; top: 0; z-index: 1050; width: 100%; background-color: #ffffff !important; flex-shrink: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+
+                <!-- Actions: Download & Share (Header) -->
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-light btn-sm rounded-pill shadow-sm mr-2 d-flex align-items-center"
+                        onclick="shareBook(parseInt(document.getElementById('quickViewModal').dataset.bookId))"
+                        style="border: 1px solid #ddd; font-weight: 600;">
+                        <i class="fas fa-share-alt mr-1"></i> COMPARTIR
+                    </button>
+
+                    <a href="#"
+                        class="btn btn-secondary btn-sm font-weight-bold rounded-pill shadow-sm d-flex align-items-center"
+                        id="modalDownloadBtn" download
+                        style="background-color: #6c757d !important; border-color: #6c757d !important; color: white !important;">
+                        <i class="fas fa-download mr-1"></i> DESCARGAR
+                    </a>
+                </div>
+
+                <!-- Close Button (X Only) - MOVED TO END FOR RIGHT ALIGNMENT -->
+                <button class="close-modal-btn btn btn-link p-0 position-relative" type="button"
+                    onclick="closeBookModal()">
                     <i class="fas fa-times"></i>
                 </button>
-
-                <!-- Download Button Moved to Header (Gray) -->
-                <a href="#" class="btn btn-secondary btn-sm font-weight-bold rounded-pill shadow-sm"
-                    id="modalDownloadBtn" download>
-                    <i class="fas fa-download mr-1"></i> DESCARGAR
-                </a>
             </div>
 
-            <div class="modal-scroll-container">
-                <div class="modal-body-content position-relative">
+            <!-- Scrollable Content Area -->
+            <div class="modal-scroll-container"
+                style="flex-grow: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; position: relative;">
+                <div class="modal-body-content position-relative" style="padding-bottom: 80px;">
 
-                    <!-- WhatsApp Floating Button with Label -->
-                    <div class="whatsapp-float-wrapper"
-                        style="position: fixed; bottom: 20px; right: 20px; z-index: 1050; display: flex; flex-direction: column; align-items: center;">
-                        <span class="bg-white shadow-sm px-2 py-1 rounded mb-1 small font-weight-bold text-dark"
-                            style="font-size: 0.75rem;">Contáctanos</span>
-                        <a href="https://wa.me/595983714552" target="_blank" class="btn-whatsapp-float shadow"
-                            style="background: #25D366; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; text-decoration: none;">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                    </div>
+                    <!-- WhatsApp Floating Button Removed from Modal -->
+
 
                     <!-- Left Column: Image -->
                     <div class="modal-column-left">
@@ -3008,15 +3084,26 @@
                             Descripción...
                         </p>
 
-                        <!-- Actions Wrapper (Download removed from here as it is now in header) -->
-                        <div class="modal-actions-wrapper">
-                            <!-- Secondary buttons removed to satisfy 'Only one download button' request -->
+                        <!-- Actions Area (Content) -->
+                        <div class="modal-inline-actions mt-4 d-flex flex-wrap align-items-center">
+                            <a href="#"
+                                class="btn btn-secondary rounded-pill px-4 py-2 font-weight-bold shadow-sm mr-3 mb-3"
+                                id="modalDownloadBtn2" download
+                                style="background-color: #6c757d !important; border:none;">
+                                <i class="fas fa-download mr-2"></i> DESCARGAR MATERIAL
+                            </a>
+                            <button class="btn btn-outline-dark rounded-pill px-4 py-2 font-weight-bold mb-3"
+                                onclick="shareBook(parseInt(document.getElementById('quickViewModal').dataset.bookId))">
+                                <i class="fas fa-share-alt mr-2"></i> COMPARTIR
+                            </button>
                         </div>
+
+
                     </div>
                 </div>
 
-                <!-- Related Books (Full Width Below) -->
-                <div id="relatedBooksContainer" class="bg-light py-5 px-3 mt-4">
+                <!-- Related Books -->
+                <div id="relatedBooksContainer" class="bg-light py-3 px-3 mt-1">
                     <!-- JS fills this -->
                 </div>
             </div>
@@ -3503,7 +3590,20 @@
 
 
     <!-- Back to Top Button -->
-    <button id="backToTopBtn" class="btn-back-to-top" title="Volver arriba">
+    <div class="whatsapp-float-wrapper"
+        style="position: fixed; bottom: 25px; right: 25px; z-index: 9999; display: flex; flex-direction: column; align-items: center; pointer-events: auto;">
+        <span class="bg-white shadow px-2 py-1 rounded mb-1 small font-weight-bold text-dark text-nowrap"
+            style="font-size: 0.75rem; border: 1px solid #eee;">Contáctanos</span>
+        <a href="https://wa.me/595983714552" target="_blank" class="shadow-lg"
+            style="background: #25D366; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; text-decoration: none; transition: transform 0.3s;">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <!-- Back to Top Button (Subir Arriba) -->
+    <!-- Back to Top Button (Subir Arriba) -->
+    <button id="backToTopBtn" class="back-to-top" title="Subir arriba"
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
         <i class="fas fa-arrow-up"></i>
     </button>
 
@@ -3581,16 +3681,10 @@
             });
         }
     </script>
-    <script>
-        // PWA Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker registrado:', reg.scope))
-                    .catch(err => console.log('Service Worker error:', err));
-            });
-        }
-    </script>
+
+
+
 </body>
 
 </html>
+```

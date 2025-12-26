@@ -720,36 +720,38 @@ document.addEventListener('DOMContentLoaded', function () {
         if (badgeEl) badgeEl.innerText = book.level.toUpperCase();
 
         // 5. Actions
-        const downloadBtn = document.getElementById('modalDownloadBtn');
-        if (downloadBtn) {
-            // Check auth (Simulated or Real)
-            const user = JSON.parse(localStorage.getItem('aranduka_currentUser'));
+        const downloadBtns = [document.getElementById('modalDownloadBtn'), document.getElementById('modalDownloadBtn2')];
+        const user = JSON.parse(localStorage.getItem('aranduka_currentUser'));
+
+        downloadBtns.forEach(btn => {
+            if (!btn) return;
+
             if (!user) {
                 // If not logged in, change button to Trigger Login
-                downloadBtn.innerHTML = '<i class="fas fa-lock mr-2"></i> INICIA SESIÓN PARA DESCARGAR';
-                downloadBtn.onclick = (e) => {
+                btn.innerHTML = '<i class="fas fa-lock mr-2"></i> INICIA SESIÓN PARA DESCARGAR';
+                btn.onclick = (e) => {
                     e.preventDefault();
-                    $('#authRequiredModal').modal('show');
+                    $('#tab-register').tab('show'); // Bootstrap 4 syntax
+                    $('#loginModal').modal('show');
                 };
-                downloadBtn.removeAttribute('download');
-                downloadBtn.href = '#';
-                downloadBtn.classList.remove('btn-primary'); // Optional style change
-                downloadBtn.classList.add('btn-secondary');
+                btn.removeAttribute('download');
+                btn.href = '#';
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-secondary');
             } else {
                 // Logged In -> Prepare Download
-                downloadBtn.innerHTML = '<i class="fas fa-download mr-2 fa-lg"></i> DESCARGAR AHORA';
-                downloadBtn.href = book.file;
-                downloadBtn.setAttribute('download', book.title); // Suggest filename
-                downloadBtn.onclick = null; // Remove previous overrides
-                downloadBtn.classList.add('btn-primary');
-                downloadBtn.classList.remove('btn-secondary');
+                btn.innerHTML = btn.id === 'modalDownloadBtn' ? '<i class="fas fa-download mr-1"></i> DESCARGAR' : '<i class="fas fa-download mr-2"></i> DESCARGAR MATERIAL';
+                btn.href = book.file;
+                btn.setAttribute('download', book.title);
+                btn.onclick = null;
 
-                // Track Download (Optional)
-                downloadBtn.addEventListener('click', () => {
-                    // Log download if needed
-                });
+                // FORCE GRAY STYLE
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-secondary');
+                btn.style.backgroundColor = '#6c757d';
+                btn.style.borderColor = '#6c757d';
             }
-        }
+        });
 
         const guideBtn = document.getElementById('modalGuideBtn');
         if (guideBtn) {
@@ -769,7 +771,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 .slice(0, 2); // Show exactly 2 books as requested
 
             if (related.length > 0) {
-                let relatedHtml = '<h5 class="text-center font-weight-bold mb-4">También te podría interesar</h5><div class="row justify-content-center">';
+                // Populate Related Books
+                let relatedHtml = `
+                    <h5 class="text-center font-weight-bold mb-4" id="relatedTitle">También te podría interesar</h5>
+                    <div class="row justify-content-center">`;
+
                 related.forEach(rb => {
                     relatedHtml += `
                     <div class="col-6 mb-4 cursor-pointer related-book-card" onclick="openBookModal(${rb.id})">
@@ -782,8 +788,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 relatedHtml += '</div>';
                 relatedContainer.innerHTML = relatedHtml;
                 relatedContainer.style.display = 'block';
+
+                // INJECT SCROLL INDICATOR HIGHER UP (After Buttons)
+                // We check if it already exists to avoid duplicates
+                let existingIndicator = document.getElementById('dynamicScrollIndicator');
+                if (existingIndicator) existingIndicator.remove();
+
+                const indicatorHtml = `
+                    <div id="dynamicScrollIndicator" class="scroll-indicator mt-3 w-100 d-flex flex-column align-items-center justify-content-center" onclick="document.getElementById('relatedBooksContainer').scrollIntoView({behavior: 'smooth'})">
+                        <p>VER RELACIONADOS</p>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                `;
+
+                // Append to the details column (modal-column-right) so it's part of the main view
+                const detailsCol = document.querySelector('.modal-column-right');
+                if (detailsCol) {
+                    detailsCol.insertAdjacentHTML('beforeend', indicatorHtml);
+                }
+
             } else {
                 relatedContainer.style.display = 'none';
+                // Remove indicator if no related books
+                let existingIndicator = document.getElementById('dynamicScrollIndicator');
+                if (existingIndicator) existingIndicator.remove();
             }
         }
 
@@ -939,13 +967,92 @@ document.addEventListener('DOMContentLoaded', function () {
     // 8. ADMIN & UPLOADS
     // ==========================================
 
-    window.loadDashboardStats = function () {
+    window.loadDashboardStats = async function () {
         if (!isAdmin()) return;
-        document.getElementById('total-books').textContent = books.length;
-        // Mock rendering users (Replace with PHP fetch later)
-        const tbody = document.getElementById('admin-users-table-body');
-        if (tbody) tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Cargando datos desde Base de Datos...</td></tr>';
+
+        try {
+            const res = await fetch('backend/admin_dashboard.php');
+            const data = await res.json();
+
+            if (data.success) {
+                // 1. Stats
+                document.getElementById('total-users').textContent = data.stats.users;
+                document.getElementById('pending-requests').textContent = data.stats.pending;
+                document.getElementById('total-books').textContent = books.length; // Keep using local count or backend
+
+                // 2. Users Table
+                const usersBody = document.getElementById('admin-users-table-body');
+                if (data.users_list && data.users_list.length > 0) {
+                    usersBody.innerHTML = data.users_list.map(u => `
+                        <tr>
+                            <td>
+                                <div class="font-weight-bold text-dark">${u.nombre_completo}</div>
+                                <div class="small text-muted">${u.email}</div>
+                            </td>
+                            <td>
+                                <div class="small">CI: ${u.ci}</div>
+                                <div class="small">${u.colegio || '-'}</div>
+                            </td>
+                            <td>
+                                <span class="badge badge-${u.rol === 'admin' ? 'danger' : 'success'} rounded-pill px-2">${u.rol}</span>
+                            </td>
+                            <td>
+                                <div class="small text-muted" style="max-height:80px; overflow-y:auto; scrollbar-width:thin;">
+                                    ${(u.historial_descargas || []).map(h =>
+                        `<div class="text-truncate" title="${h.libro_titulo}"><i class="fas fa-download mx-1 text-primary"></i> ${h.libro_titulo}</div>`
+                    ).join('') || '<span class="text-muted">-</span>'}
+                                </div>
+                            </td>
+                            <td class="text-center font-weight-bold text-primary">${(u.historial_aportes || []).length}</td>
+                            <td class="small text-muted">${new Date(u.fecha_registro).toLocaleDateString()}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    usersBody.innerHTML = '<tr><td colspan="6" class="text-center py-4">No hay usuarios registrados.</td></tr>';
+                }
+
+                // 3. Pending Aportes Table
+                const pendingBody = document.getElementById('admin-pending-table-body');
+                const pendingAportes = data.aportes_list.filter(a => a.estado === 'pendiente');
+                if (pendingAportes.length > 0) {
+                    pendingBody.innerHTML = pendingAportes.map(a => `
+                        <tr>
+                            <td class="small">${new Date(a.fecha_subida).toLocaleDateString()}</td>
+                            <td>
+                                <div class="font-weight-bold">${a.autor_nombre || 'Anónimo'}</div>
+                            </td>
+                            <td>
+                                <div class="font-weight-bold">${a.titulo}</div>
+                                <small class="text-muted">${a.descripcion || ''}</small>
+                            </td>
+                            <td><a href="${a.archivo_url}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-file-pdf"></i> Ver</a></td>
+                            <td><span class="badge badge-warning">Pendiente</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-success rounded-circle shadow-sm" title="Aprobar"><i class="fas fa-check"></i></button>
+                                <button class="btn btn-sm btn-danger rounded-circle shadow-sm" title="Rechazar"><i class="fas fa-times"></i></button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    pendingBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">No hay aportes pendientes.</td></tr>';
+                }
+
+                // Update Badge Count
+                const reqCount = document.getElementById('req-count');
+                if (reqCount) reqCount.innerText = data.stats.pending;
+
+            } else {
+                console.error("Admin Data Error:", data.message);
+            }
+        } catch (err) {
+            console.error("Admin Fetch Error:", err);
+            const tbody = document.getElementById('admin-users-table-body');
+            if (tbody) tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-4">Error de conexión con la base de datos.</td></tr>';
+        }
     };
+
+    // Auto-load when opening modal
+    $('#adminDashboardModal').on('shown.bs.modal', loadDashboardStats);
 
     $('#uploadForm').on('submit', async function (e) {
         e.preventDefault();
