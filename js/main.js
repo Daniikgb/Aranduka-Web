@@ -755,7 +755,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (relatedContainer) {
             const related = books.filter(b => (b.level === book.level || b.category === book.category) && b.id !== book.id)
                 .sort(() => 0.5 - Math.random()) // Shuffle
-                .slice(0, 3);
+                .slice(0, 2);
 
             if (related.length > 0) {
                 let relatedHtml = '<h5 class="mt-4 mb-4" style="font-weight:800; color:#2d3748; letter-spacing: -0.5px;">También te podría interesar:</h5><div class="row g-4">';

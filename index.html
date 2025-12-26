@@ -1029,7 +1029,8 @@
             background: #ffffff;
             border-radius: 30px;
             width: 95%;
-            max-width: 900px;
+            max-width: 1200px;
+            /* Much wider for desktop */
             padding: 0;
             position: relative;
             transform: scale(0.9);
@@ -1416,14 +1417,18 @@
                 /* Ocupa todo el ancho en móvil */
                 display: flex !important;
                 justify-content: center !important;
-                align-items: center !important;
+                align-items: flex-start !important;
+                /* Move image to top */
                 flex: 0 0 auto !important;
                 position: relative !important;
                 min-height: 40vh !important;
+                padding-top: 3rem !important;
+                /* Adjust top padding */
             }
 
             .modal-book-wrapper {
-                width: 170px !important;
+                width: 300px !important;
+                /* Larger image on desktop */
                 margin: 0 auto !important;
                 filter: none !important;
             }
@@ -1439,57 +1444,97 @@
             /* 5. Sección de Información: Diseño con Colores Vivos */
             .modal-content-custom .col-md-6:last-child,
             .modal-col-info {
-                padding: 1rem 2rem 5rem 2rem !important;
+                padding: 3rem 3rem 3rem 1rem !important;
                 width: 100% !important;
-                text-align: center !important;
+                text-align: left !important;
+                /* Left align for desktop */
                 flex: 0 0 auto !important;
                 background: white !important;
                 margin-top: 0 !important;
                 border-radius: 0 !important;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
 
             #modalBookBadge {
-                background: #D52B1E !important;
-                /* Rojo Paraguay */
+                background: #007bff !important;
+                /* Blue like reference */
                 color: white !important;
-                padding: 6px 16px !important;
+                padding: 5px 15px !important;
                 border-radius: 50px !important;
-                font-weight: 850 !important;
+                font-weight: 700 !important;
                 display: inline-block !important;
-                margin: 0 auto 12px !important;
-                box-shadow: 0 4px 10px rgba(213, 43, 30, 0.2) !important;
+                margin: 0 !important;
+                font-size: 0.75rem !important;
+                letter-spacing: 1px !important;
+                box-shadow: none !important;
+                align-self: flex-start;
             }
 
             #modalBookTitle {
                 font-family: 'Playfair Display', serif !important;
-                font-size: 2.1rem !important;
-                color: #0c647c !important;
-                line-height: 1.1 !important;
+                font-size: 2.5rem !important;
+                color: #212529 !important;
+                /* Darker title text */
+                line-height: 1.2 !important;
                 margin-top: 10px !important;
-                font-weight: 800 !important;
+                font-weight: 700 !important;
+                text-align: left !important;
             }
 
             #modalBookCategory {
-                color: #0038A8 !important;
-                /* Azul Paraguay */
-                font-weight: 700 !important;
-                letter-spacing: 1.5px !important;
+                color: #007bff !important;
+                /* Blue category */
+                font-weight: 600 !important;
+                letter-spacing: 2px !important;
                 text-transform: uppercase !important;
-                font-size: 0.8rem !important;
+                font-size: 0.85rem !important;
                 display: block !important;
+                margin-bottom: 20px !important;
+                text-align: left !important;
+            }
+
+            /* Divider Line Desktop */
+            .modal-divider-desktop {
+                width: 50px;
+                height: 2px;
+                background-color: #dee2e6;
+                margin-bottom: 20px;
+                display: block;
+            }
+
+            /* Divider Line Desktop */
+            .modal-divider-desktop {
+                width: 50px;
+                height: 2px;
+                background-color: #dee2e6;
+                margin-bottom: 20px;
+                display: block;
             }
 
             /* 6. Botón de Descarga Premium con efecto de pulso opcional */
             #modalDownloadBtn {
-                background: linear-gradient(135deg, #0c647c 0%, #0038A8 100%) !important;
+                background: #007bff !important;
+                /* Solid Blue */
                 color: white !important;
                 border: none !important;
-                padding: 1.2rem !important;
-                border-radius: 18px !important;
-                font-weight: 800 !important;
-                box-shadow: 0 10px 20px rgba(0, 56, 168, 0.25) !important;
+                padding: 1rem !important;
+                border-radius: 50px !important;
+                /* Pill shape */
+                font-weight: 600 !important;
+                box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3) !important;
                 width: 100% !important;
                 display: block !important;
+                margin-top: auto !important;
+                /* Push to bottom if flex container allows */
+                text-transform: none !important;
+                /* Normal case as per image usually, but image says 'Descargar Material' title case */
+                font-size: 1rem !important;
+            }
+
+            #modalDownloadBtn i {
+                margin-right: 8px;
             }
 
             /* 7. Botón X (Cierre) Flotante */
@@ -2072,14 +2117,12 @@
 
             /* Botones de Acción - Sólidos */
             .mt-auto {
-                margin: 0 -1.5rem -2rem -1.5rem;
-                /* Pegado a los bordes y fondo */
-                padding: 2rem 1.5rem;
-                background: #f8f9fa;
-                border-top: 1px solid #eee;
-                border-top-left-radius: 25px;
-                border-top-right-radius: 25px;
-                box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.03);
+                margin: 0 !important;
+                padding: 1rem 0 !important;
+                background: transparent !important;
+                /* No background bar */
+                border: none !important;
+                box-shadow: none !important;
             }
 
             #modalDownloadBtn {
@@ -2109,12 +2152,13 @@
             }
 
             .related-book-card img {
-                height: 150px !important;
-                /* Más altos */
-                width: auto;
-                max-width: 100%;
-                border-radius: 8px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+                height: 280px !important;
+                /* Even Bigger Images */
+                width: 100% !important;
+                object-fit: cover !important;
+                /* Fill the card */
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             }
 
             /* Ajuste para las columnas de relacionados (serán col-6 en JS pero aseguramos aquí) */
@@ -2312,15 +2356,15 @@
             }
 
             .related-book-card img {
-                height: 220px !important;
-                width: auto !important;
+                height: 300px !important;
+                /* Maximized height */
+                width: 100% !important;
                 max-width: 100% !important;
-                object-fit: contain;
-                /* Mantener la proporción completa de la portada */
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+                object-fit: cover !important;
+                /* Fill the area */
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
                 border-radius: 12px !important;
                 background: transparent;
-                /* Quitar fondo gris si existe */
                 padding: 0;
             }
 
@@ -2711,14 +2755,12 @@
         <div class="modal-content-custom">
             <button class="close-modal">&times;</button>
             <div class="row modal-row-main no-gutters">
-                <!-- Columna Portada -->
-                <div class="col-12 modal-col-image d-flex align-items-center justify-content-center">
+                <div class="col-md-6 modal-col-image d-flex align-items-center justify-content-center">
                     <div class="modal-book-wrapper">
                         <img src="" alt="Book Cover" id="modalBookImage" class="img-fluid">
                     </div>
                 </div>
-                <!-- Columna Información -->
-                <div class="col-12 modal-col-info">
+                <div class="col-md-6 modal-col-info">
                     <div class="modal-info-header mb-3">
                         <span class="badge badge-primary px-3 py-1 rounded-pill mb-2" id="modalBookBadge"
                             style="font-size: 0.8rem; letter-spacing: 1px;">Grado</span>
@@ -2729,8 +2771,8 @@
                             style="letter-spacing: 1.5px; opacity: 0.8;">Categoría</p>
                     </div>
 
-                    <div class="modal-divider my-3"
-                        style="height: 2px; width: 50px; background: var(--primary-color); opacity: 0.3;"></div>
+                    <div class="modal-divider my-3 modal-divider-desktop"
+                        style="height: 2px; width: 50px; background: #dee2e6; opacity: 1;"></div>
 
                     <div class="modal-description-wrapper mb-4">
                         <p class="text-secondary" id="modalBookDescription"
