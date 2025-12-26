@@ -357,27 +357,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
         return `
             <div class="book-card quick-view-trigger" data-id="${book.id}">
-                <!-- Dynamic File Badge -->
-                <span class="pdf-badge" style="background-color: ${badgeColor} !important;">${fileType}</span>
 
-                <button class="btn btn-sm fav-btn" data-id="${book.id}" aria-label="Añadir a favoritos"
-                    style="position: absolute; top: 8px; left: 8px; z-index: 25; background: rgba(255,255,255,0.9); border-radius: 50%; width: 35px; height: 35px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                    <i class="${heartClass}"></i>
-                </button>
-                ${adminControls}
-                <div class="book-cover">
-                    <div class="book-spine"></div>
-                    <img src="${book.image}" alt="${book.title}" loading="lazy" onerror="this.src='img/portadas/default_cover.png';">
+            <button class="btn btn-sm fav-btn" data-id="${book.id}" aria-label="Añadir a favoritos"
+                style="position: absolute; top: 8px; left: 8px; z-index: 25; background: rgba(255,255,255,0.9); border-radius: 50%; width: 35px; height: 35px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                <i class="${heartClass}"></i>
+            </button>
+            ${adminControls}
+            <div class="book-cover">
+                <div class="book-spine"></div>
+                <img src="${book.image}" alt="${book.title}" loading="lazy" onerror="this.src='img/portadas/default_cover.png';">
+            </div>
+            <div class="book-info">
+                <h4>${book.title}</h4>
+                <p>${book.category.replace(/-/g, ' ').toUpperCase()}</p>
+                <div class="d-flex justify-content-center align-items-center">
+                    <button type="button" class="btn btn-outline-primary btn-sm px-4">Ver Detalles</button>
+                    ${quickAction}
                 </div>
-                <div class="book-info">
-                    <h4>${book.title}</h4>
-                    <p>${book.category.replace(/-/g, ' ').toUpperCase()}</p>
-                    <div class="d-flex justify-content-center align-items-center">
-                        <button type="button" class="btn btn-outline-primary btn-sm px-4">Ver Detalles</button>
-                        ${quickAction}
-                    </div>
-                </div>
-            </div>`;
+            </div>
+        </div>`;
     }
 
     // --- RESTORED: Advanced Filter Logic with Sub-Nav ---
@@ -440,19 +438,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 const gKey = normalizeKey(g).replace(/\s+/g, '-');
                 const activeClass = (gKey === filterValue) ? 'btn-primary text-white' : 'btn-outline-primary bg-white';
                 gradeButtons += `
-                    <button class="btn ${activeClass} rounded-pill px-4 py-2 mx-1 my-1 shadow-sm font-weight-bold" 
-                        onclick="renderBooks('filter', '${gKey}')" style="border-width: 2px;">
-                        ${g}
-                    </button>`;
+            < button class="btn ${activeClass} rounded-pill px-4 py-2 mx-1 my-1 shadow-sm font-weight-bold"
+        onclick = "renderBooks('filter', '${gKey}')" style = "border-width: 2px;" >
+            ${g}
+                    </button > `;
             });
 
             const backNav = document.createElement('div');
             backNav.className = 'col-12 mb-4 d-flex flex-column align-items-center';
             backNav.style.gridColumn = '1 / -1';
             backNav.innerHTML = `
-                <div class="small text-uppercase font-weight-bold text-muted mb-2" style="letter-spacing:1px">
-                    <i class="fas fa-layer-group mr-1"></i> Explorando: ${parentLevel.toUpperCase()}
-                </div>
+            < div class="small text-uppercase font-weight-bold text-muted mb-2" style = "letter-spacing:1px" >
+                <i class="fas fa-layer-group mr-1"></i> Explorando: ${parentLevel.toUpperCase()}
+                </div >
                 <div class="d-flex flex-wrap justify-content-center">
                     ${gradeButtons}
                     <button class="btn btn-link text-muted ml-md-3 font-weight-bold" onclick="showGradeGrid('${parentLevel}')">
@@ -717,7 +715,23 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('modalBookTitle').innerText = book.title;
         document.getElementById('modalBookDescription').innerText = book.description || 'Sin descripción';
         document.getElementById('modalBookCategory').innerText = book.category.toUpperCase();
-        document.getElementById('modalBookBadge').innerText = book.level.toUpperCase();
+
+        // DETERMINAR FILE TYPE PARA EL BADGE INTERNO (Pro+)
+        let fileTypeBadge = '';
+        if (book.file) {
+            const ext = book.file.split('.').pop().toLowerCase();
+            let color = '#D52B1E';
+            let label = 'DOCUMENTO';
+            if (ext === 'pdf') { label = 'PDF'; color = '#D52B1E'; }
+            else if (ext === 'doc' || ext === 'docx') { label = 'WORD'; color = '#2b579a'; }
+            fileTypeBadge = `<span class="modal-file-indicator" style="background:${color};">${label}</span>`;
+        }
+
+        const badgeEl = document.getElementById('modalBookBadge');
+        badgeEl.parentElement.innerHTML = `
+            <span id="modalBookBadge" class="badge-py">${book.level.toUpperCase()}</span>
+            ${fileTypeBadge}
+        `;
 
         // RESTORED: Guide Button Logic
         const guideBtn = document.getElementById('modalGuideBtn');
