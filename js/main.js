@@ -749,12 +749,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 .slice(0, 3);
 
             if (related.length > 0) {
-                let relatedHtml = '<h5 class="mt-4 mb-3" style="font-weight:700; color:#333;">También te podría interesar:</h5><div class="row">';
+                let relatedHtml = '<h5 class="mt-4 mb-4" style="font-weight:800; color:#2d3748; letter-spacing: -0.5px;">También te podría interesar:</h5><div class="row g-4">';
                 related.forEach(rb => {
                     relatedHtml += `
-                    <div class="col-6 col-md-4 text-center cursor-pointer related-book-card" onclick="openBookModal(${rb.id})">
-                        <img src="${rb.image}" class="img-fluid rounded shadow-sm mb-2 hover-up" style="max-height: 200px; width: auto; object-fit: cover;">
-                        <p class="small text-muted text-truncate font-weight-bold" style="font-size: 0.8rem;">${rb.title}</p>
+                    <div class="col-6 text-center cursor-pointer related-book-card mb-4" onclick="openBookModal(${rb.id})">
+                        <div style="padding: 10px;">
+                            <img src="${rb.image}" class="img-fluid rounded-lg shadow-lg mb-3 hover-up" 
+                                 style="height: 250px; width: 100%; object-fit: contain; background: #fbfbfb; border: 1px solid #edf2f7;">
+                            <p class="font-weight-bold text-dark mb-0" style="font-size: 0.95rem; line-height: 1.3;">${rb.title}</p>
+                            <p class="small text-primary text-uppercase font-weight-bold" style="letter-spacing: 1px; font-size: 0.7rem;">${rb.category.replace(/-/g, ' ')}</p>
+                        </div>
                     </div>
             `;
                 });
