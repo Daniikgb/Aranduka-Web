@@ -2136,12 +2136,14 @@
             }
         }
 
-        /* --- ANTI-GRAVITY PRO: BRUTAL MOBILE REDESIGN --- */
+        /* --- ANTI-GRAVITY PRO: BRUTAL MOBILE REDESIGN (LONG SCROLL & BOTTOM BAR) --- */
         @media (max-width: 768px) {
 
-            /* 1. Full Screen Reset */
+            /* 1. Full Screen Modal Reset */
             #quickViewModal {
                 padding: 0 !important;
+                background: white !important;
+                /* Ensure solid background */
             }
 
             #quickViewModal .modal-dialog {
@@ -2150,185 +2152,208 @@
                 max-width: 100% !important;
                 width: 100% !important;
                 height: 100% !important;
-                text-align: center !important;
-                border-radius: 0 0 30px 30px !important;
+                border-radius: 0 !important;
             }
 
-            .modal-book-wrapper {
-                width: 200px !important;
-                /* Balanced size */
-                max-width: 60vw !important;
-                margin: 0 auto !important;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
-                border-radius: 12px !important;
-                display: block !important;
-                /* Ensure it takes space */
+            .single-block-modal {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                border-radius: 0 !important;
+                z-index: 9999 !important;
+                background: #fff !important;
+                display: flex !important;
+                flex-direction: column !important;
             }
 
-            #modalBookImage {
-                border-radius: 12px !important;
+            .modal-scroll-container {
+                overflow-y: auto !important;
+                height: 100% !important;
+                padding-bottom: 100px !important;
+                /* Space for the bottom bar */
+                -webkit-overflow-scrolling: touch !important;
             }
 
-            /* 4. CONTENT TYPOGRAPHY & SPACING */
-            .modal-info-header {
-                padding: 1rem 1.5rem 0 1.5rem !important;
-                text-align: center !important;
+            .modal-body-content {
+                display: flex !important;
+                flex-direction: column !important;
+            }
+
+            /* 2. Hero Image Section - TALLER & SPACED */
+            .modal-column-left {
+                background: linear-gradient(180deg, rgba(12, 100, 124, 0.05) 0%, #ffffff 100%) !important;
+                padding: 6rem 1rem 4rem 1rem !important;
+                /* Huge top padding */
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                min-height: 45vh !important;
+                /* Take almost half screen */
+            }
+
+            .modal-book-cover-container {
+                width: 260px !important;
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2) !important;
+                border-radius: 15px !important;
+                transform: rotateY(-5deg) !important;
+                /* 3D effect */
+            }
+
+            .modal-book-cover-container img {
+                border-radius: 15px !important;
+            }
+
+            /* 3. Content Section - LONG SCROLL FEEL */
+            .modal-column-right {
+                padding: 2rem 1.5rem !important;
+                text-align: left !important;
+                /* Better readability */
             }
 
             #modalBookTitle {
-                font-size: 1.8rem !important;
+                font-size: 2.2rem !important;
                 line-height: 1.2 !important;
-                margin-bottom: 0.5rem !important;
+                margin-bottom: 1rem !important;
+                text-align: center !important;
+                font-family: 'Playfair Display', serif !important;
                 color: #222 !important;
             }
 
             #modalBookCategory {
-                font-size: 0.9rem !important;
-                color: var(--primary-color) !important;
-                margin-bottom: 1.5rem !important;
-            }
-
-            /* DESCRIPTION */
-            .modal-description-wrapper {
-                padding: 0 1.5rem !important;
+                justify-content: center !important;
                 margin-bottom: 2rem !important;
             }
 
             #modalBookDescription {
-                font-size: 1.05rem !important;
-                line-height: 1.7 !important;
+                font-size: 1.15rem !important;
+                line-height: 1.8 !important;
+                /* Relaxed reading */
                 color: #555 !important;
-                text-align: left !important;
-                /* Better reading */
+                margin-bottom: 3rem !important;
+                /* Push content down */
+                text-align: justify !important;
             }
 
-            /* RELATED BOOKS */
-            .modal-related-wrapper {
-                padding: 0 1.5rem 2rem 1.5rem !important;
+            /* 4. Related Books - SPACED OUT */
+            #relatedBooksContainer {
+                padding: 3rem 1.5rem !important;
+                background: #fdfdfd !important;
+                border-top: 1px solid #eee !important;
+            }
+
+            #relatedBooksContainer h5 {
+                text-align: center !important;
+                font-size: 1.5rem !important;
+                margin-bottom: 2rem !important;
+            }
+
+            .related-book-card {
+                margin-bottom: 2.5rem !important;
+                /* Space between related items */
+            }
+
+            .related-book-card img {
+                height: 350px !important;
+                /* Big images */
+                width: 100% !important;
+                object-fit: contain !important;
                 background: #fff !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
             }
 
-            /* 5. STICKY FOOTER ACTION BAR */
+            /* 5. FIXED BOTTOM BAR (WhatsApp + Download App) */
             .modal-actions-wrapper {
                 position: fixed !important;
                 bottom: 0 !important;
                 left: 0 !important;
                 width: 100% !important;
-                background: rgba(255, 255, 255, 0.95) !important;
-                backdrop-filter: blur(10px) !important;
+                background: #ffffff !important;
+                box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1) !important;
                 padding: 15px 20px !important;
-                z-index: 1000 !important;
-                border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
-                box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05) !important;
+                z-index: 10000 !important;
                 display: flex !important;
-                justify-content: center !important;
                 align-items: center !important;
+                justify-content: space-between !important;
+                /* Use space-between layout */
+                gap: 15px !important;
+                border-top: 1px solid #f0f0f0 !important;
             }
 
-            #modalDownloadBtn {
-                width: 100% !important;
-                margin: 0 !important;
-                padding: 1rem !important;
-                font-size: 1.1rem !important;
-                border-radius: 50px !important;
-                /* Pill shape */
+            /* WhatsApp Button Style - Circle/Icon */
+            .btn-whatsapp-float {
+                width: 55px !important;
+                height: 55px !important;
+                min-width: 55px !important;
+                border-radius: 50% !important;
+                background: #25D366 !important;
+                color: white !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                font-size: 1.8rem !important;
+                box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4) !important;
+                text-decoration: none !important;
+            }
+
+            /* Download App Button - Full Width Pill */
+            .btn-download-app-bar {
+                flex: 1 !important;
                 background: var(--primary-color) !important;
-                box-shadow: 0 8px 20px rgba(12, 100, 124, 0.25) !important;
-            }
-
-            /* Hide things we don't need or re-order naturally */
-            .modal-divider {
-                display: none !important;
-            }
-
-            /* Close Button Position */
-            .close-modal {
-                top: 15px !important;
-                right: 15px !important;
-                background: rgba(255, 255, 255, 0.8) !important;
-                border: none !important;
-            }
-
-            /* TYPOGRAPHY */
-            #modalBookBadge {
-                margin: 0 0 0.8rem 0 !important;
-                background-color: var(--primary-color) !important;
+                color: white !important;
                 border-radius: 50px !important;
-                font-size: 0.85rem !important;
-            }
-
-            #modalBookTitle {
-                font-size: 2.2rem !important;
-                line-height: 1.1 !important;
-                text-align: center !important;
-                background: linear-gradient(45deg, var(--primary-color), #0038A8);
-                background-clip: text;
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                margin-bottom: 0.5rem !important;
-                font-weight: 850 !important;
-            }
-
-            #modalBookCategory {
-                text-align: center !important;
-                font-size: 0.95rem !important;
-                margin-top: 0.5rem !important;
-                color: var(--primary-color) !important;
-            }
-
-            #modalBookDescription {
-                font-size: 1.1rem !important;
-                color: #444 !important;
-                line-height: 1.6 !important;
-                text-align: justify;
-            }
-
-            /* BUTTONS STYLING */
-            #modalDownloadBtn {
-                border-radius: 50px !important;
-                padding: 1.1rem !important;
-                background: var(--primary-color) !important;
-                font-size: 1.1rem !important;
-            }
-
-            .modal-actions-wrapper .btn-outline {
-                border-radius: 50px !important;
-                padding: 0.9rem !important;
-            }
-
-            /* RELATED BOOKS ENHANCEMENT */
-            .modal-related-wrapper h5 {
-                font-size: 1.25rem !important;
-                font-weight: 800 !important;
-                margin-bottom: 2rem !important;
-                color: #1a1a1a;
-                text-align: center;
-                margin-bottom: 1.5rem !important;
-            }
-
-            #relatedBooksContainer .col-6 {
-                padding: 0 10px !important;
-                margin-bottom: 1.5rem !important;
-            }
-
-            .related-book-card img {
-                height: 300px !important;
-                /* Maximized height */
-                width: 100% !important;
-                max-width: 100% !important;
-                object-fit: cover !important;
-                /* Fill the area */
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
-                border-radius: 12px !important;
-                background: transparent;
-                padding: 0;
-            }
-
-            .related-book-card p {
-                font-size: 0.85rem !important;
+                padding: 0.9rem 1rem !important;
                 font-weight: 700 !important;
-                margin-top: 0.8rem !important;
-                color: #333 !important;
+                text-transform: uppercase !important;
+                font-size: 0.9rem !important;
+                text-align: center !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                box-shadow: 0 5px 15px rgba(12, 100, 124, 0.3) !important;
+                text-decoration: none !important;
+                white-space: nowrap !important;
+            }
+
+            /* Hide original inline buttons in modal since we use bar */
+            #modalDownloadBtn,
+            #modalGuideBtn {
+                display: none !important;
+                /* Hide original download button in modal flow */
+            }
+
+            /* Floating Close Button */
+            .close-modal-btn {
+                position: fixed !important;
+                top: 20px !important;
+                right: 20px !important;
+                z-index: 10001 !important;
+                background: rgba(255, 255, 255, 0.9) !important;
+                border-radius: 50% !important;
+                width: 45px !important;
+                height: 45px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+                color: #D52B1E !important;
+                font-size: 1.5rem !important;
+            }
+
+            .close-modal-btn span {
+                display: none;
+            }
+
+            /* Hide text "Volver" */
+            .close-modal-btn i {
+                margin: 0 !important;
+            }
+
+            /* Back to Top logic fix for modal */
+            .modal-scroll-container .btn-back-to-top {
+                bottom: 90px !important;
+                /* Move above bottom bar */
             }
         }
 
@@ -2963,24 +2988,25 @@
                         </p>
 
                         <!-- Actions -->
+                        <!-- Actions -->
                         <div class="modal-actions-wrapper">
+                            <!-- WhatsApp Float -->
+                            <a href="https://wa.me/595983714552" target="_blank" class="btn-whatsapp-float">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+
+                            <!-- Download App Button -->
+                            <a href="#" class="btn-download-app-bar" id="modalDownloadAppBtn">
+                                <!-- Changed ID to differentiate -->
+                                <i class="fas fa-arrow-down mr-2"></i> Descargar Aplicación
+                            </a>
+
+                            <!-- Hidden Desktop Buttons (kept for semantic Structure or desktop view if needed) -->
                             <a href="#"
-                                class="btn btn-primary btn-lg rounded-pill shadow-sm font-weight-bold d-flex align-items-center justify-content-center py-3 mb-3"
+                                class="btn btn-primary btn-lg rounded-pill shadow-sm font-weight-bold d-none d-lg-inline-flex align-items-center justify-content-center py-3 mb-3"
                                 id="modalDownloadBtn" download>
                                 <i class="fas fa-download mr-2 fa-lg"></i> DESCARGAR
                             </a>
-                            <div class="d-flex gap-2 justify-content-center justify-content-lg-start">
-                                <a href="#"
-                                    class="btn btn-outline-primary rounded-pill btn-sm font-weight-bold px-3 mx-1"
-                                    id="modalGuideBtn" style="display:none;">
-                                    <i class="fas fa-chalkboard-teacher mr-1"></i> Guía
-                                </a>
-                                <button
-                                    onclick="shareBook(parseInt(document.getElementById('quickViewModal').dataset.bookId))"
-                                    class="btn btn-outline-secondary rounded-pill btn-sm font-weight-bold px-3 mx-1">
-                                    <i class="fas fa-share-alt mr-1"></i> Compartir
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
