@@ -774,7 +774,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     relatedHtml += `
                     <div class="col-6 mb-4 cursor-pointer related-book-card" onclick="openBookModal(${rb.id})">
                         <div class="card h-100 border-0 bg-transparent">
-                            <img src="${rb.image}" class="img-fluid rounded mb-2 shadow-sm" style="height: 250px; object-fit: contain; width: 100%;">
+                            <img src="${rb.image}" class="img-fluid rounded mb-2 shadow-sm" style="width: 100%; height: auto; display: block;">
                             <p class="small font-weight-bold text-center mb-0 mt-1 text-dark" style="line-height: 1.2;">${rb.title}</p>
                         </div>
                     </div>`;
