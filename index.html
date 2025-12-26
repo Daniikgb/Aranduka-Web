@@ -1311,75 +1311,107 @@
 
             /* --- PREMIUM VERTICAL MODAL REDESIGN --- */
             .modal-content-custom {
-                max-width: 700px !important;
-                margin: 2rem auto;
+                max-width: 750px !important;
+                margin: 1.5rem auto;
                 height: auto !important;
-                max-height: 90vh !important;
+                max-height: 92vh !important;
                 border-radius: 30px !important;
                 background: #fff;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
             }
 
             .modal-row-main {
                 flex-direction: column !important;
-                margin: 0;
+                margin: 0 !important;
+                display: flex !important;
+                width: 100% !important;
                 overflow-y: auto;
             }
 
             .modal-col-image {
                 width: 100% !important;
-                flex: none !important;
-                padding: 3rem 1.5rem 2rem !important;
-                background: linear-gradient(135deg, #f8faff 0%, #eef2ff 100%);
-                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-                display: flex;
-                justify-content: center;
-                align-items: center;
+                padding: 4rem 2rem 3rem !important;
+                background: linear-gradient(135deg, #0038A8 0%, #0056b3 100%);
+                /* Vibrant blue header */
+                position: relative;
+                overflow: hidden;
+            }
+
+            .modal-col-image::after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 100px;
+                background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+                pointer-events: none;
             }
 
             .modal-book-wrapper {
-                max-width: 280px !important;
+                max-width: 260px !important;
                 margin: 0 auto;
-                transform: rotateY(-10deg) rotateX(5deg) !important;
-                box-shadow: 25px 25px 50px rgba(0, 0, 0, 0.2);
+                perspective: 1000px;
+                filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
+                z-index: 5;
+            }
+
+            #modalBookImage {
+                width: 100%;
+                height: auto;
+                border-radius: 4px 12px 12px 4px;
+                transform: rotateY(-15deg) rotateX(5deg);
                 transition: 0.5s;
+                border: none;
             }
 
             .modal-col-info {
                 width: 100% !important;
-                flex: none !important;
-                padding: 2.5rem 2rem !important;
+                padding: 4rem 2.5rem 3rem !important;
+                /* Move info up slightly */
                 text-align: center;
+                background: white;
+                margin-top: -30px;
+                /* Overlap with header gradient transition */
+                border-top-left-radius: 40px;
+                border-top-right-radius: 40px;
+                z-index: 10;
             }
 
             .modal-info-header {
-                margin-bottom: 2rem;
+                margin-bottom: 2.5rem;
             }
 
             #modalBookTitle {
-                font-size: 2.5rem !important;
-                color: #1a1a1a;
+                font-size: 2.8rem !important;
+                color: #111;
                 font-family: 'Playfair Display', serif;
-                margin-bottom: 0.5rem;
-                line-height: 1.2;
+                margin-bottom: 0.7rem;
+                line-height: 1.1;
+                font-weight: 900;
             }
 
             #modalBookCategory {
                 color: var(--primary-color) !important;
-                font-size: 1rem !important;
-                letter-spacing: 2px;
+                font-size: 1.1rem !important;
+                letter-spacing: 3px;
                 font-weight: 800;
                 text-transform: uppercase;
-                margin-bottom: 1.5rem;
+                margin-bottom: 2rem;
                 display: block;
+                opacity: 0.9;
             }
 
             #modalBookDescription {
-                font-size: 1.15rem !important;
+                font-size: 1.2rem !important;
                 color: #4a5568 !important;
                 line-height: 1.8;
                 text-align: center;
-                margin: 0 auto 2.5rem !important;
-                max-width: 550px;
+                margin: 0 auto 3rem !important;
+                max-width: 600px;
+                font-weight: 400;
             }
 
             /* Buttons */
@@ -2575,16 +2607,15 @@
     <div id="quickViewModal" class="modal-overlay">
         <div class="modal-content-custom">
             <button class="close-modal">&times;</button>
-            <div class="row modal-row-main">
+            <div class="row modal-row-main no-gutters">
                 <!-- Columna Portada -->
-                <div class="col-md-6 modal-col-image d-flex align-items-center justify-content-center py-4">
-                    <div class="modal-book-wrapper" style="perspective: 1000px; width: 100%; max-width: 350px;">
-                        <img src="" alt="Book Cover" id="modalBookImage"
-                            style="width: 100%; height: auto; border-radius: 4px 12px 12px 4px; box-shadow: 20px 20px 50px rgba(0,0,0,0.3); transform: rotateY(-10deg); transition: 0.5s; border: none;">
+                <div class="col-12 modal-col-image d-flex align-items-center justify-content-center">
+                    <div class="modal-book-wrapper">
+                        <img src="" alt="Book Cover" id="modalBookImage" class="img-fluid">
                     </div>
                 </div>
                 <!-- Columna Información -->
-                <div class="col-md-6 modal-col-info p-4 d-flex flex-column justify-content-center">
+                <div class="col-12 modal-col-info">
                     <div class="modal-info-header mb-3">
                         <span class="badge badge-primary px-3 py-1 rounded-pill mb-2" id="modalBookBadge"
                             style="font-size: 0.8rem; letter-spacing: 1px;">Grado</span>
