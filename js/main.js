@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById('quickViewModal');
         if (modal && modal.classList.contains('active')) {
             modal.classList.remove('active');
-            document.body.classList.remove('modal-open-freeze');
+            document.body.style.overflow = ''; // FIX: Restore scroll functionality
         } else {
             // Default State
             $('.modal').modal('hide');
@@ -855,14 +855,16 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     window.closeBookModal = function () {
-        const m = document.getElementById('quickViewModal');
-        m.classList.remove('active');
-        document.body.style.overflow = ''; // Unlock scroll
-
-        // Handle History
+        // 1. Prioritize History Navigation if valid state exists (fixes "resetting app" issue)
         if (!isNavigatingHistory && window.history.state && window.history.state.modalOpen) {
             window.history.back();
+            return; // Let popstate handle the UI changes
         }
+
+        // 2. Fallback: Manual Close (only if no history state)
+        const m = document.getElementById('quickViewModal');
+        m.classList.remove('active');
+        document.body.style.overflow = '';
     };
 
 
