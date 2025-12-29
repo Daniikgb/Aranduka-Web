@@ -218,10 +218,10 @@
             display: flex;
             align-items: center;
             min-height: 80vh;
-            min-height: 80vh;
+
             padding: 8rem 2rem;
             position: relative;
-            background-image: linear-gradient(rgba(54, 69, 79, 0.8), rgba(54, 69, 79, 0.8)), url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-image: linear-gradient(rgba(54, 69, 79, 0.8), rgba(54, 69, 79, 0.8)), url('ttps://imagehs.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
             background-position: center;
         }
@@ -932,15 +932,7 @@
         }
 
         /* 1. Fondo con desenfoque y oscurecimiento */
-        .modal-overlay.active {
-            backdrop-filter: blur(15px) brightness(0.8) !important;
-            -webkit-backdrop-filter: blur(15px) brightness(0.8) !important;
-            background: rgba(0, 0, 0, 0.6) !important;
-            display: flex !important;
-            align-items: flex-end !important;
-            transition: all 0.4s ease !important;
-            z-index: 2000 !important;
-        }
+
 
         .modal-overlay {
             position: fixed;
@@ -1454,14 +1446,7 @@
                 display: block;
             }
 
-            /* Divider Line Desktop */
-            .modal-divider-desktop {
-                width: 50px;
-                height: 2px;
-                background-color: #dee2e6;
-                margin-bottom: 20px;
-                display: block;
-            }
+
 
             /* 6. Botón de Descarga Premium con efecto de pulso opcional */
             #modalDownloadBtn {
@@ -1566,23 +1551,30 @@
 
             .founder-card:hover {
                 transform: translateY(-10px);
-                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.374);
             }
 
             .founder-img-wrapper {
-                width: 100px;
-                height: 100px;
-                margin: 0 auto 1rem;
-                border-radius: 50%;
-                overflow: hidden;
-                border: 2px solid var(--secondary-color);
+                width: 120px !important;
+                height: 120px !important;
+                margin: 0 auto 1rem !important;
+                border-radius: 50% !important;
+                overflow: hidden !important;
+                border: 4px solid var(--primary-color) !important;
                 box-shadow: var(--shadow-md);
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                background-color: #fff;
+                /* Ensure background */
             }
 
             .founder-img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+                display: block !important;
+                border-radius: 50% !important;
             }
 
             .founder-name {
@@ -2193,15 +2185,25 @@
             }
 
             .modal-book-cover-container {
-                width: 260px !important;
-                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2) !important;
-                border-radius: 15px !important;
-                transform: rotateY(-5deg) !important;
-                /* 3D effect */
+                width: 220px !important;
+                /* Slightly smaller to fit comfortably */
+                box-shadow: none !important;
+                border-radius: 4px !important;
+                transform: none !important;
+                /* Remove 3D */
+                border: 2px solid var(--primary-color) !important;
+                padding: 10px !important;
+                background: white !important;
+                margin: 0 auto !important;
+                /* Center it */
             }
 
             .modal-book-cover-container img {
-                border-radius: 15px !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                width: 100% !important;
+                height: auto !important;
+                display: block !important;
             }
 
             /* 3. Content Section - LONG SCROLL FEEL */
@@ -2212,12 +2214,16 @@
             }
 
             #modalBookTitle {
-                font-size: 2.2rem !important;
+                font-size: 1.8rem !important;
+                /* Slightly smaller for mobile fit */
                 line-height: 1.2 !important;
                 margin-bottom: 1rem !important;
-                text-align: center !important;
+                text-align: left !important;
+                /* Left align */
                 font-family: 'Playfair Display', serif !important;
-                color: #222 !important;
+                color: var(--primary-color) !important;
+                /* Dark Blue title */
+                margin-top: 1rem !important;
             }
 
             #modalBookCategory {
@@ -2253,14 +2259,7 @@
                 /* Space between related items */
             }
 
-            .related-book-card img {
-                height: 180px !important;
-                /* Even Smaller */
-                width: 100% !important;
-                object-fit: contain !important;
-                background: #fff !important;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
-            }
+
 
 
 
@@ -2385,15 +2384,20 @@
                 position: relative;
                 width: 100%;
                 height: 100%;
-                max-width: 900px;
+                max-width: 980px;
+                /* Increased from 950px */
                 max-height: 85vh;
                 margin: 2rem auto;
-                border-radius: 20px;
-                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+                border-radius: 12px;
+                box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5);
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
             }
 
             .modal-scroll-container {
                 padding-bottom: 0;
+                overflow-y: auto;
             }
 
             #quickViewModal {
@@ -2401,111 +2405,90 @@
                 align-items: center;
                 justify-content: center;
                 padding: 0;
+                background: rgba(0, 0, 0, 0.6);
             }
 
-            /* --- LAYOUT STRUCTURE (Universal) --- */
+            /* HIDE SCROLL INDICATOR ON DESKTOP */
+            .scroll-indicator {
+                display: none !important;
+            }
+
+            /* --- LAYOUT STRUCTURE (Desktop) --- */
             .modal-body-content {
                 display: flex;
-                flex-direction: column;
-                /* Mobile first */
-                width: 100%;
+                flex-direction: row;
+                padding: 3rem;
+                align-items: flex-start;
+                min-height: 400px;
             }
 
             .modal-column-left {
-                width: 100%;
+                width: 35%;
                 display: flex;
                 justify-content: center;
-                padding-top: 2rem;
-                padding-bottom: 1rem;
-                background: linear-gradient(180deg, rgba(12, 100, 124, 0.05) 0%, #ffffff 100%);
-            }
-
-            .modal-column-right {
-                width: 100%;
-                padding: 1.5rem 2rem;
-                text-align: center;
-                /* Mobile center */
+                align-items: flex-start;
+                padding: 0;
             }
 
             .modal-book-cover-container {
-                width: 180px;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-                border-radius: 12px;
+                width: 310px !important;
+                /* Increased to 310px */
+                flex-shrink: 0;
+                box-shadow: none !important;
+                border-radius: 4px;
+                border: 2px solid var(--primary-color);
+                padding: 8px;
+                background: white;
+                transform: none !important;
+                margin: 0 auto;
             }
 
             .modal-book-cover-container img {
-                width: 100%;
-                height: auto;
-                object-fit: contain;
-                /* Ensure full image visibility */
-                border-radius: 12px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-                /* Re-add shadow */
+                border-radius: 0;
+                box-shadow: none;
+                width: 100% !important;
+                /* FORCE fit to container */
+                height: auto !important;
+                max-width: 100% !important;
+                display: block;
             }
 
-            /* Desktop Overrides */
-            @media (min-width: 992px) {
-                .modal-body-content {
-                    flex-direction: row;
-                    /* Side by Side */
-                    padding: 3rem;
-                    align-items: flex-start;
-                }
+            .modal-column-right {
+                width: 65%;
+                /* Reverted to 65% */
+                padding: 0 0 0 3rem;
+                /* Left padding */
+                text-align: left;
+                /* Left align everything */
+            }
 
-                .modal-column-left {
-                    width: 40%;
-                    /* Left column smaller */
-                    background: none;
-                    /* No gradient bg on desktop */
-                    padding: 0;
-                    justify-content: center;
-                    align-items: flex-start;
-                }
+            /* Desktop Typography */
+            #modalBookTitle {
+                text-align: left !important;
+                font-size: 2.5rem !important;
+                margin-top: 0 !important;
+                margin-bottom: 20px !important;
+                color: var(--primary-color) !important;
+            }
 
-                .modal-column-right {
-                    width: 60%;
-                    padding: 0 0 0 3rem;
-                    /* Spacing from image */
-                    text-align: left;
-                    /* Left align text */
-                }
+            #modalBookDescription {
+                text-align: left !important;
+                font-size: 1.1rem !important;
+            }
 
-                .modal-book-cover-container {
-                    width: 100%;
-                    max-width: 300px;
-                    /* Larger image on desktop */
-                    transform: rotateY(-10deg);
-                    transition: 0.5s;
-                }
+            /* Hide inline actions on desktop (handled by footer) */
+            .modal-inline-actions {
+                display: none !important;
+                /* Double check hiding */
+            }
 
-                .modal-book-cover-container:hover {
-                    transform: rotateY(0deg) scale(1.05);
-                }
-
-                /* Typography overrides for desktop */
-                #modalBookTitle {
-                    text-align: left !important;
-                    font-size: 2.5rem !important;
-                    margin-top: 0 !important;
-                }
-
-                #modalBookCategory {
-                    justify-content: flex-start !important;
-                    /* Align badge flex */
-                }
-
-                #modalBookDescription {
-                    text-align: left !important;
-                    font-size: 1.1rem !important;
-                }
-
-
-
-                #modalDownloadBtn {
-                    max-width: 300px;
-                    /* Not full width */
-                    display: inline-flex !important;
-                }
+            /* Remove Mobile Header Sticky behavior if it conflicts, 
+               but we likely want it to look like a dialog header */
+            .modal-header-actions {
+                position: relative !important;
+                /* Inside the card */
+                background-color: var(--primary-color) !important;
+                border-bottom: none !important;
             }
         }
 
@@ -2619,11 +2602,7 @@
             letter-spacing: 1px;
         }
 
-        margin-bottom: 2px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        }
+
 
         @keyframes bounce {
 
@@ -2642,6 +2621,18 @@
             60% {
                 transform: translateY(-4px);
             }
+        }
+
+        /* GLOBAL FIX FOR RELATED BOOKS SIZE */
+        .related-book-card img {
+            height: 365px !important;
+            width: auto !important;
+            max-width: 100% !important;
+            object-fit: contain !important;
+            background: #fff !important;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+            margin: 0 auto !important;
+            display: block !important;
         }
     </style>
 </head>
@@ -2727,7 +2718,7 @@
         </div>
         <div class="right">
             <!-- Featured Book Carousel (One book at a time, auto-rotates) -->
-            <div id="heroCarousel" class="carousel slide" data-ride="carousel" data-interval="5000">
+            <div id="heroCarousel" class="carousel slide" data-ride="carousel" data-interval="3700">
                 <div class="carousel-inner" id="heroCarouselInner">
                     <!-- JS will populate these slides with actual books from the library -->
                     <div class="carousel-item active">
@@ -2739,30 +2730,7 @@
     </section>
 
     <!-- Advantages Row -->
-    <section class="advantages">
-        <div class="cards">
-            <div class="card-adv">
-                <i class="fas fa-book-open"></i>
-                <h3>Materiales Oficiales</h3>
-                <p>Colección completa de libros de texto aprobados y actualizados para todos los niveles.</p>
-            </div>
-            <div class="card-adv">
-                <i class="fas fa-chalkboard-teacher"></i>
-                <h3>Guías Docentes</h3>
-                <p>Recursos exclusivos para educadores, planeamientos y herramientas de evaluación.</p>
-            </div>
-            <div class="card-adv">
-                <i class="fas fa-users"></i>
-                <h3>Comunidad Activa</h3>
-                <p>Espacio colaborativo para compartir resúmenes, ejercicios y aportes educativos.</p>
-            </div>
-            <div class="card-adv">
-                <i class="fas fa-mobile-alt"></i>
-                <h3>Acceso Full</h3>
-                <p>Optimizado para cualquier dispositivo. Estudia desde tu celular, tablet o computadora.</p>
-            </div>
-        </div>
-    </section>
+    <!-- Advantages Section Removed -->
 
     <!-- Value Proposition Section -->
     <section class="mission">
@@ -2784,7 +2752,7 @@
     </section>
 
     <!-- Fundadores / Bibliografía Section -->
-    <section class="founders-section">
+    <section class="founders-section" style="margin-bottom: 8rem;">
         <div class="container">
             <div class="section-header text-center mb-5">
                 <h2>Nuestros Fundadores</h2>
@@ -2795,13 +2763,15 @@
                 <div class="col-md-4 mb-4">
                     <div class="founder-card text-center">
                         <div class="founder-img-wrapper">
-                            <img src="https://via.placeholder.com/150" alt="Fundador 1" class="founder-img">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Carlos Benítez"
+                                class="founder-img">
                         </div>
-                        <h3 class="founder-name">Nombre del Fundador</h3>
+                        <h3 class="founder-name">Carlos Benítez</h3>
                         <p class="founder-role text-primary font-weight-bold">Co-Fundador</p>
                         <p class="founder-bio">
-                            Aquí va la biografía del fundador. Su trayectoria educativa, su visión para el proyecto y
-                            sus aportes principales a la bibliografía nacional.
+                            Educador apasionado con más de 15 años de experiencia en el sistema educativo paraguayo. Su
+                            visión es transformar el acceso a la información, creando puentes digitales para estudiantes
+                            de todos los rincones del país.
                         </p>
                     </div>
                 </div>
@@ -2809,13 +2779,15 @@
                 <div class="col-md-4 mb-4">
                     <div class="founder-card text-center">
                         <div class="founder-img-wrapper">
-                            <img src="https://via.placeholder.com/150" alt="Fundador 2" class="founder-img">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Ana Torres"
+                                class="founder-img">
                         </div>
-                        <h3 class="founder-name">Nombre del Fundador</h3>
+                        <h3 class="founder-name">Ana Torres</h3>
                         <p class="founder-role text-primary font-weight-bold">Co-Fundador</p>
                         <p class="founder-bio">
-                            Aquí va la biografía del fundador. Su trayectoria educativa, su visión para el proyecto y
-                            sus aportes principales a la bibliografía nacional.
+                            Ingeniera en sistemas y especialista en tecnología educativa. Lidera la innovación
+                            tecnológica de Aranduka, asegurando una plataforma robusta, accesible y centrada en la
+                            experiencia del usuario.
                         </p>
                     </div>
                 </div>
@@ -3026,29 +2998,19 @@
         <div class="modal-content-custom single-block-modal"
             style="display: flex; flex-direction: column; max-height: 90vh; overflow: hidden;">
             <!-- Modal Header (Mobile & Desktop) - Force Sticky & White Background -->
-            <div class="modal-header-actions d-flex align-items-center justify-content-between px-3 py-3 bg-white border-bottom"
-                style="position: sticky; top: 0; z-index: 1050; width: 100%; background-color: #ffffff !important; flex-shrink: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
 
-                <!-- Actions: Download & Share (Header) -->
-                <div class="d-flex align-items-center">
-                    <button class="btn btn-light btn-sm rounded-pill shadow-sm mr-2 d-flex align-items-center"
-                        onclick="shareBook(parseInt(document.getElementById('quickViewModal').dataset.bookId))"
-                        style="border: 1px solid #ddd; font-weight: 600;">
-                        <i class="fas fa-share-alt mr-1"></i> COMPARTIR
-                    </button>
+            <div class="modal-header-actions d-flex align-items-center justify-content-between px-3 py-3"
+                style="position: sticky; top: 0; z-index: 1050; width: 100%; background-color: var(--primary-color) !important; color: white; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
 
-                    <a href="#"
-                        class="btn btn-secondary btn-sm font-weight-bold rounded-pill shadow-sm d-flex align-items-center"
-                        id="modalDownloadBtn" download
-                        style="background-color: #6c757d !important; border-color: #6c757d !important; color: white !important;">
-                        <i class="fas fa-download mr-1"></i> DESCARGAR
-                    </a>
-                </div>
+                <!-- Title Left -->
+                <h5 class="mb-0 font-weight-bold" style="font-family: 'Playfair Display', serif; font-size: 1.4rem;">
+                    Detalles del Libro</h5>
 
-                <!-- Close Button (X Only) - MOVED TO END FOR RIGHT ALIGNMENT -->
-                <button class="close-modal-btn btn btn-link p-0 position-relative" type="button"
-                    onclick="closeBookModal()">
-                    <i class="fas fa-times"></i>
+                <!-- Close Button (X Only) - Right -->
+                <button class="btn btn-link p-0 position-relative text-white border-0" type="button"
+                    onclick="closeBookModal()"
+                    style="font-size: 1.8rem; text-decoration: none; line-height: 1; opacity: 1;">
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
@@ -3068,37 +3030,52 @@
                     </div>
 
                     <!-- Right Column: Details & Actions -->
+
                     <div class="modal-column-right">
-                        <div id="modalBookCategory"
-                            class="d-flex align-items-center justify-content-center justify-content-lg-start mb-3">
-                            <span id="modalBookBadge"
-                                class="badge badge-primary px-3 py-1 rounded-pill mr-2">Grado</span>
-                            <span class="text-primary font-weight-bold small text-uppercase"
-                                id="modalBookCategoryText">Categoría</span>
+
+                        <!-- Title (Centered on Mobile via CSS) -->
+                        <h2 id="modalBookTitle" class="font-weight-bold text-dark mb-3"
+                            style="font-family: 'Playfair Display', serif; line-height: 1.2;">Título del Libro</h2>
+
+                        <!-- Metadata Section -->
+                        <div class="mb-4 text-secondary" style="font-size: 1rem; line-height: 1.6;">
+                            <p class="mb-1"><strong class="text-dark">Autor:</strong> <span
+                                    id="modalBookAuthor">Editorial Aranduka</span></p>
+                            <p class="mb-1"><strong class="text-dark">Año:</strong> <span id="modalBookYear">2024</span>
+                            </p>
+                            <p class="mb-0"><strong class="text-dark">Género:</strong> <span
+                                    id="modalBookGenre">Educativo</span></p>
                         </div>
 
-                        <h2 id="modalBookTitle" class="font-weight-bold text-dark mb-3">Título del Libro</h2>
-
+                        <!-- Description -->
+                        <h5 class="text-primary font-weight-bold mb-2">Descripción</h5>
                         <p class="text-secondary mb-4" id="modalBookDescription"
-                            style="font-size: 1.05rem; line-height: 1.7;">
+                            style="font-size: 1.05rem; line-height: 1.7; text-align: justify;">
                             Descripción...
                         </p>
 
                         <!-- Actions Area (Content) -->
-                        <div class="modal-inline-actions mt-4 d-flex flex-wrap align-items-center">
+                        <div
+                            class="modal-inline-actions mt-4 d-md-none d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                             <a href="#"
-                                class="btn btn-secondary rounded-pill px-4 py-2 font-weight-bold shadow-sm mr-3 mb-3"
+                                class="btn btn-secondary rounded-pill px-4 py-2 font-weight-bold shadow-sm mr-3 mb-3 w-100 w-md-auto"
                                 id="modalDownloadBtn2" download
-                                style="background-color: #6c757d !important; border:none;">
+                                style="background-color: #6c757d !important; border:none; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-download mr-2"></i> DESCARGAR MATERIAL
                             </a>
-                            <button class="btn btn-outline-dark rounded-pill px-4 py-2 font-weight-bold mb-3"
-                                onclick="shareBook(parseInt(document.getElementById('quickViewModal').dataset.bookId))">
+                            <button
+                                class="btn btn-outline-dark rounded-pill px-4 py-2 font-weight-bold mb-3 w-100 w-md-auto"
+                                onclick="shareBook(parseInt(document.getElementById('quickViewModal').dataset.bookId))"
+                                style="display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-share-alt mr-2"></i> COMPARTIR
                             </button>
                         </div>
 
-
+                        <!-- Category Badge Support (Hidden but functional if needed) -->
+                        <div id="modalBookCategory" class="d-none">
+                            <span id="modalBookBadge"></span>
+                            <span id="modalBookCategoryText"></span>
+                        </div>
                     </div>
                 </div>
 
@@ -3106,6 +3083,29 @@
                 <div id="relatedBooksContainer" class="bg-light py-3 px-3 mt-1">
                     <!-- JS fills this -->
                 </div>
+            </div>
+
+            <!-- DESKTOP FOOTER (Visible only on lg screens) -->
+            <div class="modal-footer-desktop d-none d-lg-flex align-items-center justify-content-end px-4 py-3 bg-light border-top"
+                style="gap: 1rem;">
+                <!-- Ver Resumen Completo -->
+                <button class="btn btn-info font-weight-bold rounded-pill px-4 shadow-sm"
+                    style="background-color: #0c647c; border: none;">
+                    <i class="fas fa-eye mr-2"></i> Ver Resumen Completo
+                </button>
+
+                <!-- Descargar PDF -->
+                <a href="#" id="modalDownloadFooterBtn"
+                    class="btn btn-dark font-weight-bold rounded-pill px-4 shadow-sm"
+                    style="background-color: #1a202c; border: none;">
+                    <i class="fas fa-file-download mr-2"></i> Descargar PDF
+                </a>
+
+                <!-- Cerrar -->
+                <button class="btn btn-secondary font-weight-bold rounded-pill px-4" onclick="closeBookModal()"
+                    style="background-color: #4a5568; border: none;">
+                    Cerrar
+                </button>
             </div>
         </div>
     </div>
@@ -3601,7 +3601,7 @@
     </div>
 
     <!-- Back to Top Button (Subir Arriba) -->
-    <!-- Back to Top Button (Subir Arriba) -->
+
     <button id="backToTopBtn" class="back-to-top" title="Subir arriba"
         onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
         <i class="fas fa-arrow-up"></i>
