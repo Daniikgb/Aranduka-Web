@@ -2,6 +2,7 @@
 // backend/admin_dashboard.php
 header('Content-Type: application/json');
 require 'conexion.php';
+require_once 'update_schema.php'; // Ensure DB is up to date
 session_start();
 
 try {

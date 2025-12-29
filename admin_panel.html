@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Aranduka</title>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <style>
+        :root {
+            --primary-color: #0c647c;
+            --primary-dark: #084a5c;
+            --secondary-color: #f4f6f8;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+            --warning-color: #f1c40f;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--secondary-color);
+        }
+
+        .sidebar {
+            height: 100vh;
+            background: var(--primary-color);
+            color: white;
+            position: fixed;
+            width: 250px;
+            padding-top: 2rem;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .sidebar a {
+            color: rgba(255, 255, 255, 0.8);
+            display: block;
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid #0ee0f3;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            opacity: 0.2;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3>Aranduka</h3>
+        <a href="#" class="nav-link-admin active" data-target="dashboardSection"><i class="fas fa-home mr-2"></i>
+            Dashboard</a>
+        <a href="#" class="nav-link-admin" data-target="booksSection"><i class="fas fa-book mr-2"></i> Gestionar
+            Libros</a>
+        <a href="#" class="nav-link-admin" data-target="usersSection"><i class="fas fa-users mr-2"></i> Usuarios</a>
+        <a href="#" onclick="$('#addBookModal').modal('show')"><i class="fas fa-plus-circle mr-2"></i> Agregar Libro
+            (Rápido)</a>
+        <a href="index.html" class="mt-5"><i class="fas fa-arrow-left mr-2"></i> Volver al Sitio</a>
+        <a href="#" id="adminInfoLogout"><i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Panel de Administración</h2>
+            <div class="user-info">
+                <span class="mr-2">Hola, <strong id="adminNameDisplay">Administrador</strong></span>
+                <img src="https://ui-avatars.com/api/?name=Admin&background=0c647c&color=fff" width="40"
+                    class="rounded-circle">
+            </div>
+        </div>
+
+        <!-- SECTION: DASHBOARD -->
+        <div id="dashboardSection" class="admin-section">
+            <!-- Stats Row -->
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="stat-card border-left border-primary" style="border-left-width: 5px !important;">
+                        <div>
+                            <h6 class="text-muted text-uppercase mb-1">Total Usuarios</h6>
+                            <h3 class="font-weight-bold" id="totalUsers">0</h3>
+                        </div>
+                        <i class="fas fa-users text-primary"></i>
+                    </div>
+                </div>
+                <!-- ... (Other stats kept simple for brevity or dynamically updated) ... -->
+                <div class="col-md-3">
+                    <div class="stat-card border-left border-success" style="border-left-width: 5px !important;">
+                        <div>
+                            <h6 class="text-muted text-uppercase mb-1">Libros Activos</h6>
+                            <h3 class="font-weight-bold" id="totalBooks">0</h3>
+                        </div>
+                        <i class="fas fa-book text-success"></i>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card border-left border-warning" style="border-left-width: 5px !important;">
+                        <div>
+                            <h6 class="text-muted text-uppercase mb-1">Pendientes</h6>
+                            <h3 class="font-weight-bold" id="pendingUploads">0</h3>
+                        </div>
+                        <i class="fas fa-clock text-warning"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Approvals Table -->
+            <div class="table-card">
+                <h5 class="mb-3">Aportes Pendientes de Aprobación</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Título</th>
+                                <th>Categoría</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pendingTableBody">
+                            <tr>
+                                <td colspan="5" class="text-center py-4">Cargando...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: BOOKS MANAGEMENT -->
+        <div id="booksSection" class="admin-section" style="display: none;">
+            <div class="table-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Catálogo de Libros</h5>
+                    <button class="btn btn-primary btn-sm" onclick="$('#addBookModal').modal('show')"><i
+                            class="fas fa-plus"></i> Nuevo Libro</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Título</th>
+                                <th>Categoría</th>
+                                <th>Nivel</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="booksTableBody">
+                            <!-- Filled by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: USERS MANAGEMENT -->
+        <div id="usersSection" class="admin-section" style="display: none;">
+            <div class="table-card">
+                <h5 class="mb-3">Gestión de Usuarios</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email/CI</th>
+                                <th>Rol</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBodyFull">
+                            <!-- Filled by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Add Book Modal -->
+    <div class="modal fade" id="addBookModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Agregar Nuevo Libro al Catálogo</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="adminAddBookForm">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label>Título</label>
+                                <input type="text" name="title" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Autor</label>
+                                <input type="text" name="author" class="form-control" value="Equipo de Aranduka">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Categoría</label>
+                                <select name="category" class="form-control">
+                                    <option value="matematica">Matemática</option>
+                                    <option value="comunicacion">Comunicación</option>
+                                    <option value="guarani">Guaraní</option>
+                                    <option value="ciencias">Ciencias</option>
+                                    <option value="sociales">Sociales</option>
+                                    <option value="inicial">Nivel Inicial</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Nivel</label>
+                                <select name="level" class="form-control">
+                                    <option value="1-grado">1° Grado</option>
+                                    <option value="2-grado">2° Grado</option>
+                                    <option value="3-grado">3° Grado</option>
+                                    <option value="4-grado">4° Grado</option>
+                                    <option value="5-grado">5° Grado</option>
+                                    <option value="6-grado">6° Grado</option>
+                                </select>
+                            </div>
+                            <div class="col-12 form-group">
+                                <label>Descripción</label>
+                                <textarea name="description" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Portada (Imagen)</label>
+                                <input type="file" name="cover" class="form-control-file" accept="image/*">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Archivo (PDF)</label>
+                                <input type="file" name="file" class="form-control-file" accept=".pdf" required>
+                            </div>
+                        </div>
+                        <div class="text-right mt-3">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Guardar Libro</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Book Modal (NEW) -->
+    <div class="modal fade" id="editBookModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title">Editar Libro</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="adminEditBookForm">
+                        <input type="hidden" name="id" id="editBookId">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Título</label>
+                                <input type="text" class="form-control" name="title" id="editBookTitle" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Autor</label>
+                                <input type="text" class="form-control" name="author" id="editBookAuthor">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Categoría</label>
+                                <select class="form-control" name="category" id="editBookCategory">
+                                    <option value="inicial">Nivel Inicial</option>
+                                    <option value="matematica">Matemática</option>
+                                    <option value="guarani">Guaraní</option>
+                                    <option value="castellano">Castellano</option>
+                                    <option value="ciencias">Ciencias</option>
+                                    <option value="arte">Arte</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Nivel (Etiqueta)</label>
+                                <select class="form-control" name="level" id="editBookLevel">
+                                    <option value="pre-jardin">Pre-Jardín</option>
+                                    <option value="jardin">Jardín</option>
+                                    <option value="1-grado">1° Grado</option>
+                                    <option value="2-grado">2° Grado</option>
+                                    <option value="3-grado">3° Grado</option>
+                                    <option value="general">General</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Descripción</label>
+                            <textarea class="form-control" name="description" id="editBookDesc" rows="3"></textarea>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> La edición de archivos (imagen/PDF) no está disponible en
+                            edición rápida. Elimine y vuelva a crear si necesita cambiar archivos.
+                        </div>
+                        <button type="submit" class="btn btn-warning btn-block mt-3">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/admin.js"></script>
+</body>
+
+</html>

@@ -224,13 +224,25 @@
 
             padding: 8rem 2rem;
             position: relative;
-            background-image: linear-gradient(rgba(54, 69, 79, 0.8), rgba(54, 69, 79, 0.8)), url('ttps://imagehs.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            /* FIXED URL TYPO */
+            background-image: linear-gradient(rgba(54, 69, 79, 0.8), rgba(54, 69, 79, 0.8)), url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
             background-position: center;
         }
 
+        /* FORCE CAROUSEL VISIBILITY */
+        #heroCarouselInner {
+            min-height: 400px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            /* Debug border */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .hero .left {
             flex: 1;
+
             padding-right: 3rem;
             z-index: 2;
         }
@@ -2697,7 +2709,7 @@
                         </a>
                     </li>
                     <li id="auth-menu-item">
-                        <a href="#" id="loginBtn" class="btn-login-nav">
+                        <a href="#" id="loginBtn" class="btn-login-nav" data-toggle="modal" data-target="#loginModal">
                             <i class="fas fa-user-circle mr-1"></i> Iniciar Sesión
                         </a>
                     </li>
@@ -2723,9 +2735,10 @@
             <!-- Featured Book Carousel (One book at a time, auto-rotates) -->
             <div id="heroCarousel" class="carousel slide" data-ride="carousel" data-interval="3700">
                 <div class="carousel-inner" id="heroCarouselInner">
-                    <!-- JS will populate these slides with actual books from the library -->
+                    <!-- JS will populate these slides -->
                     <div class="carousel-item active">
-                        <img src="img/portadas/default_cover.png" class="img-fluid" alt="Aranduka">
+                        <img src="img/portadas/default_cover.png" class="img-fluid rounded shadow-lg" alt="Aranduka"
+                            style="max-height: 350px;">
                     </div>
                 </div>
             </div>
@@ -2960,14 +2973,71 @@
             <div class="results-area mt-3">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3 id="viewTitle" style="margin:0">Todos los Materiales</h3>
-                    <div class="d-flex align-items-center">
-                        <small class="mr-2">Ordenar:</small>
-                        <select id="sortBooks" class="form-control form-control-sm"
-                            style="width: auto; border-radius: 20px;">
-                            <option value="az">A - Z</option>
-                            <option value="za">Z - A</option>
-                            <option value="newest">Más Nuevos</option>
-                        </select>
+                    <div class="d-flex align-items-center flex-wrap" style="gap: 15px;">
+                        <!-- Filter: Grade -->
+                        <div class="d-flex align-items-center">
+                            <small class="mr-2 font-weight-bold text-muted">Grado:</small>
+                            <select id="filterGrade" class="form-control form-control-sm shadow-sm"
+                                style="width: auto; border-radius: 20px; border: 1px solid #dee2e6;">
+                                <option value="">Todos</option>
+                                <optgroup label="Educación Inicial">
+                                    <option value="pre-jardin">Pre-Jardín</option>
+                                    <option value="jardin">Jardín</option>
+                                    <option value="pre-escolar">Pre-Escolar</option>
+                                </optgroup>
+                                <optgroup label="Primer Ciclo">
+                                    <option value="1-grado">1° Grado</option>
+                                    <option value="2-grado">2° Grado</option>
+                                    <option value="3-grado">3° Grado</option>
+                                </optgroup>
+                                <optgroup label="Segundo Ciclo">
+                                    <option value="4-grado">4° Grado</option>
+                                    <option value="5-grado">5° Grado</option>
+                                    <option value="6-grado">6° Grado</option>
+                                </optgroup>
+                                <optgroup label="Tercer Ciclo">
+                                    <option value="7-grado">7° Grado</option>
+                                    <option value="8-grado">8° Grado</option>
+                                    <option value="9-grado">9° Grado</option>
+                                </optgroup>
+                                <optgroup label="Nivel Medio">
+                                    <option value="1-curso">1° Curso</option>
+                                    <option value="2-curso">2° Curso</option>
+                                    <option value="3-curso">3° Curso</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <!-- Filter: Subject -->
+                        <div class="d-flex align-items-center">
+                            <small class="mr-2 font-weight-bold text-muted">Materia:</small>
+                            <select id="filterSubject" class="form-control form-control-sm shadow-sm"
+                                style="width: auto; border-radius: 20px; border: 1px solid #dee2e6;">
+                                <option value="">Todas</option>
+                                <option value="matematica">Matemática</option>
+                                <option value="comunicacion">Comunicación y Literatura</option>
+                                <option value="guarani">Guaraní</option>
+                                <option value="ciencias-de-la-naturaleza-y-salud">Ciencias Naturales / Salud</option>
+                                <option value="historia">Historia y Geografía</option>
+                                <option value="sociales">Vida Social (1°-3°)</option>
+                                <option value="trabajo-tecnologia">Trabajo y Tecnología</option>
+                                <option value="etica">Formación Ética</option>
+                                <option value="fisica">Física</option>
+                                <option value="quimica">Química</option>
+                                <option value="caligrafia">Caligrafía</option>
+                            </select>
+                        </div>
+
+                        <!-- Sort -->
+                        <div class="d-flex align-items-center">
+                            <small class="mr-2 font-weight-bold text-muted">Ordenar:</small>
+                            <select id="sortBooks" class="form-control form-control-sm shadow-sm"
+                                style="width: auto; border-radius: 20px; border: 1px solid #dee2e6;">
+                                <option value="az">A - Z</option>
+                                <option value="za">Z - A</option>
+                                <option value="newest">Más Nuevos</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -3616,40 +3686,183 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="js/main.js?v=2025.1.0"></script>
+
     <script>
-        // Tab switching logic for Dashboard
-        $(document).ready(function () {
-            $('.tab-btn').click(function () {
-                const target = $(this).data('target');
-                $('.tab-btn').removeClass('active');
-                $(this).addClass('active');
+        // DEBUG: Proof of Life
+        console.log("INLINE SCRIPT STARTING...");
 
-                $('.filter-section').removeClass('active');
-                $('#' + target).addClass('active');
+        // --- INLINED main.js LOGIC ---
+        window.onerror = function (msg, url, line) {
+            alert("Error Crítico: " + msg + "\nLínea: " + line);
+        };
 
-                // Custom Scroll Logic: Scroll to tabs with offset for Sticky Header
-                // This ensures tabs & section content are visible, but doesn't scroll down to books.
-                const tabs = document.querySelector('.dashboard-tabs');
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("DOM Loaded - Starting App");
 
-                if (tabs) {
-                    // 120px offset to account for sticky header and some breathing room
-                    const headerOffset = 120;
-                    const elementPosition = tabs.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            // 1. STATE
+            let books = [];
+            let currentUser = JSON.parse(localStorage.getItem('aranduka_currentUser')) || null;
 
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: "smooth"
-                    });
+            const elements = {
+                booksContainer: document.getElementById('books-container'),
+                heroCarouselInner: document.getElementById('heroCarouselInner'),
+                introTitle: document.getElementById('viewTitle') || document.querySelector('.section-header p'),
+                searchInput: document.getElementById('searchInput'),
+                voiceBtn: document.getElementById('voiceSearchBtn'),
+                filterGrade: document.getElementById('filterGrade'),
+                filterSubject: document.getElementById('filterSubject'),
+                sortSelect: document.getElementById('sortBooks'),
+                loginBtn: document.getElementById('loginBtn'),
+                loginModal: $('#loginModal')
+            };
+
+            // 2. FETCH FETCH FETCH
+            const fetchBooks = async () => {
+                try {
+                    // Try fetch
+                    const res = await fetch('backend/get_books.php');
+                    if (!res.ok) throw new Error("HTTP Error");
+                    const data = await res.json();
+                    if (data.success && data.data) {
+                        books = data.data;
+                        if (books.length === 0) throw new Error("Empty DB");
+                        initializeApp(books);
+                    } else { throw new Error("Invalid Data"); }
+                } catch (e) {
+                    console.warn("Using Fallback Data due to:", e);
+                    // FORCE FALLBACK
+                    books = [
+                        { id: 1, title: 'Texto "Mis Huellas" Pre-Jardín', category: 'educacion inicial', level: 'pre-jardin', image: 'img/portadas/pre-jardin.png', file: 'documentos/libro-ejemplo.pdf', description: 'Libro de actividades.' },
+                        { id: 2, title: 'Matemática 1° Grado', category: 'matematica', level: '1-grado', image: 'img/portadas/mat1.png', file: 'documentos/libro-ejemplo.pdf', description: 'Introducción a números.' },
+                        { id: 3, title: 'Guaraní 1° Grado', category: 'guarani', level: '1-grado', image: 'img/portadas/gua1.png', file: 'documentos/libro-ejemplo.pdf', description: 'Lengua Guaraní.' },
+                        { id: 4, title: 'Historia 7° Grado', category: 'historia', level: '7-grado', image: 'img/portadas/hist7.png', file: 'documentos/libro-ejemplo.pdf', description: 'Historia del Paraguay.' }
+                    ];
+                    Swal.fire({ toast: true, position: 'top-end', icon: 'warning', title: 'Modo Offline', text: 'Usando libros de ejemplo.', timer: 3000 });
+                    initializeApp(books);
+                }
+            };
+
+            const initializeApp = (list) => {
+                renderHeroCarousel(list);
+                renderBooks('all');
+                checkSession();
+            };
+
+            // 3. RENDER CAROUSEL
+            window.renderHeroCarousel = (list) => {
+                console.log("RENDER CAROUSEL CALLED with", list ? list.length : 0, "books");
+                const c = document.getElementById('heroCarouselInner');
+                if (!c) { console.error("Carousel Inner NOT FOUND"); return; }
+
+                if (!list || list.length === 0) {
+                    c.innerHTML = '<div class="text-white text-center"><h3>NO BOOKS LOADED</h3></div>';
+                    return;
                 }
 
-                if (target === 'favoritos') {
-                    if (typeof renderBooks === 'function') renderBooks('favorites');
-                } else if (target === 'comunidad') {
-                    // handled by main.js or community logic
+                const html = list.slice(0, 5).map((b, i) => `
+                    <div class="carousel-item ${i === 0 ? 'active' : ''}" style="height: 100%; width: 100%; display: ${i === 0 ? 'block' : 'none'}"> 
+                        <!-- FORCE DISPLAY BLOCK ON ACTIVE -->
+                        <div class="d-flex justify-content-center align-items-center" style="height: 100%; flex-direction: column;">
+                            <h5 class="text-white bg-dark p-1">${b.title} (JS)</h5>
+                            <img src="${b.image}" class="img-fluid shadow-lg rounded" style="max-height: 350px; cursor: pointer; display: block;" 
+                                 onclick="openBookModal(${b.id})" 
+                                 onerror="console.error('Img failed:', this.src); this.src='https://dummyimage.com/300x400/000/fff&text=Error+Carga';">
+                        </div>
+                    </div>
+                `).join('');
+
+                c.innerHTML = html;
+                console.log("Carousel HTML Updated");
+
+                // FORCE RE-INIT
+                try {
+                    $('#heroCarousel').carousel('dispose');
+                } catch (e) { }
+                $('#heroCarousel').carousel({ interval: 3500 });
+
+                // Force visibility again just in case bootstrap css is failing
+                $('.carousel-item.active').css('display', 'block');
+            };
+
+            // 4. RENDER GRID
+            window.renderBooks = (type, val) => {
+                const c = document.getElementById('books-container');
+                if (!c) return;
+                c.innerHTML = '';
+
+                let show = books;
+                // Simple filter logic for inline debug
+                if (type === 'search') show = books.filter(b => b.title.toLowerCase().includes(val.toLowerCase()));
+                if (type === 'filter') show = books.filter(b => b.category.includes(val) || b.level.includes(val));
+
+                if (show.length === 0) c.innerHTML = '<div class="col-12 text-center">No hay libros</div>';
+
+                show.forEach(b => {
+                    c.insertAdjacentHTML('beforeend', `
+                       <div class="book-card quick-view-trigger" onclick="openBookModal(${b.id})">
+                           <div class="book-cover"><img src="${b.image}" onerror="this.src='img/portadas/default_cover.png'"></div>
+                           <div class="book-info"><h4>${b.title}</h4><p>${b.category}</p></div>
+                       </div>
+                   `);
+                });
+            };
+
+            // 5. MODAL
+            window.openBookModal = (id) => {
+                const b = books.find(x => x.id === id);
+                if (!b) return;
+                $('#quickViewModal').modal('show');
+                document.getElementById('modalBookTitle').innerText = b.title;
+                document.getElementById('modalBookImage').src = b.image;
+                document.getElementById('modalBookDescription').innerText = b.description;
+            };
+
+            // 6. AUTH CHECK (Simple)
+            window.checkSession = () => {
+                if (currentUser) {
+                    document.getElementById('auth-menu-item')?.classList.add('d-none');
+                    document.getElementById('user-display-item')?.classList.remove('d-none');
+                    document.getElementById('headerUserName').innerText = currentUser.nombre_completo || 'Usuario';
                 }
-            });
+            };
+
+            // START
+            fetchBooks();
+
+        });
+    </script>
+    <script>
+        // Tab switching logic for Dashboard (Keep existing)
+        $('.tab-btn').click(function () {
+            const target = $(this).data('target');
+            $('.tab-btn').removeClass('active');
+            $(this).addClass('active');
+
+            $('.filter-section').removeClass('active');
+            $('#' + target).addClass('active');
+
+            // Custom Scroll Logic: Scroll to tabs with offset for Sticky Header
+            // This ensures tabs & section content are visible, but doesn't scroll down to books.
+            const tabs = document.querySelector('.dashboard-tabs');
+
+            if (tabs) {
+                // 120px offset to account for sticky header and some breathing room
+                const headerOffset = 120;
+                const elementPosition = tabs.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+
+            if (target === 'favoritos') {
+                if (typeof renderBooks === 'function') renderBooks('favorites');
+            } else if (target === 'comunidad') {
+                // handled by main.js or community logic
+            }
+        });
         });
     </script>
     <script>
