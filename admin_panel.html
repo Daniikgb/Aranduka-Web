@@ -11,6 +11,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
+    <!-- Security Check -->
+    <script>
+        // Check if admin is logged in
+        if (localStorage.getItem('adminLogged') !== 'true') {
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Logout logic
+            const logoutBtn = document.getElementById('adminInfoLogout');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    localStorage.removeItem('adminLogged');
+                    window.location.href = 'index.html';
+                });
+            }
+        });
+    </script>
+
     <style>
         :root {
             --primary-color: #0c647c;
@@ -98,8 +118,7 @@
         <a href="#" class="nav-link-admin" data-target="booksSection"><i class="fas fa-book mr-2"></i> Gestionar
             Libros</a>
         <a href="#" class="nav-link-admin" data-target="usersSection"><i class="fas fa-users mr-2"></i> Usuarios</a>
-        <a href="#" onclick="$('#addBookModal').modal('show')"><i class="fas fa-plus-circle mr-2"></i> Agregar Libro
-            (Rápido)</a>
+
         <a href="index.html" class="mt-5"><i class="fas fa-arrow-left mr-2"></i> Volver al Sitio</a>
         <a href="#" id="adminInfoLogout"><i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión</a>
     </div>
@@ -178,8 +197,7 @@
             <div class="table-card">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="mb-0">Catálogo de Libros</h5>
-                    <button class="btn btn-primary btn-sm" onclick="$('#addBookModal').modal('show')"><i
-                            class="fas fa-plus"></i> Nuevo Libro</button>
+
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover">
@@ -225,69 +243,7 @@
 
     </div>
 
-    <!-- Add Book Modal -->
-    <div class="modal fade" id="addBookModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Agregar Nuevo Libro al Catálogo</h5>
-                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <form id="adminAddBookForm">
-                        <div class="row">
-                            <div class="col-md-6 form-group">
-                                <label>Título</label>
-                                <input type="text" name="title" class="form-control" required>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>Autor</label>
-                                <input type="text" name="author" class="form-control" value="Equipo de Aranduka">
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>Categoría</label>
-                                <select name="category" class="form-control">
-                                    <option value="matematica">Matemática</option>
-                                    <option value="comunicacion">Comunicación</option>
-                                    <option value="guarani">Guaraní</option>
-                                    <option value="ciencias">Ciencias</option>
-                                    <option value="sociales">Sociales</option>
-                                    <option value="inicial">Nivel Inicial</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>Nivel</label>
-                                <select name="level" class="form-control">
-                                    <option value="1-grado">1° Grado</option>
-                                    <option value="2-grado">2° Grado</option>
-                                    <option value="3-grado">3° Grado</option>
-                                    <option value="4-grado">4° Grado</option>
-                                    <option value="5-grado">5° Grado</option>
-                                    <option value="6-grado">6° Grado</option>
-                                </select>
-                            </div>
-                            <div class="col-12 form-group">
-                                <label>Descripción</label>
-                                <textarea name="description" class="form-control" rows="3"></textarea>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>Portada (Imagen)</label>
-                                <input type="file" name="cover" class="form-control-file" accept="image/*">
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>Archivo (PDF)</label>
-                                <input type="file" name="file" class="form-control-file" accept=".pdf" required>
-                            </div>
-                        </div>
-                        <div class="text-right mt-3">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Guardar Libro</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Edit Book Modal (NEW) -->
     <div class="modal fade" id="editBookModal" tabindex="-1">

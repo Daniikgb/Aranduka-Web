@@ -744,52 +744,135 @@ document.addEventListener('DOMContentLoaded', function () {
         const badgeEl = document.getElementById('modalBookBadge');
         if (badgeEl) badgeEl.innerText = book.level.toUpperCase();
 
-        // 5. Actions
-        const downloadBtns = [
-            document.getElementById('modalDownloadBtn'),
-            document.getElementById('modalDownloadBtn2'),
-            document.getElementById('modalDownloadFooterBtn')
-        ];
+        // 5. Actions Logic (Revised for Aranduka 2.0)
         const user = JSON.parse(localStorage.getItem('aranduka_currentUser'));
+        
+        // --- Button 1: Proyectar Clase ---
+        const btnProject = document.getElementById('btnProjectClass');
+        if (btnProject) {
+            btnProject.onclick = () => {
+                if(!user) {
+                     Swal.fire({
+                        title: 'Acceso Restringido',
+                        text: 'Debes iniciar sesión para proyectar clases listas.',
+                        icon: 'warning',
+                        confirmButtonText: 'Iniciar Sesión'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            closeBookModal();
+                            $('#loginModal').modal('show');
+                        }
+                    });
+                    return;
+                }
+                
+                // Demo Action
+                Swal.fire({
+                    title: 'Generando Clase...',
+                    html: 'Aranduka está organizando la presentación, actividades y cierre.<br><b>Tiempo estimado: 3 segundos.</b>',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                }).then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Clase Lista!',
+                        text: 'Se ha abierto el modo presentación en una nueva pestaña (Demo).',
+                        confirmButtonColor: '#1565c0'
+                    });
+                });
+            };
+        }
 
-        downloadBtns.forEach(btn => {
-            if (!btn) return;
+        // --- Button 2: Descargar Recursos ---
+        const btnDownload = document.getElementById('btnDownloadResources');
+        if (btnDownload) {
+             btnDownload.onclick = () => {
+                if (!user) {
+                    Swal.fire({
+                        title: '¿Eres Docente?',
+                        text: 'Para descargar solucionarios y guías, necesitamos verificar tu cuenta.',
+                        icon: 'info',
+                        showCancelButton: true,
+                        confirmButtonText: 'Iniciar Sesión',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            closeBookModal();
+                            $('#loginModal').modal('show');
+                        }
+                    });
+                } else {
+                    // Real Download Logic
+                    const link = document.createElement('a');
+                    link.href = book.file || '#';
+                    link.download = book.title;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Descarga Iniciada',
+                        text: 'El pack de recursos se está descargando.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            };
+        }
 
-            if (!user) {
-                // If not logged in, change button to Trigger Login
-                btn.innerHTML = '<i class="fas fa-lock mr-2"></i> INICIA SESIÓN PARA DESCARGAR';
-                btn.onclick = (e) => {
-                    e.preventDefault();
-                    $('#tab-register').tab('show'); // Bootstrap 4 syntax
-                    $('#loginModal').modal('show');
-                };
-                btn.removeAttribute('download');
-                btn.href = '#';
-                btn.classList.remove('btn-primary');
-                btn.classList.add('btn-secondary');
-            } else {
-                // Logged In -> Prepare Download
-                btn.innerHTML = btn.id === 'modalDownloadBtn' ? '<i class="fas fa-download mr-1"></i> DESCARGAR' : '<i class="fas fa-download mr-2"></i> DESCARGAR MATERIAL';
-                btn.href = book.file;
-                btn.setAttribute('download', book.title);
-                btn.onclick = null;
+        // --- Button 3: Crear mi Clase (AI) ---
+        const btnCreate = document.getElementById('btnCreateClass');
+        if (btnCreate) {
+            btnCreate.onclick = () => {
+                if(!user) {
+                     Swal.fire({
+                        title: 'Asistente IA',
+                        text: 'Inicia sesión para usar el asistente de creación de clases.',
+                        icon: 'warning',
+                        confirmButtonText: 'Entrar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            closeBookModal();
+                            $('#loginModal').modal('show');
+                        }
+                    });
+                    return;
+                }
 
-                // FORCE GRAY STYLE
-                btn.classList.remove('btn-primary');
-                btn.classList.add('btn-secondary');
-                btn.style.backgroundColor = '#6c757d';
-                btn.style.borderColor = '#6c757d';
-            }
-        });
-
-        const guideBtn = document.getElementById('modalGuideBtn');
-        if (guideBtn) {
-            if (book.guideFile) {
-                guideBtn.href = book.guideFile;
-                guideBtn.style.display = 'inline-flex';
-            } else {
-                guideBtn.style.display = 'none';
-            }
+                Swal.fire({
+                    title: 'Crear mi Clase',
+                    input: 'textarea',
+                    inputLabel: '¿Sobre qué quieres dar clase hoy?',
+                    inputPlaceholder: 'Ej: El ciclo del agua para niños de 3er grado...',
+                    inputAttributes: {
+                        'aria-label': 'Tema de la clase'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Generar Clase',
+                    confirmButtonColor: '#00695c',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (text) => {
+                        return new Promise((resolve) => {
+                            setTimeout(() => {
+                                resolve();
+                            }, 2000); // Fake AI delay
+                        });
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Estructura Creada',
+                            text: 'Hemos generado una propuesta de clase basada en tu idea. Revisa tu correo.',
+                        });
+                    }
+                });
+            };
         }
 
         // 6. Related Books Logic (Grid for Mobile)
