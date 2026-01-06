@@ -210,8 +210,26 @@
             background: linear-gradient(135deg, #e63025 0%, #b2241a 100%);
         }
 
-        .btn-admin-nav i {
-            font-size: 1.1em;
+        .btn-share-nav {
+            background: linear-gradient(135deg, var(--py-blue) 0%, #002e8a 100%);
+            color: white !important;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0, 56, 168, 0.3);
+            text-decoration: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-share-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 56, 168, 0.5);
+            background: linear-gradient(135deg, #0047cc 0%, #002e8a 100%);
         }
 
         /* --- Premium Hero Section --- */
@@ -230,14 +248,67 @@
             background-position: center;
         }
 
-        /* FORCE CAROUSEL VISIBILITY */
+        /* --- CORRECCIÓN DEL CONTENEDOR DEL CARRUSEL --- */
+
+        /* 1. Quitamos el borde de líneas y el flex que rompía el layout */
         #heroCarouselInner {
-            min-height: 400px;
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            /* Debug border */
-            display: flex;
+            min-height: 450px;
+            border: none;
+            /* Adiós al borde de líneas discontinuas */
+            /* Quitamos display: flex de aquí para que Bootstrap controle el slide */
+            display: block;
+            width: 100%;
+        }
+
+        /* 2. Centramos el contenido DENTRO de cada item individual */
+        .carousel-item {
+            height: 450px;
+            /* Altura fija para evitar saltos */
+            transition: transform 0.6s ease-in-out;
+        }
+
+        /* Esta clase ayuda a centrar todo vertical y horizontalmente */
+        .carousel-item-content {
+            height: 100%;
+            width: 100%;
+            display: flex !important;
+            flex-direction: column;
             align-items: center;
+            /* Centrado Horizontal */
             justify-content: center;
+            /* Centrado Vertical */
+            padding-bottom: 2rem;
+        }
+
+        /* 3. Ajustamos la imagen para que no se corte */
+        .hero-book-wrapper {
+            position: relative;
+            z-index: 10;
+            margin-bottom: 1rem;
+            perspective: 1000px;
+            /* Para el efecto 3D */
+        }
+
+        .hero-book-wrapper img {
+            max-height: 320px;
+            /* Un poco más pequeño para asegurar que quepa */
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            /* Sombra elegante */
+            transform: rotateY(-10deg);
+            /* Efecto 3D sutil */
+            transition: transform 0.3s ease;
+        }
+
+        /* Texto debajo del libro */
+        .hero-book-caption {
+            text-align: center;
+            color: white;
+            z-index: 20;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
 
         .hero .left {
@@ -338,25 +409,7 @@
             max-width: 480px;
         }
 
-        .hero-book-wrapper img {
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
 
-        .carousel-item.active .hero-book-wrapper img {
-            animation: bookFloat 4s ease-in-out infinite;
-        }
-
-        @keyframes bookFloat {
-
-            0%,
-            100% {
-                transform: rotateY(-8deg) translateY(0);
-            }
-
-            50% {
-                transform: rotateY(-12deg) translateY(-10px);
-            }
-        }
 
         /* --- Advantages Row --- */
         .advantages {
@@ -2508,7 +2561,6 @@
         }
 
         /* FORCE MODALS ON TOP */
-        #loginModal,
         #authRequiredModal {
             z-index: 12000 !important;
         }
@@ -2649,6 +2701,17 @@
             margin: 0 auto !important;
             display: block !important;
         }
+
+        /* --- ARREGLO Z-INDEX LOGIN --- */
+        /* Forzamos que el modal de login esté SIEMPRE encima de todo */
+        #loginModal {
+            z-index: 100000 !important;
+        }
+
+        /* Ajustamos el fondo oscuro de Bootstrap para que esté justo debajo del modal */
+        .modal-backdrop {
+            z-index: 99999 !important;
+        }
     </style>
 </head>
 
@@ -2679,6 +2742,8 @@
 
 
                     <!-- Contact Dropdown -->
+
+
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false" style="cursor: pointer;">
@@ -2709,7 +2774,7 @@
                         </a>
                     </li>
                     <li id="auth-menu-item">
-                        <a href="#" id="loginBtn" class="btn-login-nav" data-toggle="modal" data-target="#loginModal">
+                        <a href="#" id="loginBtn" class="btn-login-nav">
                             <i class="fas fa-user-circle mr-1"></i> Iniciar Sesión
                         </a>
                     </li>
@@ -2750,138 +2815,7 @@
 
     <!-- Value Proposition Section -->
     <!-- Aranduka Comprehensive Info Section -->
-    <section class="info-aranduka py-5" style="background-color: #f9f9f9;">
-        <div class="container">
-            <!-- 1. The Big Idea -->
-            <div class="row mb-5 align-items-center">
-                <div class="col-lg-6 mb-4 mb-lg-0">
-                    <h2 class="font-weight-bold display-4 text-primary mb-3"
-                        style="font-family: 'Playfair Display', serif;">La Gran Idea</h2>
-                    <h5 class="text-secondary mb-3 font-weight-bold">Plataforma educativa pensada para el docente real
-                    </h5>
-                    <p class="lead text-dark">Aranduka nace a partir de una realidad concreta: <b>el docente no falla
-                            por falta de conocimiento, falla por falta de tiempo.</b></p>
-                    <p class="text-muted">Entre clases cortas, presión institucional, preparación de materiales y tareas
-                        administrativas, muchas veces enseñar bien no depende de saber, sino de llegar con algo listo.
-                    </p>
-                    <p class="text-muted">Aranduka existe para resolver ese problema. No como una editorial más, ni como
-                        una plataforma tecnológica compleja, sino como un sistema de apoyo pedagógico inmediato. En
-                        Aranduka, el docente no pelea contra el tiempo. <b>Aranduka pelea por él.</b></p>
-                </div>
-                <div class="col-lg-6 text-center">
-                    <img src="https://images.unsplash.com/photo-1577896332409-7e97a39d2c5e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                        alt="Docente enseñando" class="img-fluid rounded shadow-lg" style="border-radius: 20px;">
-                </div>
-            </div>
 
-            <hr class="my-5">
-
-            <!-- 2. Target Audience & Philosophy -->
-            <div class="row mb-5">
-                <div class="col-md-6 mb-4">
-                    <div class="p-4 bg-white rounded shadow-sm h-100 border-left-primary"
-                        style="border-left: 5px solid var(--primary-color);">
-                        <h3 class="font-weight-bold mb-4" style="font-family: 'Playfair Display', serif;">¿Para quién es
-                            Aranduka?</h3>
-                        <p class="mb-3">Pensada para el docente paraguayo que:</p>
-                        <ul class="list-unstyled">
-                            <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Tiene clases de 40 u
-                                80 minutos.</li>
-                            <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Trabaja con poco
-                                margen entre una clase y otra.</li>
-                            <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Necesita materiales
-                                claros y defendibles.</li>
-                            <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> No quiere perder
-                                tiempo armando presentaciones.</li>
-                            <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Quiere enseñar con
-                                tranquilidad.</li>
-                        </ul>
-                        <p class="font-italic mt-3 text-primary">"Aranduka no asume un docente ideal. Asume un docente
-                            cansado, real y comprometido."</p>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <div class="p-4 bg-white rounded shadow-sm h-100 border-left-secondary"
-                        style="border-left: 5px solid var(--py-red);">
-                        <h3 class="font-weight-bold mb-4" style="font-family: 'Playfair Display', serif;">Filosofía y
-                            Tecnología</h3>
-                        <p><b>El uso de la tecnología:</b> Aranduka utiliza asistencia inteligente, pero invisible. El
-                            docente NO escribe prompts, NO aprende ingeniería de IA, NO toma decisiones técnicas. La
-                            tecnología trabaja en segundo plano.</p>
-                        <p><b>Filosofía:</b> Aranduka no reemplaza al docente. No lo evalúa. No lo juzga. <b>Lo
-                                acompaña.</b></p>
-                        <p class="mb-0">Usar material de apoyo no te hace menos docente. Te permite llegar mejor a tus
-                            alumnos.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. Organization & Features Overview -->
-            <div class="text-center mb-5">
-                <h2 class="font-weight-bold mb-4" style="font-family: 'Playfair Display', serif;">El Corazón del
-                    Sistema: El Libro</h2>
-                <p class="lead text-muted mx-auto" style="max-width: 800px;">
-                    Cuando entras a un libro, no encuentras solo texto. Encuentras un centro de trabajo con tres
-                    funciones diseñadas para salvar tu clase.
-                </p>
-            </div>
-
-            <div class="row">
-                <!-- Feature 1 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 border-0 shadow-sm hover-up text-center p-4">
-                        <div class="mb-3 text-primary">
-                            <i class="fas fa-project-diagram fa-3x"></i>
-                        </div>
-                        <h4 class="font-weight-bold">1. Proyectar Clase</h4>
-                        <span class="badge badge-pill badge-primary mx-auto mb-3 px-3">Clase Lista</span>
-                        <p class="small text-muted">Para cuando no tienes tiempo.</p>
-                        <p class="card-text">Aranduka genera automáticamente una presentación, desarrollo del tema,
-                            actividad breve y cierre. Tú solo proyectas y enseñas. Pensado para 40 minutos reales.</p>
-                    </div>
-                </div>
-                <!-- Feature 2 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 border-0 shadow-sm hover-up text-center p-4">
-                        <div class="mb-3 text-danger">
-                            <i class="fas fa-file-download fa-3x"></i>
-                        </div>
-                        <h4 class="font-weight-bold">2. Descargar Recursos</h4>
-                        <span class="badge badge-pill badge-danger mx-auto mb-3 px-3">Material de Apoyo</span>
-                        <p class="small text-muted">Solucionarios y Guías.</p>
-                        <p class="card-text">Respaldo pedagógico listo para descargar. Solucionarios, guías y material
-                            complementario que no requieren edición. Consulta rápida y corrección segura.</p>
-                    </div>
-                </div>
-                <!-- Feature 3 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 border-0 shadow-sm hover-up text-center p-4">
-                        <div class="mb-3 text-info">
-                            <i class="fas fa-magic fa-3x"></i>
-                        </div>
-                        <h4 class="font-weight-bold">3. Crear mi Clase</h4>
-                        <span class="badge badge-pill badge-info mx-auto mb-3 px-3">Asistente IA</span>
-                        <p class="small text-muted">Cuando tienes una idea propia.</p>
-                        <p class="card-text">Tú eliges el tema, Aranduka estructura la clase. Genera presentaciones
-                            editables y actividades a medida. Tu idea, nuestro orden y redacción pedagógica.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-5">
-                <div class="col-12 text-center">
-                    <div class="alert alert-light border shadow-sm d-inline-block px-5" role="alert">
-                        <h4 class="alert-heading font-weight-bold"
-                            style="font-family: 'Playfair Display', serif; color: var(--primary-color);">Nuestra Visión
-                        </h4>
-                        <p class="mb-0">“Ser el primer lugar al que el docente acude cuando piensa: 'Hoy no tengo
-                            tiempo, pero tengo que dar clase'.”</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
 
     <!-- Main Dashboard Section -->
     <main class="dashboard-container" id="materiales-section">
@@ -2897,39 +2831,11 @@
                     Grados</button>
                 <button class="tab-btn" data-target="materias"><i class="fas fa-book"></i> Por Materias</button>
                 <button class="tab-btn" data-target="favoritos"><i class="fas fa-heart"></i> Favoritos</button>
-                <button class="tab-btn" data-target="comunidad"><i class="fas fa-users"></i> Ensayos Destacados</button>
             </div>
         </div>
 
         <div class="dashboard-main-area">
 
-            <!-- Announcement Banner (Redesigned) -->
-            <div class="card border-0 shadow-sm mb-4 overflow-hidden"
-                style="border-radius: 20px; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: 1px solid rgba(0,0,0,0.03);">
-                <div class="card-body p-3 p-md-4 d-flex align-items-center justify-content-between flex-wrap">
-                    <div class="d-flex align-items-center flex-grow-1">
-                        <div class="d-flex align-items-center justify-content-center mr-3 mr-md-4"
-                            style="width: 55px; height: 55px; min-width: 55px; background: rgba(12, 100, 124, 0.08); border-radius: 18px; color: var(--primary-color);">
-                            <i class="fas fa-feather-alt fa-lg"></i>
-                        </div>
-                        <div>
-                            <h5 class="font-weight-bold text-dark mb-1"
-                                style="font-family: 'Playfair Display', serif; font-size: 1.25rem;">¡El espacio es tuyo!
-                            </h5>
-                            <p class="text-muted mb-0 small" style="line-height: 1.4; max-width: 500px;">
-                                Publica tus <b>ensayos y guías</b>. Ayuda a crecer a la comunidad Aranduka.
-                            </p>
-                        </div>
-                    </div>
-                    <button
-                        class="btn btn-primary px-4 py-2 rounded-pill font-weight-bold shadow-sm mt-3 mt-md-0 ml-auto"
-                        onclick="document.querySelector('.tab-btn[data-target=\'comunidad\']').click(); $('#uploadMaterialModal').modal('show');"
-                        style="font-size: 0.9rem; letter-spacing: 0.5px; min-width: 140px;">
-                        Subir Aporte <i class="fas fa-upload ml-2"></i>
-                    </button>
-                    <!-- Close button optional, removing for cleaner look as it is a permanent CTA -->
-                </div>
-            </div>
 
             <!-- Filters by Section -->
             <div id="secciones" class="filter-section active">
@@ -3008,23 +2914,10 @@
                         <i class="fas fa-pen-nib"></i>
                         <span>Caligrafía</span>
                     </a>
-                    <a href="#" class="filter-card community-trigger">
-                        <i class="fas fa-users-cog"></i>
-                        <span>Ensayos Destacados</span>
-                    </a>
                 </div>
             </div>
 
-            <!-- Community Section -->
-            <div id="comunidad" class="filter-section">
-                <div class="row">
-                    <div class="col-md-12" id="community-list-col">
-                        <div class="row" id="community-books-list">
-                            <!-- JS fills here -->
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Logout Logic (Hidden Tab Trigger) -->
             <div id="logout" class="filter-section text-center py-5">
@@ -3046,70 +2939,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3 id="viewTitle" style="margin:0">Todos los Materiales</h3>
                     <div class="d-flex align-items-center flex-wrap" style="gap: 15px;">
-                        <!-- Filter: Grade -->
-                        <div class="d-flex align-items-center">
-                            <small class="mr-2 font-weight-bold text-muted">Grado:</small>
-                            <select id="filterGrade" class="form-control form-control-sm shadow-sm"
-                                style="width: auto; border-radius: 20px; border: 1px solid #dee2e6;">
-                                <option value="">Todos</option>
-                                <optgroup label="Educación Inicial">
-                                    <option value="pre-jardin">Pre-Jardín</option>
-                                    <option value="jardin">Jardín</option>
-                                    <option value="pre-escolar">Pre-Escolar</option>
-                                </optgroup>
-                                <optgroup label="Primer Ciclo">
-                                    <option value="1-grado">1° Grado</option>
-                                    <option value="2-grado">2° Grado</option>
-                                    <option value="3-grado">3° Grado</option>
-                                </optgroup>
-                                <optgroup label="Segundo Ciclo">
-                                    <option value="4-grado">4° Grado</option>
-                                    <option value="5-grado">5° Grado</option>
-                                    <option value="6-grado">6° Grado</option>
-                                </optgroup>
-                                <optgroup label="Tercer Ciclo">
-                                    <option value="7-grado">7° Grado</option>
-                                    <option value="8-grado">8° Grado</option>
-                                    <option value="9-grado">9° Grado</option>
-                                </optgroup>
-                                <optgroup label="Nivel Medio">
-                                    <option value="1-curso">1° Curso</option>
-                                    <option value="2-curso">2° Curso</option>
-                                    <option value="3-curso">3° Curso</option>
-                                </optgroup>
-                            </select>
-                        </div>
 
-                        <!-- Filter: Subject -->
-                        <div class="d-flex align-items-center">
-                            <small class="mr-2 font-weight-bold text-muted">Materia:</small>
-                            <select id="filterSubject" class="form-control form-control-sm shadow-sm"
-                                style="width: auto; border-radius: 20px; border: 1px solid #dee2e6;">
-                                <option value="">Todas</option>
-                                <option value="matematica">Matemática</option>
-                                <option value="comunicacion">Comunicación y Literatura</option>
-                                <option value="guarani">Guaraní</option>
-                                <option value="ciencias-de-la-naturaleza-y-salud">Ciencias Naturales / Salud</option>
-                                <option value="historia">Historia y Geografía</option>
-                                <option value="sociales">Vida Social (1°-3°)</option>
-                                <option value="trabajo-tecnologia">Trabajo y Tecnología</option>
-                                <option value="etica">Formación Ética</option>
-                                <option value="fisica">Física</option>
-                                <option value="quimica">Química</option>
-                                <option value="caligrafia">Caligrafía</option>
-                            </select>
-                        </div>
-
-                        <!-- Sort -->
-                        <div class="d-flex align-items-center">
-                            <small class="mr-2 font-weight-bold text-muted">Ordenar:</small>
-                            <select id="sortBooks" class="form-control form-control-sm shadow-sm"
-                                style="width: auto; border-radius: 20px; border: 1px solid #dee2e6;">
-                                <option value="az">A - Z</option>
-                                <option value="za">Z - A</option>
-                                <option value="newest">Más Nuevos</option>
-                            </select>
-                        </div>
                     </div>
                 </div>
 
@@ -3260,17 +3090,11 @@
                                 <div id="pane-student">
 
                                     <!-- Tab Navigation for Login/Register -->
-                                    <ul class="nav nav-tabs nav-justified mb-4 border-0" id="studentAuthTabs"
-                                        role="tablist">
+                                    <ul class="nav nav-pills nav-justified mb-4" id="studentAuthTabs" role="tablist">
                                         <li class="nav-item">
                                             <a class="nav-link active font-weight-bold border-0 bg-light rounded-pill mx-1"
                                                 id="tab-login" data-toggle="tab" href="#auth-login" role="tab"
-                                                style="color: var(--primary-color);">Iniciar Sesión</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link font-weight-bold border-0 bg-light rounded-pill mx-1"
-                                                id="tab-register" data-toggle="tab" href="#auth-register" role="tab"
-                                                style="color: var(--primary-color);">Crear Cuenta</a>
+                                                style="color: var(--primary-color);">Acceso Biblioteca (Invitado)</a>
                                         </li>
                                     </ul>
 
@@ -3289,51 +3113,18 @@
                                                         </div>
                                                         <input type="text" name="ci"
                                                             class="form-control border-left-0 rounded-right-pill py-4"
-                                                            placeholder="Cédula o Correo Electrónico"
-                                                            style="font-size:1rem;" required>
+                                                            placeholder="Usuario (ej: invitado)" style="font-size:1rem;"
+                                                            required>
                                                     </div>
                                                 </div>
                                                 <button type="submit"
                                                     class="btn btn-primary btn-block rounded-pill py-3 font-weight-bold shadow-sm transition-hover">
                                                     Ingresar a la Biblioteca
                                                 </button>
-                                            </form>
-                                        </div>
-
-                                        <!-- REGISTER FORM -->
-                                        <div class="tab-pane fade" id="auth-register" role="tabpanel">
-                                            <form id="studentRegisterForm">
-                                                <div class="form-row">
-                                                    <div class="col-6 form-group">
-                                                        <input type="text" name="ci"
-                                                            class="form-control rounded-pill bg-light border-0"
-                                                            placeholder="C.I. (Cédula)" required>
-                                                    </div>
-                                                    <div class="col-6 form-group">
-                                                        <input type="text" name="telefono"
-                                                            class="form-control rounded-pill bg-light border-0"
-                                                            placeholder="Teléfono" required>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <input type="text" name="nombre"
-                                                        class="form-control rounded-pill bg-light border-0"
-                                                        placeholder="Nombre Completo" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <input type="email" name="email"
-                                                        class="form-control rounded-pill bg-light border-0"
-                                                        placeholder="Correo Electrónico" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <input type="text" name="colegio"
-                                                        class="form-control rounded-pill bg-light border-0"
-                                                        placeholder="Nombre de tu Institución/Colegio" required>
-                                                </div>
-                                                <!-- Password field removed as per user request -->
-                                                <button type="submit"
-                                                    class="btn btn-success btn-block rounded-pill py-3 font-weight-bold shadow-sm">
-                                                    Registrarme Gratis
+                                                <button type="button" id="btnDemoLogin"
+                                                    class="btn btn-outline-primary btn-block rounded-pill py-2 mt-3 font-weight-bold"
+                                                    style="border-style: dashed; border-width: 2px;">
+                                                    <i class="fas fa-magic mr-2"></i> Acceso Rápido (Demo)
                                                 </button>
                                             </form>
                                         </div>
@@ -3404,17 +3195,6 @@
                                     <li class="nav-item">
                                         <a class="nav-link py-3 px-4 mb-2" data-toggle="pill" href="#pane-inventory"><i
                                                 class="fas fa-book mr-2"></i> Inventario</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link py-3 px-4 mb-2" data-toggle="pill" href="#pane-add-book"><i
-                                                class="fas fa-plus-circle mr-2"></i> Agregar Libro</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link py-3 px-4 mb-2 d-flex justify-content-between align-items-center"
-                                            data-toggle="pill" href="#pane-requests">
-                                            <span><i class="fas fa-bell mr-2"></i> Solicitudes</span>
-                                            <span class="badge badge-danger rounded-pill px-2" id="req-count">0</span>
-                                        </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link py-3 px-4 mb-2" data-toggle="pill" href="#pane-users"><i
@@ -3498,108 +3278,9 @@
                                 </div>
 
                                 <!-- Add Book Pane -->
-                                <div class="tab-pane fade" id="pane-add-book">
-                                    <h4 class="font-weight-bold text-dark mb-4">Añadir Nuevo Material</h4>
-                                    <form id="admin-add-form">
-                                        <div class="row">
-                                            <div class="col-md-6 form-group">
-                                                <label class="small font-weight-bold">Título del Libro</label>
-                                                <input type="text" name="title" class="form-control rounded-pill"
-                                                    required>
-                                            </div>
-                                            <div class="col-md-6 form-group">
-                                                <label class="small font-weight-bold">Autor / Editorial</label>
-                                                <input type="text" name="author" class="form-control rounded-pill"
-                                                    value="Editorial Aranduka" required>
-                                            </div>
-                                            <div class="col-md-6 form-group">
-                                                <label class="small font-weight-bold">Sección / Categoría</label>
-                                                <select name="category" class="form-control rounded-pill">
-                                                    <option value="matematica">Matemática</option>
-                                                    <option value="comunicacion">Comunicación</option>
-                                                    <option value="guarani">Guaraní</option>
-                                                    <option value="ciencias-de-la-naturaleza-y-salud">Ciencias Naturales
-                                                    </option>
-                                                    <option value="historia">Historia y Geografía</option>
-                                                    <option value="sociales">Vida Social / Sociales</option>
-                                                    <option value="fisica">Física</option>
-                                                    <option value="quimica">Química</option>
-                                                    <option value="filosofia">Filosofía</option>
-                                                    <option value="etica">Formación Ética</option>
-                                                    <option value="trabajo-tecnologia">Trabajo y Tecnología</option>
-                                                    <option value="caligrafia">Caligrafía</option>
-                                                    <option value="politica">Política / Sociología</option>
-                                                    <option value="inicial">Nivel Inicial</option>
-                                                    <option value="otros">Otros</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6 form-group">
-                                                <label class="small font-weight-bold">Nivel / Grado</label>
-                                                <select name="level" class="form-control rounded-pill">
-                                                    <option value="jardin">Jardín</option>
-                                                    <option value="pre-jardin">Pre-Jardín</option>
-                                                    <option value="pre-escolar">Pre-Escolar</option>
-                                                    <option value="1-grado">1° Grado</option>
-                                                    <option value="2-grado">2° Grado</option>
-                                                    <option value="3-grado">3° Grado</option>
-                                                    <option value="4-grado">4° Grado</option>
-                                                    <option value="5-grado">5° Grado</option>
-                                                    <option value="6-grado">6° Grado</option>
-                                                    <option value="7-grado">7° Grado</option>
-                                                    <option value="8-grado">8° Grado</option>
-                                                    <option value="9-grado">9° Grado</option>
-                                                    <option value="1-curso">1° Curso</option>
-                                                    <option value="2-curso">2° Curso</option>
-                                                    <option value="3-curso">3° Curso</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-12 form-group">
-                                                <label class="small font-weight-bold">Descripción</label>
-                                                <textarea name="description" class="form-control" rows="3"
-                                                    style="border-radius:15px;"></textarea>
-                                            </div>
-                                            <div class="col-md-6 form-group">
-                                                <label class="small font-weight-bold">Portada (.png/.jpg)</label>
-                                                <input type="file" name="cover" class="form-control-file">
-                                            </div>
-                                            <div class="col-md-6 form-group">
-                                                <label class="small font-weight-bold">Archivo PDF (.pdf)</label>
-                                                <input type="file" name="file" class="form-control-file">
-                                            </div>
-                                        </div>
-                                        <div class="text-right">
-                                            <button type="submit"
-                                                class="btn btn-primary rounded-pill px-4 shadow-sm font-weight-bold">
-                                                <i class="fas fa-save mr-2"></i> Guardar Libro
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
 
-                                <!-- Requests Pane -->
-                                <div class="tab-pane fade" id="pane-requests">
-                                    <div class="d-flex justify-content-between align-items-center mb-4">
-                                        <h4 class="font-weight-bold text-dark mb-0">Gestión de Aportes</h4>
-                                        <span class="badge badge-warning p-2">Pendientes de Revisión</span>
-                                    </div>
-                                    <div class="table-responsive bg-light p-2 rounded">
-                                        <table class="table table-bordered border-0 bg-white">
-                                            <thead>
-                                                <tr>
-                                                    <th>Fecha</th>
-                                                    <th>Usuario (Autor)</th>
-                                                    <th>Título / Descripción</th>
-                                                    <th>Archivo</th>
-                                                    <th>Estado</th>
-                                                    <th>Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="admin-pending-table-body">
-                                                <!-- JS fills -->
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+
+
 
                                 <!-- Users Pane -->
                                 <div class="tab-pane fade" id="pane-users">
@@ -3652,91 +3333,11 @@
                 </div>
             </div>
 
-            <!-- Add Book Selection Modal (Hierarchical) -->
-            <div class="modal fade" id="addBookSelectionModal" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
-                        <div class="modal-header bg-success text-white p-4">
-                            <h5 class="modal-title font-weight-bold">¿Qué nivel deseas agregar?</h5>
-                            <button type="button" class="close text-white"
-                                data-dismiss="modal"><span>&times;</span></button>
-                        </div>
-                        <div class="modal-body p-4">
-                            <div class="list-group list-group-flush">
-                                <button class="list-group-item list-group-item-action border-0 py-3"
-                                    onclick="openAddFormWithLevel('inicial')">🎈 Educación Inicial</button>
-                                <button class="list-group-item list-group-item-action border-0 py-3"
-                                    onclick="openAddFormWithLevel('1-grado')">🌱 1er Ciclo</button>
-                                <button class="list-group-item list-group-item-action border-0 py-3"
-                                    onclick="openAddFormWithLevel('4-grado')">🚀 2do y 3er Ciclo</button>
-                                <button class="list-group-item list-group-item-action border-0 py-3"
-                                    onclick="openAddFormWithLevel('1-curso')">🎓 Nivel Medio</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
 
 
-            <!-- Upload Material Modal -->
-            <div class="modal fade" id="uploadMaterialModal" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
-                        <div class="modal-header border-0 bg-primary text-white p-4">
-                            <h5 class="modal-title font-weight-bold"><i class="fas fa-file-upload mr-2"></i> Compartir
-                                con la
-                                Comunidad</h5>
-                            <button type="button" class="close text-white"
-                                data-dismiss="modal"><span>&times;</span></button>
-                        </div>
-                        <div class="modal-body p-4">
-                            <form id="uploadForm">
-                                <div class="form-group">
-                                    <label class="small font-weight-bold">Título del Material</label>
-                                    <input type="text" name="title" class="form-control rounded-pill"
-                                        placeholder="Ej: Resumen de Geografía" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="small font-weight-bold">Tu Nombre/Seudónimo</label>
-                                    <input type="text" name="author" class="form-control rounded-pill"
-                                        placeholder="¿Cómo quieres aparecer?" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="small font-weight-bold">Nivel Correspondiente</label>
-                                    <select name="level" class="form-control rounded-pill">
-                                        <option value="General">Nivel General</option>
-                                        <option value="inicial">Inicial</option>
-                                        <option value="1-grado">1er Ciclo</option>
-                                        <option value="4-grado">2do Ciclo</option>
-                                        <option value="7-grado">3er Ciclo</option>
-                                        <option value="nivel-medio">Nivel Medio</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="small font-weight-bold">Breve descripción</label>
-                                    <textarea name="description" class="form-control" rows="2"
-                                        placeholder="Cuéntanos un poco sobre este archivo..."
-                                        style="border-radius: 15px;"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label class="small font-weight-bold">Archivo PDF</label>
-                                    <div class="custom-file">
-                                        <input type="file" name="archivo" class="custom-file-input" id="modalCustomFile"
-                                            required>
-                                        <label class="custom-file-label" for="modalCustomFile"
-                                            style="border-radius: 50px;">Elegir PDF...</label>
-                                    </div>
-                                </div>
-                                <button type="submit"
-                                    class="btn btn-primary btn-block rounded-pill py-3 font-weight-bold shadow mt-4">
-                                    Subir Material Ahora
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+
 
             <!-- WhatsApp FAB -->
 
@@ -3765,247 +3366,9 @@
             <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script src="js/main.js"></script>
 
-            <script>
-                // DEBUG: Proof of Life
-                console.log("INLINE SCRIPT STARTING...");
 
-                // --- INLINED main.js LOGIC ---
-                window.onerror = function (msg, url, line) {
-                    alert("Error Crítico: " + msg + "\nLínea: " + line);
-                };
-
-                document.addEventListener('DOMContentLoaded', function () {
-                    console.log("DOM Loaded - Starting App");
-
-                    // 1. STATE
-                    let books = [];
-                    let currentUser = JSON.parse(localStorage.getItem('aranduka_currentUser')) || null;
-
-                    const elements = {
-                        booksContainer: document.getElementById('books-container'),
-                        heroCarouselInner: document.getElementById('heroCarouselInner'),
-                        introTitle: document.getElementById('viewTitle') || document.querySelector('.section-header p'),
-                        searchInput: document.getElementById('searchInput'),
-                        voiceBtn: document.getElementById('voiceSearchBtn'),
-                        filterGrade: document.getElementById('filterGrade'),
-                        filterSubject: document.getElementById('filterSubject'),
-                        sortSelect: document.getElementById('sortBooks'),
-                        loginBtn: document.getElementById('loginBtn'),
-                        loginModal: $('#loginModal')
-                    };
-
-                    // 2. FETCH FETCH FETCH
-                    const fetchBooks = async () => {
-                        try {
-                            // Try fetch
-                            const res = await fetch('backend/get_books.php');
-                            if (!res.ok) throw new Error("HTTP Error");
-                            const data = await res.json();
-                            if (data.success && data.data) {
-                                books = data.data;
-                                if (books.length === 0) throw new Error("Empty DB");
-                                initializeApp(books);
-                            } else { throw new Error("Invalid Data"); }
-                        } catch (e) {
-                            console.warn("Using Fallback Data due to:", e);
-                            // FORCE FALLBACK
-                            books = [
-                                { id: 1, title: 'Texto "Mis Huellas" Pre-Jardín', category: 'educacion inicial', level: 'pre-jardin', image: 'img/portadas/pre-jardin.png', file: 'documentos/libro-ejemplo.pdf', description: 'Libro de actividades.' },
-                                { id: 2, title: 'Matemática 1° Grado', category: 'matematica', level: '1-grado', image: 'img/portadas/mat1.png', file: 'documentos/libro-ejemplo.pdf', description: 'Introducción a números.' },
-                                { id: 3, title: 'Guaraní 1° Grado', category: 'guarani', level: '1-grado', image: 'img/portadas/gua1.png', file: 'documentos/libro-ejemplo.pdf', description: 'Lengua Guaraní.' },
-                                { id: 4, title: 'Historia 7° Grado', category: 'historia', level: '7-grado', image: 'img/portadas/hist7.png', file: 'documentos/libro-ejemplo.pdf', description: 'Historia del Paraguay.' }
-                            ];
-                            Swal.fire({ toast: true, position: 'top-end', icon: 'warning', title: 'Modo Offline', text: 'Usando libros de ejemplo.', timer: 3000 });
-                            initializeApp(books);
-                        }
-                    };
-
-                    // --- ADMIN LOGIN LOGIC ---
-                    const adminForm = document.getElementById('adminLoginForm');
-                    if (adminForm) {
-                        adminForm.addEventListener('submit', function (e) {
-                            e.preventDefault();
-
-                            const user = document.getElementById('adminUser').value;
-                            const pass = document.getElementById('adminPass').value;
-
-                            // Hardcoded credentials as requested
-                            if (user === 'arandukaADMIN' && pass === 'Aranduka1974') {
-                                localStorage.setItem('adminLogged', 'true');
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Bienvenido Administrador',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                }).then(() => {
-                                    window.location.href = 'admin_panel.html';
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Credenciales incorrectas',
-                                    text: 'Por favor verifique su usuario y contraseña'
-                                });
-                            }
-                        });
-                    }
-
-                    const initializeApp = (list) => {
-                        renderHeroCarousel(list);
-                        renderBooks('all');
-                        checkSession();
-                    };
-
-                    // 3. RENDER CAROUSEL
-                    window.renderHeroCarousel = (list) => {
-                        console.log("RENDER CAROUSEL CALLED with", list ? list.length : 0, "books");
-                        const c = document.getElementById('heroCarouselInner');
-                        if (!c) { console.error("Carousel Inner NOT FOUND"); return; }
-
-                        if (!list || list.length === 0) {
-                            c.innerHTML = '<div class="text-white text-center"><h3>NO BOOKS LOADED</h3></div>';
-                            return;
-                        }
-
-                        const html = list.slice(0, 5).map((b, i) => `
-                    <div class="carousel-item ${i === 0 ? 'active' : ''}" style="height: 100%; width: 100%; display: ${i === 0 ? 'block' : 'none'}"> 
-                        <!-- FORCE DISPLAY BLOCK ON ACTIVE -->
-                        <div class="d-flex justify-content-center align-items-center" style="height: 100%; flex-direction: column;">
-                            <h5 class="text-white bg-dark p-1">${b.title} (JS)</h5>
-                            <img src="${b.image}" class="img-fluid shadow-lg rounded" style="max-height: 350px; cursor: pointer; display: block;" 
-                                 onclick="openBookModal(${b.id})" 
-                                 onerror="console.error('Img failed:', this.src); this.src='https://dummyimage.com/300x400/000/fff&text=Error+Carga';">
-                        </div>
-                    </div>
-                `).join('');
-
-                        c.innerHTML = html;
-                        console.log("Carousel HTML Updated");
-
-                        // FORCE RE-INIT
-                        try {
-                            $('#heroCarousel').carousel('dispose');
-                        } catch (e) { }
-                        $('#heroCarousel').carousel({ interval: 3500 });
-
-                        // Force visibility again just in case bootstrap css is failing
-                        $('.carousel-item.active').css('display', 'block');
-                    };
-
-                    // 4. RENDER GRID
-                    window.renderBooks = (type, val) => {
-                        const c = document.getElementById('books-container');
-                        if (!c) return;
-                        c.innerHTML = '';
-
-                        let show = books;
-                        // Simple filter logic for inline debug
-                        if (type === 'search') show = books.filter(b => b.title.toLowerCase().includes(val.toLowerCase()));
-                        if (type === 'filter') show = books.filter(b => b.category.includes(val) || b.level.includes(val));
-
-                        if (show.length === 0) c.innerHTML = '<div class="col-12 text-center">No hay libros</div>';
-
-                        show.forEach(b => {
-                            c.insertAdjacentHTML('beforeend', `
-                       <div class="book-card quick-view-trigger" onclick="openBookModal(${b.id})">
-                           <div class="book-cover"><img src="${b.image}" onerror="this.src='img/portadas/default_cover.png'"></div>
-                           <div class="book-info"><h4>${b.title}</h4><p>${b.category}</p></div>
-                       </div>
-                   `);
-                        });
-                    };
-
-                    // 5. MODAL
-                    window.openBookModal = (id) => {
-                        const b = books.find(x => x.id === id);
-                        if (!b) return;
-                        $('#quickViewModal').modal('show');
-                        document.getElementById('modalBookTitle').innerText = b.title;
-                        document.getElementById('modalBookImage').src = b.image;
-                        document.getElementById('modalBookDescription').innerText = b.description;
-                    };
-
-                    // 6. AUTH CHECK (Simple)
-                    window.checkSession = () => {
-                        if (currentUser) {
-                            document.getElementById('auth-menu-item')?.classList.add('d-none');
-                            document.getElementById('user-display-item')?.classList.remove('d-none');
-                            document.getElementById('headerUserName').innerText = currentUser.nombre_completo || 'Usuario';
-                        }
-                    };
-
-                    // START
-                    fetchBooks();
-
-                });
-            </script>
-            <script>
-                // Tab switching logic for Dashboard (Keep existing)
-                $('.tab-btn').click(function () {
-                    const target = $(this).data('target');
-                    $('.tab-btn').removeClass('active');
-                    $(this).addClass('active');
-
-                    $('.filter-section').removeClass('active');
-                    $('#' + target).addClass('active');
-
-                    // Custom Scroll Logic: Scroll to tabs with offset for Sticky Header
-                    // This ensures tabs & section content are visible, but doesn't scroll down to books.
-                    const tabs = document.querySelector('.dashboard-tabs');
-
-                    if (tabs) {
-                        // 120px offset to account for sticky header and some breathing room
-                        const headerOffset = 120;
-                        const elementPosition = tabs.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                        window.scrollTo({
-                            top: offsetPosition,
-                            behavior: "smooth"
-                        });
-                    }
-
-                    if (target === 'favoritos') {
-                        if (typeof renderBooks === 'function') renderBooks('favorites');
-                    } else if (target === 'comunidad') {
-                        // handled by main.js or community logic
-                    }
-                });
-
-            </script>
-            <script>
-                // Auto-Hide Header Script
-                const header = document.querySelector('.main-header');
-                const backToTopBtn = document.getElementById('backToTopBtn');
-
-                window.addEventListener('scroll', function () {
-                    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-                    // Header Logic
-                    if (scrollTop > 50) {
-                        header.classList.add('header-hidden');
-                    } else {
-                        header.classList.remove('header-hidden');
-                    }
-
-                    // Back to Top Logic
-                    if (scrollTop > 300) {
-                        if (backToTopBtn) backToTopBtn.style.display = 'flex';
-                    } else {
-                        if (backToTopBtn) backToTopBtn.style.display = 'none';
-                    }
-                });
-
-                if (backToTopBtn) {
-                    backToTopBtn.addEventListener('click', () => {
-                        window.scrollTo({
-                            top: 0,
-                            behavior: 'smooth'
-                        });
-                    });
-                }
-            </script>
 
 
 

@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function () {
     // ==========================================
     // 0. INITIALIZATION & CONFIG
@@ -9,12 +8,16 @@ document.addEventListener('DOMContentLoaded', function () {
     window.scrollTo(0, 0);
 
     // Core State
-    let currentUser = JSON.parse(localStorage.getItem('aranduka_currentUser')) || null;
+    let currentUser = null;
+    try {
+        currentUser = JSON.parse(localStorage.getItem('aranduka_currentUser'));
+    } catch (e) {
+        console.error('Error parsing user session:', e);
+        localStorage.removeItem('aranduka_currentUser');
+    }
     let currentFilter = { type: 'all', value: '' };
     let currentSort = 'az';
     let isNavigatingHistory = false;
-
-    // Handle Browser Back Button (Anti-Gravity Pro+)
     window.addEventListener('popstate', (event) => {
         isNavigatingHistory = true;
         const modal = document.getElementById('quickViewModal');
@@ -49,33 +52,88 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // Auth Listeners
-    if (elements.loginBtn) {
-        elements.loginBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            elements.loginModal.modal('show');
-        });
-    }
+    const attachLoginListeners = () => {
+        const btn = document.getElementById('loginBtn');
 
-    // ==========================================
-    // 1. DATA (CATALOGO DIGITAL & HIERARCHY)
-    // ==========================================
+        if (btn) {
+            // Eliminamos listeners previos para evitar duplicados si se llama varias veces
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
 
-    // Hierarchy Definition (Critical for "Elegir distintos cursos sin salir")
-    const educationLevels = {
-        'educacion inicial': ['Jardín', 'Pre-Jardín', 'Pre-Escolar'],
-        'primer ciclo': ['1° Grado', '2° Grado', '3° Grado'],
-        'segundo ciclo': ['4° Grado', '5° Grado', '6° Grado'],
-        'tercer ciclo': ['7° Grado', '8° Grado', '9° Grado'],
-        'nivel medio': ['1° Curso', '2° Curso', '3° Curso']
+            newBtn.onclick = (e) => {
+                e.preventDefault();
+                console.log('Login button clicked via JS');
+
+                if (typeof $ !== 'undefined') {
+                    // Aseguramos que no haya otros modales interfiriendo
+                    $('.modal').modal('hide');
+
+                    // Pequeño delay para permitir que el CSS se recalcule
+                    setTimeout(() => {
+                        $('#loginModal').modal('show');
+                    }, 100);
+                } else {
+                    console.error('jQuery is missing.');
+                    alert('Error: jQuery no está cargado.');
+                }
+            };
+        }
+
+        // Configuración del botón Demo (se mantiene igual)
+        const demoBtn = document.getElementById('btnDemoLogin');
+        if (demoBtn) {
+            demoBtn.onclick = () => {
+                const demoUser = {
+                    id: 2,
+                    nombre_completo: 'Usuario de Prueba',
+                    name: 'Invitado',
+                    role: 'user',
+                    ci: 'invitado'
+                };
+                localStorage.setItem('aranduka_currentUser', JSON.stringify(demoUser));
+                checkSession(); // Actualiza la UI
+                $('#loginModal').modal('hide'); // Cierra el modal
+
+                // SweetAlert de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Acceso Concedido!',
+                    text: 'Bienvenido a la versión demo de Aranduka.',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            };
+        }
     };
+    attachLoginListeners();
 
-    // Lista base de libros (Completo)
-    const books = [
+    // ==========================================
+    // LOGIN FORMS LOGIC (FIX)
+    // ==========================================
+
+
+
+    // 2. Admin Login
+
+
+    // ==========================================
+    // 1. DATA (CATALOGO DIGITAL - STATICO)
+    // ==========================================
+
+    // Lista base de libros (Estática por solicitud del usuario)
+    // Los libros se cargan desde este array, NO desde la base de datos.
+    // ==========================================
+    // 1. DATA (CATALOGO DIGITAL - PERSISTENTE)
+    // ==========================================
+
+    // A) Lista de Respaldo (Tus libros originales)
+    // CAMBIO: Renombramos 'const books' a 'const defaultBooks'
+    const defaultBooks = [
         // --- NIVEL INICIAL ---
-        { id: 101, title: "Texto \"Mis Huellas\" Pre-Jardín", category: "inicial", level: "pre-jardin", image: "img/portadas/pre-jardin.png", file: "documentos/libro-ejemplo.pdf", guideFile: "documentos/guia-docente-ejemplo.docx", author: "Equipo de Aranduka", description: "Diseñado con cariño por el Equipo de Aranduka, este libro para el nivel inicial estimula el desarrollo cognitivo y motor de los más pequeños. Con ilustraciones coloridas y actividades lúdicas, es el compañero perfecto para sus primeros pasos en el aprendizaje escolar." },
-        { id: 102, title: "Texto \"Mis Huellas\" Jardín", category: "inicial", level: "jardin", image: "img/portadas/jardin.png", file: "documentos/libro-ejemplo.pdf", guideFile: "documentos/guia-docente-ejemplo.docx", author: "Equipo de Aranduka", description: "Este material del Equipo de Aranduka fomenta la expresión creativa y la autonomía en los niños de Jardín. A través de juegos y ejercicios interactivos, los pequeños exploran su entorno y desarrollan habilidades sociales y emocionales fundamentales para su crecimiento." },
-        { id: 103, title: "Texto \"Mis Huellas\" Pre-Escolar", category: "inicial", level: "pre-escolar", image: "img/portadas/MISHUELLASPREESCOLAR.png", file: "documentos/libro-ejemplo.pdf", guideFile: "documentos/guia-docente-ejemplo.docx", author: "Equipo de Aranduka", description: "Preparación integral para la lectoescritura y el cálculo matemático, elaborada por el Equipo de Aranduka. Este libro guía a los niños de Pre-Escolar en la transición hacia la educación primaria, fortaleciendo su confianza y capacidades cognitivas básicas." },
-        { id: 104, title: "Texto \"Mis Lecciones\" Pre-Escolar", category: "inicial", level: "pre-escolar", image: "img/portadas/MISLECCIONESPREESCOLAR.png", file: "documentos/libro-ejemplo.pdf", guideFile: "documentos/guia-docente-ejemplo.docx", author: "Equipo de Aranduka", description: "Guía complementaria con actividades prácticas desarrollada por el Equipo de Aranduka. Ofrece ejercicios adicionales para reforzar los conocimientos adquiridos en clase, asegurando una base sólida para el futuro académico de los estudiantes de nivel inicial." },
+        { id: 101, title: "Texto \"Mis Huellas\" Pre-Jardín", category: "inicial", level: "pre-jardin", image: "img/portadas/pre-jardin.png", file: "documentos/libro-ejemplo.pdf", guideFile: "documentos/guia-docente-ejemplo.doc", author: "Equipo de Aranduka", description: "Diseñado con cariño por el Equipo de Aranduka, este libro para el nivel inicial estimula el desarrollo cognitivo y motor de los más pequeños. Con ilustraciones coloridas y actividades lúdicas, es el compañero perfecto para sus primeros pasos en el aprendizaje escolar." },
+        { id: 102, title: "Texto \"Mis Huellas\" Jardín", category: "inicial", level: "jardin", image: "img/portadas/jardin.png", file: "documentos/libro-ejemplo.pdf", guideFile: "documentos/guia-docente-ejemplo.doc", author: "Equipo de Aranduka", description: "Este material del Equipo de Aranduka fomenta la expresión creativa y la autonomía en los niños de Jardín. A través de juegos y ejercicios interactivos, los pequeños exploran su entorno y desarrollan habilidades sociales y emocionales fundamentales para su crecimiento." },
+        { id: 103, title: "Texto \"Mis Huellas\" Pre-Escolar", category: "inicial", level: "pre-escolar", image: "img/portadas/MISHUELLASPREESCOLAR.png", file: "documentos/libro-ejemplo.pdf", guideFile: "documentos/guia-docente-ejemplo.doc", author: "Equipo de Aranduka", description: "Preparación integral para la lectoescritura y el cálculo matemático, elaborada por el Equipo de Aranduka. Este libro guía a los niños de Pre-Escolar en la transición hacia la educación primaria, fortaleciendo su confianza y capacidades cognitivas básicas." },
+        { id: 104, title: "Texto \"Mis Lecciones\" Pre-Escolar", category: "inicial", level: "pre-escolar", image: "img/portadas/MISLECCIONESPREESCOLAR.png", file: "documentos/libro-ejemplo.pdf", guideFile: "documentos/guia-docente-ejemplo.doc", author: "Equipo de Aranduka", description: "Guía complementaria con actividades prácticas desarrollada por el Equipo de Aranduka. Ofrece ejercicios adicionales para reforzar los conocimientos adquiridos en clase, asegurando una base sólida para el futuro académico de los estudiantes de nivel inicial." },
 
         // --- 1° y 2° CICLO ---
         { id: 201, title: "Matemática 1° Grado", category: "matematica", level: "1-grado", image: "img/portadas/mat1.png", file: "documentos/libro-ejemplo.pdf", author: "Equipo de Aranduka", description: "Este libro de Matemáticas ha sido diseñado meticulosamente por el Equipo de Aranduka para introducir a los niños en el mundo de los números. A través de ejercicios lúdicos y visuales, los alumnos darán sus primeros pasos en el pensamiento lógico-matemático." },
@@ -165,11 +223,42 @@ document.addEventListener('DOMContentLoaded', function () {
         { id: 446, title: "Química 3° Curso", category: "quimica", level: "3-curso", image: "img/portadas/quimmica3.png", file: "documentos/libro-ejemplo.pdf", author: "Equipo de Aranduka", description: "Química orgánica y bioquímica exploradas por el Equipo de Aranduka. Estudia los compuestos del carbono y las moléculas de la vida, base para la medicina, la farmacología y la biotecnología, campos de gran relevancia futura." },
         { id: 460, title: "Filosofía 2° Curso", category: "filosofia", level: "2-curso", image: "img/portadas/filosofia2.png", file: "documentos/libro-ejemplo.pdf", author: "Equipo de Aranduka", description: "Pensamiento filosófico y lógica introducidos por el Equipo de Aranduka. Invita a la reflexión profunda sobre la existencia, el conocimiento y la verdad, desarrollando el pensamiento crítico y la capacidad de argumentación racional." },
 
-        // --- ENSAYOS DE CLIENTES / COMUNIDAD ---
-        { id: 901, title: "Ensayo sobre la Reforma Educativa", category: "ensayo", level: "comunidad", image: "img/portadas/default_cover.png", file: "documentos/libro-ejemplo.pdf", author: "Equipo de Aranduka", description: "Aporte valioso sobre la educación paraguaya, analizado y presentado por el Equipo de Aranduka. Este ensayo ofrece una perspectiva crítica sobre los cambios necesarios en nuestro sistema educativo para enfrentar los desafíos del siglo XXI." },
-        { id: 902, title: "La Importancia de la Lectura", category: "ensayo", level: "comunidad", image: "img/portadas/default_cover.png", file: "documentos/libro-ejemplo.pdf", author: "Equipo de Aranduka", description: "Reflexión sobre el hábito lector en jóvenes, destacada por el Equipo de Aranduka. Argumenta convincentemente sobre cómo la lectura transforma mentes y abre horizontes, siendo una herramienta indispensable para el desarrollo personal y profesional." },
-        { id: 903, title: "Héroes del Paraguay", category: "ensayo", level: "comunidad", image: "img/portadas/default_cover.png", file: "documentos/libro-ejemplo.pdf", author: "Equipo de Aranduka", description: "Reseña histórica colaborativa curada por el Equipo de Aranduka. Rinde homenaje a las figuras que forjaron nuestra patria, recordando sus sacrificios y legados para inspirar a las nuevas generaciones a amar y servir al Paraguay." }
+        { id: 461, title: "Filosofía 2° Curso", category: "filosofia", level: "2-curso", image: "img/portadas/filosofia2.png", file: "documentos/libro-ejemplo.pdf", author: "Equipo de Aranduka", description: "Pensamiento filosófico y lógica introducidos por el Equipo de Aranduka. Invita a la reflexión profunda sobre la existencia, el conocimiento y la verdad, desarrollando el pensamiento crítico y la capacidad de argumentación racional." }
     ];
+
+    // B) Lógica de Base de Datos
+    // Intentamos cargar los libros guardados en el navegador.
+    // Si no existen (primera vez), usamos la lista por defecto.
+    let books = [];
+
+    try {
+        const storedData = localStorage.getItem('aranduka_books_db');
+        if (storedData) {
+            books = JSON.parse(storedData);
+            console.log('📚 Base de datos cargada: ' + books.length + ' libros.');
+        } else {
+            throw new Error('No hay datos guardados');
+        }
+    } catch (e) {
+        console.log('⚙️ Inicializando base de datos por defecto...');
+        books = JSON.parse(JSON.stringify(defaultBooks)); // Copia limpia
+        localStorage.setItem('aranduka_books_db', JSON.stringify(books));
+    }
+
+    // Función auxiliar para guardar cambios (se usará al borrar/crear)
+    const saveDatabase = () => {
+        localStorage.setItem('aranduka_books_db', JSON.stringify(books));
+        // Actualizamos estadísticas si el modal de admin está abierto
+        if (typeof loadDashboardStats === 'function') loadDashboardStats();
+    };
+
+    const educationLevels = {
+        "educacion inicial": ["Pre-Jardín", "Jardín", "Pre-Escolar"],
+        "primer ciclo": ["1° Grado", "2° Grado", "3° Grado"],
+        "segundo ciclo": ["4° Grado", "5° Grado", "6° Grado"],
+        "tercer ciclo": ["7° Grado", "8° Grado", "9° Grado"],
+        "nivel medio": ["1° Curso", "2° Curso", "3° Curso"]
+    };
 
     // ==========================================
     // 2. UTILITIES (HELPERS)
@@ -214,104 +303,167 @@ document.addEventListener('DOMContentLoaded', function () {
             if (adminMenuItem) adminMenuItem.classList.add('d-none');
             if (logoutTab) logoutTab.classList.add('d-none');
             document.body.classList.remove('is-admin');
+            setTimeout(attachLoginListeners, 100); // Re-check if login button appeared
         }
     };
 
-    // --- REAL BACKEND LOGIN ---
-    $('#studentLoginForm').on('submit', async function (e) {
+    // ==========================================
+    // FIX SUPREMO DE LOGIN (JAVASCRIPT PURO)
+    // ==========================================
+    document.addEventListener('submit', function (e) {
+        // Detectamos si el formulario enviado es el de login
+        if (e.target && e.target.id === 'studentLoginForm') {
+            e.preventDefault(); // ¡ALTO! Detiene la recarga de página sí o sí.
+
+            console.log("Intento de login interceptado correctamente.");
+
+            // Obtenemos el valor del input manualmente
+            const input = e.target.querySelector('input[name="ci"]');
+            const ci = input ? input.value.trim() : '';
+
+            if (!ci) {
+                if (typeof Swal !== 'undefined') Swal.fire('Error', 'Escribe un usuario.', 'warning');
+                else alert('Escribe un usuario');
+                return;
+            }
+
+            // Mostrar carga
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({ title: 'Verificando...', didOpen: () => Swal.showLoading() });
+            }
+
+            setTimeout(() => {
+                let demoUser = null;
+                const usuarioMinuscula = ci.toLowerCase();
+
+                // LÓGICA DE USUARIOS
+                if (usuarioMinuscula === 'arandukaadmin' || usuarioMinuscula === 'admin') {
+                    demoUser = { id: 1, nombre_completo: 'Administrador Aranduka', name: 'Admin', role: 'admin', ci: 'arandukaADMIN' };
+                } else {
+                    demoUser = { id: 2, nombre_completo: 'Estudiante Invitado', name: 'Invitado', role: 'user', ci: ci };
+                }
+
+                // GUARDAR Y ENTRAR
+                localStorage.setItem('aranduka_currentUser', JSON.stringify(demoUser));
+                checkSession(); // Actualizar UI
+
+                // Cerrar modal usando jQuery si está disponible, sino a la fuerza
+                if (typeof $ !== 'undefined') $('#loginModal').modal('hide');
+                else document.getElementById('loginModal').classList.remove('show');
+
+                input.value = ''; // Limpiar campo
+
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Bienvenido!',
+                        text: `Has ingresado como ${demoUser.name}`,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+            }, 800);
+        }
+    });
+
+    // --- DEMO REGISTER (Disabled for pure static) ---
+    $('#studentRegisterForm').on('submit', function (e) {
         e.preventDefault();
-        const ci = $(this).find('input[name="ci"]').val().trim();
-        if (!ci) return Swal.fire('Error', 'Ingresa tu cédula o usuario', 'warning');
+        Swal.fire('Modo Demo', 'El registro está desactivado en la versión estática. Usa los usuarios de prueba.', 'info');
+    });
 
-        Swal.showLoading();
+    // --- DEMO ADMIN LOGIN ---
+    $('#adminLoginForm').off('submit').on('submit', function (e) {
+        e.preventDefault();
+        const user = $('#adminUser').val().trim();
+        const pass = $('#adminPass').val().trim();
 
-        try {
-            const formData = new FormData();
-            formData.append('ci', ci);
+        if (user.toLowerCase() === 'arandukaadmin' && pass === 'Aranduka1974') {
+            const demoAdmin = {
+                id: 1,
+                nombre_completo: 'Administrador Aranduka',
+                name: 'Admin',
+                role: 'admin',
+                ci: 'arandukaADMIN'
+            };
+            localStorage.setItem('aranduka_currentUser', JSON.stringify(demoAdmin));
+            checkSession();
+            elements.loginModal.modal('hide');
+            Swal.fire('Acceso Autorizado', 'Bienvenido al panel de control (Modo Demo).', 'success').then(() => location.reload());
+        } else {
+            Swal.fire('Error', 'Credenciales administrativas incorrectas. Uso sugerido: "arandukaADMIN" / "Aranduka1974"', 'error');
+        }
+    });
 
-            const response = await fetch('backend/login.php', {
-                method: 'POST',
-                body: JSON.stringify({ ci: ci }), // Send as JSON as preferred by backend logic
-                headers: { 'Content-Type': 'application/json' }
-            });
-            const data = await response.json();
+    // ==========================================
+    // NUEVA LÓGICA DE LOGOUT (CERRAR SESIÓN)
+    // ==========================================
 
-            if (data.success) {
-                // Login Success
-                localStorage.setItem('aranduka_currentUser', JSON.stringify(data.user));
+    const handleLogout = () => {
+        Swal.fire({
+            title: '¿Cerrar Sesión?',
+            text: "¿Estás seguro que deseas salir de tu cuenta?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#D52B1E', // Rojo Aranduka
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, salir',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // 1. Eliminar datos de sesión
+                localStorage.removeItem('aranduka_currentUser');
+
+                // Opcional: ¿Quieres borrar favoritos al salir? 
+                // Si es sí, descomenta la siguiente línea:
+                // localStorage.removeItem('aranduka_favorites');
+
+                // 2. Actualizar UI visualmente antes de recargar
                 checkSession();
-                elements.loginModal.modal('hide');
+
+                // 3. Mensaje de despedida y recarga
                 Swal.fire({
+                    title: '¡Hasta pronto!',
+                    text: 'Has cerrado sesión correctamente.',
                     icon: 'success',
-                    title: '¡Bienvenido!',
-                    text: data.message,
-                    timer: 2000,
+                    timer: 1500,
                     showConfirmButton: false
-                }).then(() => location.reload());
-            } else {
-                Swal.fire('Error de Acceso', data.message, 'error');
+                }).then(() => {
+                    // Recargamos para limpiar cualquier residuo en memoria o modales pegados
+                    window.location.reload();
+                });
             }
-        } catch (error) {
-            console.error(error);
-            Swal.fire('Error', 'No se pudo conectar con el servidor.', 'error');
-        }
-    });
+        });
+    };
 
-    // --- REAL BACKEND REGISTER ---
-    $('#studentRegisterForm').on('submit', async function (e) {
-        e.preventDefault();
-
-        // Basic Client Validation
-        const form = this;
-        const ci = form.ci.value.trim();
-        const nombre = form.nombre.value.trim();
-
-        if (!ci || !nombre) {
-            return Swal.fire('Atención', 'Completá los campos obligatorios.', 'warning');
-        }
-
-        Swal.showLoading();
-
-        // Prepare Data
-        const formData = {
-            ci: ci,
-            nombre: nombre,
-            telefono: form.telefono.value,
-            email: form.email.value,
-            colegio: form.colegio.value,
-            password: '' // Backend will handle default
-        };
-
-        try {
-            const response = await fetch('backend/registro.php', {
-                method: 'POST',
-                body: JSON.stringify(formData),
-                headers: { 'Content-Type': 'application/json' }
-            });
-            const data = await response.json();
-
-            if (data.success) {
-                // Auto Login on Register Success
-                localStorage.setItem('aranduka_currentUser', JSON.stringify(data.user));
-                checkSession();
-                elements.loginModal.modal('hide');
-                Swal.fire('¡Registrado!', data.message, 'success').then(() => location.reload());
-            } else {
-                Swal.fire('Error', data.message, 'error');
+    const attachLogoutListeners = () => {
+        const btn = document.getElementById('logoutBtn');
+        if (btn) {
+            // Clonamos para limpiar eventos viejos (igual que hicimos con el Login)
+            const newBtn = btn.cloneNode(true);
+            if (btn.parentNode) {
+                btn.parentNode.replaceChild(newBtn, btn);
             }
-        } catch (error) {
-            console.error('Registration Error:', error);
-            // Show more specific error if available from response parsing failure or network
-            Swal.fire('Error', `Hubo un problema al registrar: ${error.message || error}`, 'error');
-        }
-    });
 
-    document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        localStorage.removeItem('aranduka_currentUser');
-        checkSession();
-        Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Sesión cerrada', timer: 1500, showConfirmButton: false }).then(() => location.reload());
-    });
+            newBtn.onclick = (e) => {
+                e.preventDefault();
+                handleLogout();
+            };
+        }
+
+        // También vinculamos el botón grande que está en la pestaña "logout" (el rojo grande)
+        // Buscamos el botón dentro del div con id="logout"
+        const bigLogoutBtn = document.querySelector('#logout button');
+        if (bigLogoutBtn) {
+            bigLogoutBtn.onclick = (e) => {
+                e.preventDefault();
+                handleLogout();
+            };
+        }
+    };
+
+    // INICIALIZAR LISTENERS
+    attachLogoutListeners();
 
     // ==========================================
     // 4. RENDERING & FILTERS (RESTORED LOGIC)
@@ -345,15 +497,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 <i class="fas fa-trash"></i>
             </button>` : '';
 
-        // Quick Download (Only if logged in)
+        // Quick Download (DESACTIVADO - SOLO LECTURA)
         let quickAction = '';
-        if (user) {
-            quickAction = `
-                <button class="quick-download-btn ml-2" onclick="handleQuickDownload(${book.id}); event.stopPropagation();" title="Descarga Rápida">
-                    <i class="fas fa-download"></i>
-                </button>
-            `;
-        }
+        // El botón de descarga ha sido eliminado para proteger los archivos.
 
         return `
             <div class="book-card quick-view-trigger" data-id="${book.id}">
@@ -408,7 +554,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // 2. Sort
-        const sortMode = elements.sortSelect.value;
+        const sortMode = elements.sortSelect ? elements.sortSelect.value : 'az';
         filtered.sort((a, b) => {
             if (sortMode === 'az') return a.title.localeCompare(b.title);
             if (sortMode === 'za') return b.title.localeCompare(a.title);
@@ -482,46 +628,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             document.querySelectorAll('.book-card').forEach(card => {
                 observer.observe(card);
-            });
-        }
-    };
-
-    window.renderCommunityBooks = function () {
-        const container = document.getElementById('community-books-list');
-        if (!container) return;
-
-        container.innerHTML = `
-            <div class="col-12 mb-4 d-flex flex-column flex-md-row justify-content-between align-items-center text-center text-md-left">
-                <div class="mb-2 mb-md-0">
-                    <h4 class="font-weight-bold text-dark mb-1">Aportes de la Comunidad</h4>
-                    <p class="text-muted small mb-0">Ensayos, guías y resúmenes compartidos por estudiantes.</p>
-                </div>
-                <button class="btn btn-outline-primary btn-sm rounded-pill px-3 font-weight-bold" 
-                        onclick="$('#uploadMaterialModal').modal('show');" style="font-size: 0.75rem; border-width:1px;">
-                    <i class="fas fa-plus mr-1"></i> Subir Material
-                </button>
-            </div>
-            <div class="row w-100 m-0" id="essays-grid"></div>
-        `;
-
-        const grid = document.getElementById('essays-grid');
-        const ensayos = books.filter(b => b.category === 'ensayo');
-        const favorites = JSON.parse(localStorage.getItem('aranduka_favorites') || '[]');
-
-        if (ensayos.length === 0) {
-            grid.innerHTML = `
-                <div class="col-12 text-center py-5 border rounded" style="border-style: dashed !important; border-width: 2px !important; background: #f9f9f9;">
-                    <i class="fas fa-cloud-upload-alt fa-3x text-light mb-3"></i>
-                    <h5 class="text-muted">¡Sé el primero en aportar!</h5>
-                    <p class="text-muted small">Tu ensayo aparecerá aquí una vez aprobado.</p>
-                </div>`;
-        } else {
-            ensayos.forEach(book => {
-                grid.insertAdjacentHTML('beforeend', `
-                    <div class="col-md-6 mb-4">
-                        ${generateCard(book, favorites)}
-                    </div>
-                `);
             });
         }
     };
@@ -608,10 +714,38 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    elements.searchInput?.addEventListener('input', (e) => {
-        const val = e.target.value;
-        if (val.length > 2 || val.length === 0) handleSearch(val, false);
-    });
+    // ==========================================
+    // MEJORA: BÚSQUEDA INSTANTÁNEA (DEBOUNCE)
+    // ==========================================
+
+    // Función auxiliar para esperar a que el usuario termine de escribir
+    const debounce = (func, wait) => {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    };
+
+    elements.searchInput?.addEventListener('input', debounce((e) => {
+        const val = e.target.value.trim();
+
+        // Efecto visual: mostrar icono de carga si hay texto
+        const searchIcon = document.querySelector('.search-bar button[type="submit"] i');
+        if (searchIcon) searchIcon.className = val.length > 0 ? "fas fa-spinner fa-spin" : "fas fa-search";
+
+        if (val.length > 0) {
+            // Busca inmediatamente (incluso con 1 letra)
+            handleSearch(val, false);
+        } else {
+            // Si el usuario borra todo, restaura la vista original
+            elements.introTitle.innerText = "Explora nuestros materiales";
+            renderBooks('all');
+        }
+
+        // Restaurar icono
+        setTimeout(() => { if (searchIcon) searchIcon.className = "fas fa-search"; }, 300);
+    }, 300)); // 300ms de retraso: equilibrio perfecto entre velocidad y rendimiento
 
     document.getElementById('searchForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -641,48 +775,9 @@ document.addEventListener('DOMContentLoaded', function () {
         recognition.onend = () => elements.voiceBtn.style.color = '#888';
     }
 
-    // --- Dashboard Tabs Logic (Unified) ---
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const sections = document.querySelectorAll('.filter-section');
 
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // 1. UI Updates
-            tabBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
 
-            // 2. Section Display
-            const targetId = btn.dataset.target; // secciones, materias, favoritos, comunidad
-            sections.forEach(sec => {
-                sec.classList.remove('active');
-                if (sec.id === targetId) {
-                    sec.classList.add('active');
 
-                    // 3. Auto-Scroll Logic: Targeted for flow
-                    // Execute after a slight delay to ensure the browser has repainted the new section
-                    setTimeout(() => {
-                        smoothScrollTo(sec, 140);
-                    }, 50);
-                }
-            });
-
-            // 3. Special Handlers
-            if (targetId === 'favoritos') {
-                renderBooks('favorites');
-                elements.introTitle.innerText = "Tus Libros Favoritos";
-            } else if (targetId === 'comunidad') {
-                renderCommunityBooks();
-                elements.introTitle.innerText = 'Aportes de la Comunidad';
-                const uploadCol = document.getElementById('community-upload-col');
-                const listCol = document.getElementById('community-list-col');
-                if (uploadCol) uploadCol.classList.remove('d-none');
-                if (listCol) { listCol.classList.remove('col-md-12'); listCol.classList.add('col-md-8'); }
-            } else {
-                renderBooks('all');
-                elements.introTitle.innerText = "Explora todos los libros";
-            }
-        });
-    });
 
     // ==========================================
     // 6. MODALS & UI COMPONENTS (History Enhanced)
@@ -746,13 +841,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // 5. Actions Logic (Revised for Aranduka 2.0)
         const user = JSON.parse(localStorage.getItem('aranduka_currentUser'));
-        
+
+        // Helper: Track Usage (Disabled in Static Demo)
+        const trackAction = async (actionType) => {
+            console.log("Static Demo: Action tracked ->", actionType);
+            return true;
+        };
+
+        // --- Button 1: Proyectar Clase ---
+
+
         // --- Button 1: Proyectar Clase ---
         const btnProject = document.getElementById('btnProjectClass');
         if (btnProject) {
-            btnProject.onclick = () => {
-                if(!user) {
-                     Swal.fire({
+            btnProject.onclick = async () => {
+                if (!user) {
+                    Swal.fire({
                         title: 'Acceso Restringido',
                         text: 'Debes iniciar sesión para proyectar clases listas.',
                         icon: 'warning',
@@ -765,75 +869,46 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                     return;
                 }
-                
-                // Demo Action
+
+                // TRACKING
+                trackAction('PROYECCION_PPT');
+
                 Swal.fire({
-                    title: 'Generando Clase...',
-                    html: 'Aranduka está organizando la presentación, actividades y cierre.<br><b>Tiempo estimado: 3 segundos.</b>',
-                    timer: 2000,
+                    title: 'Abriendo Presentación...',
+                    text: 'Se descargará la presentación para tu clase.',
+                    timer: 1500,
                     timerProgressBar: true,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
+                    didOpen: () => { Swal.showLoading(); }
                 }).then(() => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Clase Lista!',
-                        text: 'Se ha abierto el modo presentación en una nueva pestaña (Demo).',
-                        confirmButtonColor: '#1565c0'
-                    });
+                    // Link to local PPTX or Slides
+                    const link = document.createElement('a');
+                    link.href = 'documentos/clase_ejemplo.pptx';
+                    link.download = `Clase_${book.title}.pptx`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                 });
             };
         }
 
-        // --- Button 2: Descargar Recursos ---
-        const btnDownload = document.getElementById('btnDownloadResources');
-        if (btnDownload) {
-             btnDownload.onclick = () => {
+        // --- Botón 2: LEER AHORA (Reemplaza a Descargar) ---
+        const btnRead = document.getElementById('btnDownloadResources'); // Usamos el mismo ID para no tocar el HTML
+        if (btnRead) {
+            // Cambiamos el texto e icono visualmente
+            btnRead.innerHTML = `
+                <i class="fas fa-book-reader fa-2x mb-2"></i>
+                <span class="font-weight-bold">Leer Ahora</span>
+                <small style="opacity: 0.8;">Visualización Gratuita</small>
+            `;
+
+            // Nueva lógica de lectura
+            btnRead.onclick = async () => {
                 if (!user) {
                     Swal.fire({
-                        title: '¿Eres Docente?',
-                        text: 'Para descargar solucionarios y guías, necesitamos verificar tu cuenta.',
+                        title: 'Lectura Exclusiva',
+                        text: 'Regístrate gratis para leer este libro.',
                         icon: 'info',
-                        showCancelButton: true,
-                        confirmButtonText: 'Iniciar Sesión',
-                        cancelButtonText: 'Cancelar'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            closeBookModal();
-                            $('#loginModal').modal('show');
-                        }
-                    });
-                } else {
-                    // Real Download Logic
-                    const link = document.createElement('a');
-                    link.href = book.file || '#';
-                    link.download = book.title;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Descarga Iniciada',
-                        text: 'El pack de recursos se está descargando.',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                }
-            };
-        }
-
-        // --- Button 3: Crear mi Clase (AI) ---
-        const btnCreate = document.getElementById('btnCreateClass');
-        if (btnCreate) {
-            btnCreate.onclick = () => {
-                if(!user) {
-                     Swal.fire({
-                        title: 'Asistente IA',
-                        text: 'Inicia sesión para usar el asistente de creación de clases.',
-                        icon: 'warning',
-                        confirmButtonText: 'Entrar'
+                        confirmButtonText: 'Iniciar Sesión'
                     }).then((result) => {
                         if (result.isConfirmed) {
                             closeBookModal();
@@ -843,37 +918,153 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                Swal.fire({
-                    title: 'Crear mi Clase',
+                // Lógica del Visor
+                showPdfViewer(book);
+            };
+        }
+
+
+        // --- Botón 3: Crear mi Clase (IA Avanzada con Formato MEC) ---
+        const btnCreate = document.getElementById('btnCreateClass');
+        if (btnCreate) {
+            btnCreate.onclick = async () => {
+                // 1. Verificación de seguridad
+                if (!user) {
+                    Swal.fire({
+                        title: 'Asistente IA',
+                        text: 'Inicia sesión para usar el generador de clases.',
+                        icon: 'warning',
+                        confirmButtonText: 'Entrar',
+                        target: document.getElementById('quickViewModal') // Truco para que se vea encima
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            closeBookModal();
+                            $('#loginModal').modal('show');
+                        }
+                    });
+                    return;
+                }
+
+                // 2. Pedir el tema específico
+                const { value: userTopic } = await Swal.fire({
+                    title: 'Diseña tu Clase con IA',
                     input: 'textarea',
-                    inputLabel: '¿Sobre qué quieres dar clase hoy?',
-                    inputPlaceholder: 'Ej: El ciclo del agua para niños de 3er grado...',
-                    inputAttributes: {
-                        'aria-label': 'Tema de la clase'
-                    },
+                    inputLabel: `Libro: ${book.title}`,
+                    inputPlaceholder: 'Ej: Suma de fracciones, La Guerra del Chaco, Los colores en Guaraní...',
+                    inputAttributes: { 'aria-label': 'Tema de la clase' },
                     showCancelButton: true,
-                    confirmButtonText: 'Generar Clase',
-                    confirmButtonColor: '#00695c',
-                    showLoaderOnConfirm: true,
-                    preConfirm: (text) => {
-                        return new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                            }, 2000); // Fake AI delay
-                        });
-                    },
-                    allowOutsideClick: () => !Swal.isLoading()
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Estructura Creada',
-                            text: 'Hemos generado una propuesta de clase basada en tu idea. Revisa tu correo.',
-                        });
+                    confirmButtonText: 'Generar Planificación',
+                    confirmButtonColor: '#0c647c',
+                    cancelButtonText: 'Cancelar',
+                    footer: '<span class="small text-muted">Generaremos una planificación formato MEC Paraguay.</span>',
+                    target: document.getElementById('quickViewModal') // Mantiene el z-index correcto
+                });
+
+                if (!userTopic) return; // Si cancela, no hacemos nada
+
+                // 3. Construcción del Prompt (Basado en tu Guía Docente )
+                const promptPlan = `
+Actúa como un docente experto del sistema educativo de Paraguay.
+Diseña un PLAN DE CLASE (80 min) basado en el libro "${book.title}" para el nivel "${book.level}".
+
+TEMA: "${userTopic}".
+
+Genera la planificación estrictamente con esta estructura (Formato MEC):
+
+**I. IDENTIFICACIÓN**
+* **Asignatura:** ${book.category.toUpperCase()}
+* **Grado/Curso:** ${book.level}
+* **Unidad Temática:** Relacionada al tema.
+
+**II. CAPACIDADES**
+(Redacta 1 capacidad acorde al currículo nacional paraguayo para este grado).
+
+**III. INDICADORES**
+1.  (Conceptual - 1p)
+2.  (Procedimental - 1p)
+3.  (Actitudinal - 1p)
+
+**IV. ESTRATEGIAS METODOLÓGICAS**
+* **Inicio (10 min):** Dinámica de motivación o recuperación de saberes previos (ej: lluvia de ideas, juego).
+* **Desarrollo (60 min):** - Explicación del tema (usando el libro "${book.title}").
+    - Actividad grupal o individual en el cuaderno.
+    - Resolución de ejercicios prácticos.
+* **Cierre (10 min):** Socialización de resultados y metacognición.
+
+**V. RECURSOS**
+* Libro de texto Aranduka.
+* Pizarra, marcadores.
+
+**VI. EVALUACIÓN**
+* Instrumento: Lista de Cotejo o RSA.
+
+Dame la respuesta en formato Markdown limpio y listo para copiar.
+`.trim();
+
+                const promptSlides = `
+Crea una estructura para una presentación de diapositivas educativa sobre "${userTopic}".
+Público: Estudiantes de ${book.level} en Paraguay.
+Base: Libro "${book.title}".
+
+Estructura de 8 Slides (Visual y concisa):
+1. Portada (Título e Imagen sugerida).
+2. Objetivo de la clase.
+3. ¿Qué sabemos? (Pregunta disparadora).
+4. Concepto clave (Definición sencilla).
+5. Ejemplo local (Contexto Paraguay).
+6. Actividad en clase.
+7. Resumen.
+8. Tarea y Cierre.
+`.trim();
+
+                // 4. Interfaz de Selección de IA
+                Swal.fire({
+                    title: '🚀 Elige tu Asistente',
+                    html: `
+                        <p class="text-muted small mb-3">El prompt ya está listo. Selecciona una IA para abrirla y el texto se copiará automáticamente.</p>
+                        
+                        <div class="d-grid gap-2">
+                            <button id="btn-gpt" class="btn btn-dark btn-block py-3 mb-2 shadow-sm text-left">
+                                <i class="fas fa-robot mr-3"></i> <b>ChatGPT</b> (Recomendado para Texto)
+                            </button>
+                            <button id="btn-gem" class="btn btn-primary btn-block py-3 mb-2 shadow-sm text-left" style="background: #1a73e8; border:none;">
+                                <i class="fas fa-gem mr-3"></i> <b>Google Gemini</b> (Rápido y actual)
+                            </button>
+                            <hr>
+                            <button id="btn-gamma" class="btn btn-warning btn-block py-3 shadow-sm text-left text-dark font-weight-bold" style="background: #f4b400; border:none;">
+                                <i class="fas fa-images mr-3"></i> <b>Gamma App</b> (Para Diapositivas)
+                            </button>
+                        </div>
+                    `,
+                    showConfirmButton: false,
+                    showCloseButton: true,
+                    target: document.getElementById('quickViewModal'),
+                    didOpen: () => {
+                        // Función auxiliar para Copiar y Abrir
+                        const copyAndGo = (url, text) => {
+                            navigator.clipboard.writeText(text).then(() => {
+                                Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: '¡Prompt copiado! Pégalo en el chat (Ctrl+V)',
+                                    timer: 3000,
+                                    showConfirmButton: false,
+                                    target: document.getElementById('quickViewModal')
+                                });
+                                window.open(url, '_blank');
+                            });
+                        };
+
+                        // Listeners
+                        document.getElementById('btn-gpt').onclick = () => copyAndGo('https://chatgpt.com/', promptPlan);
+                        document.getElementById('btn-gem').onclick = () => copyAndGo('https://gemini.google.com/app', promptPlan);
+                        document.getElementById('btn-gamma').onclick = () => copyAndGo('https://gamma.app/create', promptSlides);
                     }
                 });
             };
         }
+
 
         // 6. Related Books Logic (Grid for Mobile)
         const relatedContainer = document.getElementById('relatedBooksContainer');
@@ -1018,32 +1209,40 @@ document.addEventListener('DOMContentLoaded', function () {
     function initCarousel() {
         const container = elements.heroCarouselInner;
         if (!container) return;
+
+        // Seleccionamos 5 libros al azar
         const shuffled = [...books].sort(() => 0.5 - Math.random()).slice(0, 5);
+
         let html = '';
         shuffled.forEach((book, idx) => {
             html += `
             <div class="carousel-item ${idx === 0 ? 'active' : ''}">
-                <div class="d-flex flex-column align-items-center justify-content-center h-100" style="padding: 1rem;">
-                    <div class="position-relative" style="transition: transform 0.3s;">
-                        <span class="badge badge-white text-dark shadow-sm px-3 py-1 mb-3 font-weight-bold" 
-                              style="position: absolute; top: -15px; right: -15px; z-index: 10; background: white; border-radius: 50px; font-size: 0.8rem;">
-                            ★ DESTACADO
-                        </span>
-                        <div class="hero-book-wrapper" style="perspective: 1000px;">
-                            <img src="${book.image}" class="img-fluid rounded shadow-lg quick-view-trigger" 
-                                 data-id="${book.id}"
-                                 style="max-height: 380px; cursor: pointer; transform: rotateY(-10deg); transition: transform 0.5s; border-left: 5px solid rgba(255,255,255,0.2);">
-                        </div>
+                <div class="carousel-item-content">
+                    <div class="hero-book-wrapper">
+                        <img src="${book.image}" 
+                             class="quick-view-trigger" 
+                             data-id="${book.id}"
+                             alt="${book.title}"
+                             style="cursor: pointer;">
                     </div>
-                    <div class="text-center mt-4 d-none d-md-block">
-                        <h5 class="text-white font-weight-bold mb-1" style="text-shadow: 0 2px 4px rgba(0,0,0,0.6); letter-spacing: 0.5px;">${book.title}</h5>
-                        <small class="text-light" style="opacity: 0.8;">${book.category.toUpperCase()}</small>
+                    <div class="hero-book-caption d-none d-md-block">
+                        <h5 class="font-weight-bold mb-0">${book.title}</h5>
+                        <small style="opacity: 0.9;">${book.category.toUpperCase()}</small>
                     </div>
                 </div>
             </div>`;
         });
+
         container.innerHTML = html;
-        if (typeof $ !== 'undefined') $('#heroCarousel').carousel({ interval: 3000, pause: 'hover' });
+
+        // Inicializar Bootstrap Carousel
+        if (typeof $ !== 'undefined') {
+            $('#heroCarousel').carousel({
+                interval: 3500, // Velocidad (3.5 segundos)
+                pause: 'hover',
+                ride: 'carousel'
+            });
+        }
     }
 
     // RESTORED: Grade Grid with Cards (History Enhanced)
@@ -1081,125 +1280,89 @@ document.addEventListener('DOMContentLoaded', function () {
     // 8. ADMIN & UPLOADS
     // ==========================================
 
-    window.loadDashboardStats = async function () {
+    window.loadDashboardStats = function () {
         if (!isAdmin()) return;
 
-        try {
-            const res = await fetch('backend/admin_dashboard.php');
-            const data = await res.json();
+        // Estadísticas reales
+        document.getElementById('total-users').textContent = 'Admin Activo';
+        document.getElementById('pending-requests').textContent = '0';
+        document.getElementById('total-books').textContent = books.length; // Ahora cuenta los reales
 
-            if (data.success) {
-                // 1. Stats
-                document.getElementById('total-users').textContent = data.stats.users;
-                document.getElementById('pending-requests').textContent = data.stats.pending;
-                document.getElementById('total-books').textContent = books.length; // Keep using local count or backend
+        const usersBody = document.getElementById('admin-users-table-body');
+        usersBody.innerHTML = '<tr><td colspan="6" class="text-center py-4">Modo Demo - Base de datos inactiva.</td></tr>';
 
-                // 2. Users Table
-                const usersBody = document.getElementById('admin-users-table-body');
-                if (data.users_list && data.users_list.length > 0) {
-                    usersBody.innerHTML = data.users_list.map(u => `
-                        <tr>
-                            <td>
-                                <div class="font-weight-bold text-dark">${u.nombre_completo}</div>
-                                <div class="small text-muted">${u.email}</div>
-                            </td>
-                            <td>
-                                <div class="small">CI: ${u.ci}</div>
-                                <div class="small">${u.colegio || '-'}</div>
-                            </td>
-                            <td>
-                                <span class="badge badge-${u.rol === 'admin' ? 'danger' : 'success'} rounded-pill px-2">${u.rol}</span>
-                            </td>
-                            <td>
-                                <div class="small text-muted" style="max-height:80px; overflow-y:auto; scrollbar-width:thin;">
-                                    ${(u.historial_descargas || []).map(h =>
-                        `<div class="text-truncate" title="${h.libro_titulo}"><i class="fas fa-download mx-1 text-primary"></i> ${h.libro_titulo}</div>`
-                    ).join('') || '<span class="text-muted">-</span>'}
-                                </div>
-                            </td>
-                            <td class="text-center font-weight-bold text-primary">${(u.historial_aportes || []).length}</td>
-                            <td class="small text-muted">${new Date(u.fecha_registro).toLocaleDateString()}</td>
-                        </tr>
-                    `).join('');
-                } else {
-                    usersBody.innerHTML = '<tr><td colspan="6" class="text-center py-4">No hay usuarios registrados.</td></tr>';
-                }
+        const pendingBody = document.getElementById('admin-pending-table-body');
+        pendingBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">No hay aportes pendientes en esta versión estática.</td></tr>';
 
-                // 3. Pending Aportes Table
-                const pendingBody = document.getElementById('admin-pending-table-body');
-                const pendingAportes = data.aportes_list.filter(a => a.estado === 'pendiente');
-                if (pendingAportes.length > 0) {
-                    pendingBody.innerHTML = pendingAportes.map(a => `
-                        <tr>
-                            <td class="small">${new Date(a.fecha_subida).toLocaleDateString()}</td>
-                            <td>
-                                <div class="font-weight-bold">${a.autor_nombre || 'Anónimo'}</div>
-                            </td>
-                            <td>
-                                <div class="font-weight-bold">${a.titulo}</div>
-                                <small class="text-muted">${a.descripcion || ''}</small>
-                            </td>
-                            <td><a href="${a.archivo_url}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-file-pdf"></i> Ver</a></td>
-                            <td><span class="badge badge-warning">Pendiente</span></td>
-                            <td>
-                                <button class="btn btn-sm btn-success rounded-circle shadow-sm" title="Aprobar"><i class="fas fa-check"></i></button>
-                                <button class="btn btn-sm btn-danger rounded-circle shadow-sm" title="Rechazar"><i class="fas fa-times"></i></button>
-                            </td>
-                        </tr>
-                    `).join('');
-                } else {
-                    pendingBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">No hay aportes pendientes.</td></tr>';
-                }
-
-                // Update Badge Count
-                const reqCount = document.getElementById('req-count');
-                if (reqCount) reqCount.innerText = data.stats.pending;
-
-            } else {
-                console.error("Admin Data Error:", data.message);
-            }
-        } catch (err) {
-            console.error("Admin Fetch Error:", err);
-            const tbody = document.getElementById('admin-users-table-body');
-            if (tbody) tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-4">Error de conexión con la base de datos.</td></tr>';
+        // AGREGADO: Inyectar botón de restauración si no existe
+        const inventoryPane = document.getElementById('pane-inventory');
+        if (inventoryPane && !document.getElementById('btn-reset-db')) {
+            const header = inventoryPane.querySelector('h4');
+            const btnReset = document.createElement('button');
+            btnReset.id = 'btn-reset-db';
+            btnReset.className = 'btn btn-sm btn-outline-danger float-right';
+            btnReset.innerHTML = '<i class="fas fa-sync-alt mr-1"></i> Restaurar Fábrica';
+            btnReset.onclick = () => {
+                Swal.fire({
+                    title: '¿Reiniciar Base de Datos?',
+                    text: 'Se borrarán todos los cambios y volverás a la lista original de libros.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Sí, restaurar'
+                }).then((r) => {
+                    if (r.isConfirmed) {
+                        localStorage.removeItem('aranduka_books_db');
+                        location.reload(); // Recargar para volver a leer defaultBooks
+                    }
+                });
+            };
+            if (header) header.appendChild(btnReset);
         }
     };
 
     // Auto-load when opening modal
     $('#adminDashboardModal').on('shown.bs.modal', loadDashboardStats);
 
-    $('#uploadForm').on('submit', async function (e) {
+    $('#uploadForm').on('submit', function (e) {
         e.preventDefault();
-        if (!currentUser) return elements.authRequiredModal.modal('show');
-        const formData = new FormData(this);
-        if (currentUser.id) formData.append('user_id', currentUser.id);
-
-        Swal.showLoading();
-        try {
-            const res = await fetch('backend/upload.php', { method: 'POST', body: formData });
-            const data = await res.json().catch(() => ({}));
-
-            if (data.success || res.ok) {
-                Swal.fire('¡Enviado!', 'Tu aporte está en revisión.', 'success');
-                this.reset();
-                document.querySelector('.custom-file-label').innerText = 'Elegir archivo...';
-            } else {
-                Swal.fire('Error', 'No se pudo subir el archivo.', 'error');
-            }
-        } catch (err) {
-            Swal.fire('Info', 'Backend no conectado. (Demo Mode)', 'info');
-        }
+        Swal.fire('Modo Demo', 'La subida de archivos está desactivada en esta versión estática.', 'info');
     });
 
     window.deleteBook = (id) => {
         Swal.fire({
-            title: '¿Eliminar?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Sí, borrar'
+            title: '¿Eliminar libro?',
+            text: "Esta acción eliminará el libro de la base de datos local. (Puedes restaurarlo reiniciando los datos).",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, borrar',
+            confirmButtonColor: '#d33',
+            cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
                 const idx = books.findIndex(b => b.id === id);
-                if (idx > -1) books.splice(idx, 1);
-                renderBooks(currentFilter.type, currentFilter.value);
-                Swal.fire('Eliminado', '', 'success');
+
+                if (idx > -1) {
+                    // 1. Eliminar del array
+                    books.splice(idx, 1);
+
+                    // 2. GUARDAR EN MEMORIA (Persistencia)
+                    saveDatabase();
+
+                    // 3. Actualizar vista visualmente
+                    // Si estamos filtrando, mantenemos el filtro
+                    renderBooks(currentFilter.type, currentFilter.value);
+
+                    Swal.fire({
+                        title: 'Eliminado',
+                        text: 'El libro ha sido eliminado correctamente.',
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire('Error', 'No se encontró el libro.', 'error');
+                }
             }
         });
     };
@@ -1271,13 +1434,69 @@ document.addEventListener('DOMContentLoaded', function () {
 
     checkSession();
     initCarousel();
-    renderBooks('all');
+    console.log("Aranduka v2.7 Fix: Filters Removed");
+    // ==========================================
+    // 7. UI INTERACTIONS (Header & Tabs)
+    // ==========================================
 
-    // Restore File Input Label logic
-    $('.custom-file-input').on('change', function () {
-        const fileName = $(this).val().split('\\').pop();
-        $(this).next('.custom-file-label').html(fileName);
+    // Tab Logic (Already partially in main.js but reinforcing)
+    $('.tab-btn').click(function () {
+        const target = $(this).data('target');
+        $('.tab-btn').removeClass('active');
+        $(this).addClass('active');
+
+        $('.filter-section').removeClass('active');
+        $('#' + target).addClass('active');
+
+        // Scroll Logic
+        const tabs = document.querySelector('.dashboard-tabs');
+        if (tabs) {
+            const headerOffset = 120;
+            const elementPosition = tabs.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+        }
+
+        if (target === 'favoritos') {
+            renderBooks('favorites');
+            elements.introTitle.innerText = "Tus Libros Favoritos";
+        } else if (target === 'comunidad') {
+            elements.introTitle.innerText = "Modo Demo Activo";
+        } else {
+            renderBooks('all');
+            elements.introTitle.innerText = "Explora todos los libros";
+        }
     });
 
-    console.log("Aranduka v2.5 Restore Complete: UI Features + Clean Architecture");
+    // Auto-Hide Header Script
+    const header = document.querySelector('.main-header');
+    const backToTopBtn = document.getElementById('backToTopBtn');
+
+    window.addEventListener('scroll', function () {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Header Logic
+        if (scrollTop > 50) {
+            header.classList.add('header-hidden');
+        } else {
+            header.classList.remove('header-hidden');
+        }
+
+        // Back to Top Logic
+        if (scrollTop > 300) {
+            if (backToTopBtn) backToTopBtn.style.display = 'flex';
+        } else {
+            if (backToTopBtn) backToTopBtn.style.display = 'none';
+        }
+    });
+
+    if (backToTopBtn) {
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    renderBooks('all');
+    checkSession();
 });
+
